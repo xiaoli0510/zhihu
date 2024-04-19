@@ -1,13 +1,13 @@
 <script setup>
 import { RouterView } from "vue-router";
-import TabBar from './components/TabBar/index.vue'
+import BottomTabBar from './components/BottomTabBar/index.vue'
 
 </script>
 
 <template>
   <div class="container">
     <RouterView />
-    <TabBar/>
+    <BottomTabBar/>
   </div>
 </template>
 

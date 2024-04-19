@@ -2,24 +2,24 @@
 import { ref } from "vue";
 const active = ref(0);
 const icon = [{
-  active: "/src/assets/imgs/active-home.png",
-  inactive: "/src/assets/imgs/home.png",
+  active: "/src/assets/imgs/bottomTabBar/active-home.png",
+  inactive: "/src/assets/imgs/bottomTabBar/home.png",
   routeName:'home'
 },{
-  active: "/src/assets/imgs/active-discover.png",
-  inactive: "/src/assets/imgs/discover.png",
+  active: "/src/assets/imgs/bottomTabBar/active-discover.png",
+  inactive: "/src/assets/imgs/bottomTabBar/discover.png",
   routeName:'discover'
 },{
-  active: "/src/assets/imgs/active-add.png",
-  inactive: "/src/assets/imgs/add.png",
+  active: "/src/assets/imgs/bottomTabBar/active-add.png",
+  inactive: "/src/assets/imgs/bottomTabBar/add.png",
   routeName:'add'
 },{
-  active: "/src/assets/imgs/active-hot.png",
-  inactive: "/src/assets/imgs/hot.png",
+  active: "/src/assets/imgs/bottomTabBar/active-hot.png",
+  inactive: "/src/assets/imgs/bottomTabBar/hot.png",
   routeName:'hot'
 },{
-  active: "/src/assets/imgs/active-center.png",
-  inactive: "/src/assets/imgs/center.png",
+  active: "/src/assets/imgs/bottomTabBar/active-center.png",
+  inactive: "/src/assets/imgs/bottomTabBar/center.png",
   routeName:'center'
 }];
 </script>
