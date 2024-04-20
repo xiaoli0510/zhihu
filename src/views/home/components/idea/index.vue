@@ -1,48 +1,13 @@
 <script setup>
 import { ref } from "vue";
-import {useRouter,RouterLink} from 'vue-router';
-import img1 from "@/assets/imgs/1.jpg";
-import img2 from "@/assets/imgs/2.jpg";
+import { RouterLink } from "vue-router";
 import triangle from "@/assets/imgs/sync.png";
+import {fetchIdeaList} from '@/api/index.js';
+let list = ref([]);
 
-const list = ref([
-  {
-    title: "标题",
-    src: img1,
-    id: 1,
-    author: "a",
-    authorImg: img2,
-    like: 111,
-    label: ["a", "b"],
-  },
-  {
-    title: "标题2",
-    src: img2,
-    id: 1,
-    author: "a",
-    authorImg: img1,
-    like: 111,
-    label: ["a", "b"],
-  },
-  {
-    title: "标题",
-    src: img1,
-    id: 1,
-    author: "a",
-    authorImg: img2,
-    like: 111,
-    label: ["a", "b"],
-  },
-  {
-    title: "标题2",
-    src: img2,
-    id: 1,
-    author: "a",
-    authorImg: img1,
-    like: 111,
-    label: ["a", "b"],
-  },
-]);
+let res = await fetchIdeaList();
+list.value=res.data.list;
+console.log(list.value);
 
 const loading = ref(false);
 const finished = ref(false);
@@ -56,15 +21,15 @@ const onLoad = () => {
     }
 
     for (let i = 0; i < 10; i++) {
-      list.value.push({
-        title: "标题",
-        src: img1,
-        id: 1,
-        author: "a",
-        authorImg: img2,
-        like: 111,
-        label: ["a", "b"],
-      });
+      // list.value.push({
+      //   title: "标题",
+      //   src: img1,
+      //   id: 1,
+      //   author: "a",
+      //   avatar: img2,
+      //   like: 111,
+      //   label: ["a", "b"],
+      // });
     }
     loading.value = false;
 
@@ -85,124 +50,77 @@ const onRefresh = () => {
 };
 </script>
 <template>
-  <!-- <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+  <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
     <van-list
       v-model:loading="loading"
       :finished="finished"
-      finished-text="没有更多了"
+      finished-text="想法已更新"
       @load="onLoad"
     >
-      <van-cell> -->
-      <!-- <van-cell-group> -->
+      <van-cell>
         <van-row justify="space-around" class="item-wrap">
           <van-col span="10" v-for="item in list" class="item">
             <router-link to="/idea">
-            <van-image fit="contain" :src="item.src" />
-            <!-- 标题 -->
-            <van-row class="detail">
-              <van-col span="24" class="title">{{ item.title }}</van-col>
-            </van-row>
-            <!-- 作者+点赞 -->
-            <van-row justify="space-between" class="detail">
-              <van-col span="12">
-                <van-row justify="start" align="bottom">
-                  <van-col span="3"
-                    ><van-image
-                      fit="cover"
-                      width=".5rem"
-                      height=".5rem"
-                      round
-                      :src="item.authorImg"
-                  /></van-col>
-                  <van-col span="8"
-                    ><van-text-ellipsis
-                      :content="item.author"
-                    ></van-text-ellipsis
-                  ></van-col>
-                </van-row>
-              </van-col>
-              <van-col span="12">
-                <van-row justify="end" align="bottom">
-                  <van-col span="3"
-                    ><van-image
-                      fit="contain"
-                      width=".5rem"
-                      round
-                      :src="triangle"
-                  /></van-col>
-                  <van-col offset="2" span="8">{{ item.like }}</van-col>
-                </van-row>
-              </van-col>
-            </van-row>
-            <!-- 标签 -->
-            <van-row justify="start" gutter="10" class="detail">
-              <van-col v-for="tag in item.label">
-                <van-tag size="large" color="#7c7979" plain># {{ tag }}</van-tag>
-              </van-col>
-            </van-row>
-          </router-link>
-          </van-col>
-          <van-col span="10" v-for="item in list" class="item">
-            <router-link to="/idea">
-            <van-image fit="contain" :src="item.src" />
-            <!-- 标题 -->
-            <van-row class="detail">
-              <van-col span="24" class="title">{{ item.title }}</van-col>
-            </van-row>
-            <!-- 作者+点赞 -->
-            <van-row justify="space-between" class="detail">
-              <van-col span="12">
-                <van-row justify="start" align="bottom">
-                  <van-col span="3"
-                    ><van-image
-                      fit="cover"
-                      width=".5rem"
-                      height=".5rem"
-                      round
-                      :src="item.authorImg"
-                  /></van-col>
-                  <van-col span="8"
-                    ><van-text-ellipsis
-                      :content="item.author"
-                    ></van-text-ellipsis
-                  ></van-col>
-                </van-row>
-              </van-col>
-              <van-col span="12">
-                <van-row justify="end" align="bottom">
-                  <van-col span="3"
-                    ><van-image
-                      fit="contain"
-                      width=".5rem"
-                      round
-                      :src="triangle"
-                  /></van-col>
-                  <van-col offset="2" span="8">{{ item.like }}</van-col>
-                </van-row>
-              </van-col>
-            </van-row>
-            <!-- 标签 -->
-            <van-row justify="start" gutter="10" class="detail">
-              <van-col v-for="tag in item.label">
-                <van-tag size="large" color="#7c7979" plain># {{ tag }}</van-tag>
-              </van-col>
-            </van-row>
-          </router-link>
+              <van-image width="100%" fit="fill" :src="item.src" />
+              <!-- 标题 -->
+              <van-row class="detail">
+                <van-col span="24" class="title">{{ item.title }}</van-col>
+              </van-row>
+              <!-- 作者+点赞 -->
+              <van-row justify="space-between" class="detail">
+                <van-col span="12">
+                  <van-row justify="start" align="bottom">
+                    <van-col span="3"
+                      ><van-image
+                        fit="cover"
+                        width=".5rem"
+                        height=".5rem"
+                        round
+                        :src="item.avatar"
+                    /></van-col>
+                    <van-col span="8" offset="5"
+                      ><van-text-ellipsis
+                        :content="item.author"
+                      ></van-text-ellipsis
+                    ></van-col>
+                  </van-row>
+                </van-col>
+                <van-col span="12">
+                  <van-row justify="end" align="bottom">
+                    <van-col span="3"
+                      ><van-image
+                        fit="contain"
+                        width=".5rem"
+                        round
+                        :src="triangle"
+                    /></van-col>
+                    <van-col offset="2" span="8">{{ item.like }}</van-col>
+                  </van-row>
+                </van-col>
+              </van-row>
+              <!-- 标签 -->
+              <van-row justify="start" gutter="10" class="detail">
+                <van-col v-for="tag in item.label">
+                  <van-tag size="large" color="#7c7979" plain
+                    ># {{ tag }}</van-tag
+                  >
+                </van-col>
+              </van-row>
+            </router-link>
           </van-col>
         </van-row>
-      <!-- </van-cell-group> -->
-      <!-- </van-cell>
+      </van-cell>
     </van-list>
-  </van-pull-refresh> -->
+  </van-pull-refresh>
 </template>
 <style scoped lang="scss">
-.item-wrap{
+.item-wrap {
   align-items: flex-start;
 }
 .item {
   background: #fff;
   border-radius: 0.1rem;
-  padding-bottom: .2rem;
+  padding-bottom: 0.2rem;
   margin-bottom: 3%;
   border: 1px solid #7c7979;
   box-shadow: #000;

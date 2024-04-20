@@ -1,11 +1,14 @@
-<script setup lang='ts'>
-import {RouterView} from 'vue-router';
-import IdeaItem from './components/idea/index.vue'
+<script setup lang="ts">
+import { defineAsyncComponent } from "vue";
+const IdeaItem = defineAsyncComponent(
+  () => import("./components/idea/index.vue")
+);
 </script>
 <template>
-    
-    <IdeaItem/>
-    <!-- <RouterView/> -->
+  <Suspense>
+    <template #default>
+        <IdeaItem />
+    </template>
+  </Suspense>
 </template>
-<style scoped lang='scss'>
-</style>
+<style scoped lang="scss"></style>

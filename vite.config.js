@@ -7,6 +7,7 @@ import postcssPxtorem from 'postcss-pxtorem'
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { VantResolver } from '@vant/auto-import-resolver';
+import {viteMockServe }  from 'vite-plugin-mock';
 
 
 
@@ -37,6 +38,10 @@ export default defineConfig({
       resolvers: [VantResolver()],
     }),
     vueJsx(),
+    viteMockServe({
+      // default
+      mockPath: 'src/mock',
+    }),
   ],
   resolve: {
     alias: {
