@@ -12,5 +12,7 @@ import BottomTabBar from './components/BottomTabBar/index.vue'
 </template>
 
 <style scoped>
-
+.container{
+  background:#e9e8e8;
+}
 </style>
