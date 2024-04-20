@@ -12,7 +12,7 @@ const tabArray = ref([
 <template>
   <van-tabs v-model:active="activeName">
     <van-tab v-for="item in tabArray" :title="item.title" :name="item.value"
-      >{{ item.title }}
+      >
       <Idea />
     </van-tab>
   </van-tabs>
