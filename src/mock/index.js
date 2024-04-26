@@ -1,33 +1,39 @@
 import Mock from "mockjs";
 
 //想法页列表
-const ideaList = Mock.mock({
+Mock.mock("/api/idea", "get", {
   "list|10": [
     {
       id: "@increment",
       avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
-      title: "标题",
+      title: "@sentence(5)",
       src: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
       author: "@cname",
-      like: "number1|1-100",
-      label: ["a", "b"],
+      like:"@integer(1, 100)",
+      "label|1-2": ["@word(2,5)"],
     },
-  ],
+  ], 
 });
 
-Mock.mock("/api/user", "get", {
+//想法详情页
+Mock.mock("/api/idea/id", "get", {
   status: 200, //请求成功状态码
   "list|10": [
     {
       id: "@increment",
       avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
-      title: "标题",
-      src: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+      title: "标题1",
+      cup: ["https://randomuser.me/api/portraits/men/@integer(0,99).jpg"],
       author: "@cname",
+      career: "@cname",
+      depict: "@cname",
       like: Mock.Random.integer(1, 100),
       label: ["a", "b"],
+      imgs: [
+        "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+        "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+        "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+      ],
     },
-  ], //模拟的请
+  ], 
 });
-
-// export {ideaList};

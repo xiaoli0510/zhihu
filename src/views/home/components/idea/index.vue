@@ -6,6 +6,7 @@ import {fetchIdeaList} from '@/api/index.js';
 let list = ref([]);
 
 let res = await fetchIdeaList();
+console.log(res);
 list.value=res.data.list;
 console.log(list.value);
 

@@ -7,6 +7,7 @@ import BottomTabBar from '@/components/BottomTabBar/index.vue'
     
 </script>
 <template>
+
     <Header/>
     <BottomTabBar/>
     
