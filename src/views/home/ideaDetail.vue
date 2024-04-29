@@ -2,12 +2,16 @@
 import { ref } from "vue";
 const value2 = ref("");
 import shareIcon from "@/assets/imgs/share.png";
+import triangle from "@/assets/imgs/sync.png";
+import like from "@/assets/imgs/like.png";
+import comment from "@/assets/imgs/comment.png";
 import { fetchIdeaDetail } from "@/api/index";
 
 let list = ref([]);
 
 let res = await fetchIdeaDetail();
 list.value = res.data.list;
+console.log(list.value);
 
 const handlePreviewImg = () => {
   showImagePreview(["https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"]);
@@ -31,70 +35,98 @@ const handlePreviewImg = () => {
               /> </van-cell-group
           ></van-col>
         </van-row>
-        <div class="item"  v-for="item in list">
-        <!-- 关注分享 -->
-        <div class="author">
-          <van-row align="center">
-            <van-col span="3"
-              ><van-image
-                round
-                width="1rem"
-                height="1rem"
-                :src="item.avatar"
-            /></van-col>
-            <van-col span="13">
-              <van-row>
-                <van-col span="24">
-                  <van-row>
-                    <van-col span="2">{{item.author}}</van-col>
-                    <van-col span="21" offset="1"
-                      ><van-image
-                        offset="1"
-                        round
-                        width=".5rem"
-                        height=".5rem"
-                        src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
-                    /></van-col> </van-row
-                ></van-col>
-                <van-col span="24"
-                  ><van-text-ellipsis content="是演员" class="career"
-                /></van-col>
-              </van-row>
-            </van-col>
-            <van-col offset="1" span="4">
-              <van-button size="small" plain round icon="plus" type="primary"
-                >关注</van-button
+        <div class="item" v-for="item in list">
+          <!-- 关注分享 -->
+          <div class="author">
+            <van-row align="center">
+              <van-col span="3"
+                ><van-image round width="1rem" height="1rem" :src="item.avatar"
+              /></van-col>
+              <van-col span="13">
+                <van-row>
+                  <van-col span="24">
+                    <van-row>
+                      <van-col span="4">{{ item.author }}</van-col>
+                      <van-col span="19" offset="1"
+                        ><van-icon name="gem"
+                      /></van-col> </van-row
+                  ></van-col>
+                  <van-col span="24"
+                    ><van-text-ellipsis :content="item.career" class="career"
+                  /></van-col>
+                </van-row>
+              </van-col>
+              <van-col offset="1" span="4">
+                <van-button size="small" plain round icon="plus" type="primary"
+                  >关注</van-button
+                >
+              </van-col>
+              <van-col span="3">
+                <van-icon :name="shareIcon" size=".7rem" />
+              </van-col>
+            </van-row>
+          </div>
+          <!-- 描述 -->
+          <van-row>
+            <van-col span="24"
+              ><h2>{{ item.title }}</h2></van-col
+            >
+            <van-col span="24" class="txt-wrap">
+              <span class="depict-txt">{{ item.detail }}</span>
+              <span class="label-txt" v-for="word in item.label"
+                ># {{ word }}</span
               >
             </van-col>
-            <van-col span="3">
-              <van-icon :name="shareIcon" size=".7rem" />
+            <van-col span="24"
+              ><van-image
+                v-for="img in item.imgList"
+                @click="handlePreviewImg"
+                width="50%"
+                :src="img"
+            /></van-col>
+            <!-- 时间 地点 -->
+            <van-col span="24">
+              <van-row class="time-place" align="center">
+                <van-col span="7">{{ item.createTime }}</van-col>
+                <van-col span="17">·{{ item.province.slice(0, -1) }}</van-col>
+              </van-row>
+            </van-col>
+            <!-- tool -->
+            <van-col span="24">
+              <van-row class="tool" align="center">
+                <van-col span="10">
+                  <van-row align="center">
+                    <van-col span="5">
+                      <van-image
+                        round
+                        width=".6rem"
+                        height=".6rem"
+                        :src="item.avatar"
+                    /></van-col>
+                    <van-col span="7" offset="1">{{ item.author }}</van-col>
+                    <van-col span="9" offset="1">+ 关注</van-col>
+                  </van-row>
+                </van-col>
+                <van-col span="14">
+                  <van-row align="center">
+                    <van-col span="5">
+                      <van-icon :name="triangle" badge="9" size=".6rem" />
+                    </van-col>
+                    <van-col span="5" offset="1">
+                      <van-icon :name="like" badge="9" size=".6rem" />
+                    </van-col>
+                    <van-col span="5" offset="1">
+                      <van-icon :name="comment" badge="9" size=".6rem" />
+                    </van-col>
+                    <van-col span="5" offset="1">
+                      <van-icon :name="comment" badge="9" size=".6rem" />
+                    </van-col>
+                  </van-row>
+                </van-col>
+              </van-row>
             </van-col>
           </van-row>
         </div>
-        <!-- 描述 -->
-        <van-row>
-          <van-col span="24"><h2>标题</h2></van-col>
-          <van-col span="24" class="txt-wrap">
-            <span class="depict-txt"
-              >222222222222223333333333333333333333333333555555555555</span
-            >
-            <span class="label-txt"># 123</span>
-          </van-col>
-          <van-col span="24"
-            ><van-image
-              @click="handlePreviewImg"
-              width="50%"
-              src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
-          /></van-col>
-          <!-- 时间 地点 -->
-          <van-col span="24">
-            <van-row class="time-place" align="center">
-              <van-col span="7">2024-04-16 14:33</van-col>
-              <van-col span="2">·辽宁</van-col>
-            </van-row>
-          </van-col>
-        </van-row>
-      </div>
       </div>
     </template>
   </Suspense>
