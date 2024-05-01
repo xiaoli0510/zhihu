@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
-import triangle from "@/assets/imgs/sync.png";
+import triangle from "@/assets/imgs/upvote.png";
 import {fetchIdeaList} from '@/api/index.js';
 let list = ref([]);
 
@@ -60,7 +60,7 @@ const onRefresh = () => {
     >
       <van-cell>
         <van-row justify="space-around" class="item-wrap">
-          <van-col span="10" v-for="item in list" class="item">
+          <van-col span="11" v-for="item in list" class="item">
             <router-link to="/idea">
               <van-image width="100%" fit="fill" :src="item.src" />
               <!-- 标题 -->
@@ -70,7 +70,7 @@ const onRefresh = () => {
               <!-- 作者+点赞 -->
               <van-row justify="space-between" class="detail">
                 <van-col span="12">
-                  <van-row justify="start" align="bottom">
+                  <van-row justify="start" align="center">
                     <van-col span="3"
                       ><van-image
                         fit="cover"
@@ -87,7 +87,7 @@ const onRefresh = () => {
                   </van-row>
                 </van-col>
                 <van-col span="12">
-                  <van-row justify="end" align="bottom">
+                  <van-row justify="end" align="center">
                     <van-col span="3"
                       ><van-image
                         fit="contain"

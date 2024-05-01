@@ -5,6 +5,7 @@ import AddView from "../views/add/index.vue";
 import HotView from "../views/hot/index.vue";
 import CenterView from "../views/center/index.vue";
 import IdeaDetail from "../views/home/ideaDetail.vue";
+import Profile from "../views/home/profile.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,11 @@ const router = createRouter({
       path: "/idea",
       name: "idea",
       component: IdeaDetail,
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      component: Profile,
     },
   ],
 });
