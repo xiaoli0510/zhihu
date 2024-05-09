@@ -7,8 +7,8 @@ import dot from "@/assets/imgs/dot.png";
 import Upvote from "@/components/upvote.vue";
 import Collect from "@/components/collect.vue";
 
-const props = defineProps(["item"]);
-let item = props.item;
+const props = defineProps(["item","index"]);
+let {item,index} = props;
 
 
 const handlePreviewImg = () => {
@@ -75,7 +75,7 @@ const handlePreviewImg = () => {
     <van-col span="24" class="tool">
       <van-row class="tool" align="center">
         <van-col span="10" class="tool-left">
-          <van-row align="center">
+          <van-row align="center" v-if="index==0">
             <van-col span="5">
               <van-image
                 round
@@ -87,6 +87,7 @@ const handlePreviewImg = () => {
             <van-col span="7" offset="1">{{ item.author }}</van-col>
             <van-col span="9" offset="1" class="tool-concern">+ 关注</van-col>
           </van-row>
+          <div class="discuss" v-else>欢迎参与讨论</div>
         </van-col>
         <van-col span="14">
           <van-row align="center" justify="end">
@@ -139,6 +140,15 @@ const handlePreviewImg = () => {
     background: rgba(0, 0, 0, 0.07);
     border-radius: 0.5rem;
     height: 0.8rem;
+    .discuss{
+      width:100%;
+      line-height:.8rem;
+      border-radius: .2rem;
+      color:#ccc;
+      text-align: left;
+      padding-left:10%;
+      font-size:.3rem;
+    }
     .tool-concern {
       font-size: 0.34rem;
       color: #1989fa;

@@ -48,7 +48,7 @@ const addCollect = (index) => {
           ></van-col>
         </van-row>
         <div class="item" v-for="(item, index) in list" :key="index">
-          <Detail :item="item" />
+          <Detail :item="item" :index="index"/>
         </div>
       </div>
     </template>
