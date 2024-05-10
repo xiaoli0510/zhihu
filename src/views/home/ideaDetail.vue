@@ -32,7 +32,7 @@ const addCollect = (index) => {
 <template>
   <Suspense>
     <template #default>
-      <div class="idea-detail">
+        <div class="idea-detail">
         <!-- 搜索 -->
         <van-row align="center" class="search-wrap">
           <van-col span="1"><van-icon name="arrow-left" /></van-col>

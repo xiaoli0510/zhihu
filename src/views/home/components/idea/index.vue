@@ -51,7 +51,7 @@ const onRefresh = () => {
 };
 </script>
 <template>
-  <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+  <van-pull-refresh v-model="refreshing" @refresh="onRefresh" class="list">
     <van-list
       v-model:loading="loading"
       :finished="finished"
@@ -115,6 +115,9 @@ const onRefresh = () => {
   </van-pull-refresh>
 </template>
 <style scoped lang="scss">
+.list{
+  margin-top:44px;
+}
 .item-wrap {
   align-items: flex-start;
 }
@@ -130,7 +133,7 @@ const onRefresh = () => {
   .detail {
     font-size: 0.3rem;
     color: #7c7979;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     .title {
       font-size: 0.3rem;
