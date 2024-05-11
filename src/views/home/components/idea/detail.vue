@@ -1,26 +1,30 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import shareIcon from "@/assets/imgs/share.png";
-
 import comment from "@/assets/imgs/comment.png";
 import dot from "@/assets/imgs/dot.png";
 import Upvote from "@/components/upvote.vue";
 import Collect from "@/components/collect.vue";
-
+import { useRouter } from "vue-router";
 const props = defineProps(["item"]);
 let item = props.item;
-
-
+console.log(item);
 const handlePreviewImg = () => {
   showImagePreview(["https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"]);
 };
-
-
+const router = useRouter();
+const enterProfile = (id)=>{
+ router.push({
+   name:'profile',
+   query:{
+    id
+   }
+ })
+}
 </script>
 <template>
   <!-- 关注分享 -->
   <div class="author">
-    <van-row align="center">
+    <van-row align="center" @click="enterProfile(item.id)">
       <van-col span="3"
         ><van-image round width="1rem" height="1rem" :src="item.avatar"
       /></van-col>
@@ -38,12 +42,12 @@ const handlePreviewImg = () => {
           /></van-col>
         </van-row>
       </van-col>
-      <van-col offset="1" span="4">
+      <van-col offset="1" span="5">
         <van-button size="small" plain round icon="plus" type="primary"
           >关注</van-button
         >
       </van-col>
-      <van-col span="2" offset="1">
+      <van-col span="2">
         <van-icon :name="shareIcon" size=".7rem" />
       </van-col>
     </van-row>
@@ -84,7 +88,7 @@ const handlePreviewImg = () => {
                 height=".8rem"
                 :src="item.avatar"
             /></van-col>
-            <van-col span="7" offset="1">{{ item.author }}</van-col>
+            <van-col span="8" offset="1">{{ item.author }}</van-col>
             <van-col span="9" offset="1" class="tool-concern">+ 关注</van-col>
           </van-row>
         </van-col>

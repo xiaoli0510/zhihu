@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import upvote from "@/assets/imgs/upvote.png";
-import activeUpvote from "@/assets/imgs/active-upvote.png";
+import comment from "@/assets/imgs/comment.png";
 
 const props = defineProps(["item"]);
 let item = props.item;
@@ -12,27 +11,14 @@ const addUpVote = (item) => {
   item.upvote++;
   upvoteRef.value = !upvoteRef.value;
 };
-const cancelUpVote = (item) => {
-  item.upvote--;
-  upvoteRef.value = !upvoteRef.value;
-};
-
-
 </script>
 <template>
   <van-icon
     v-if="!upvoteRef"
-    :name="upvote"
-    :badge="item.upvote"
+    :name="comment"
+    :badge="item.comment"
     size=".6rem"
     @click="addUpVote(item)"
-  />
-  <van-icon
-    v-else
-    :name="activeUpvote"
-    :badge="item.upvote"
-    size=".6rem"
-    @click="cancelUpVote(item)"
   />
 </template>
 <style scoped lang="scss"></style>
