@@ -4,7 +4,6 @@ import comment from "@/assets/imgs/comment.png";
 
 const props = defineProps(["item"]);
 let item = props.item;
-console.log('1111',item);
 let upvoteRef = ref(false);
 
 const addUpVote = (item) => {

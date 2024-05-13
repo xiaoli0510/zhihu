@@ -4,25 +4,30 @@ import personal from "@/assets/imgs/personal.jpg";
 import Upvote from "@/components/upvote.vue";
 import Collect from "@/components/collect.vue";
 import Comment from "@/components/comment.vue";
-const item = {
-    upvote: 112,
-    collect: 112,
-    comment:12,
-}
+const {item} = defineProps(["item"])
+// {
+//     name:'宝宝',
+//     time:'2024-05-13 07:00',
+//     title:'这是一句话标题',
+//     sentence:'这是一段话',
+//     upvote: 112,
+//     collect: 112,
+//     comment:12,
+// }
 </script>
 <template>
     <div class="item">
         <div class="top">
             <van-image round width="1.5rem" height="1.5rem" :src="personal" />
             <div class="right">
-                <div>名字 <van-icon name="gem" /></div>
-                <div class="time">昨天 07:00 回答了问题</div>
+                <div>{{ item.name }} <van-icon name="gem" /></div>
+                <div class="time">{{ item.time }} 回答了问题</div>
 
             </div>
         </div>
         <div class="middle">
-            <h3>这是一句话标题</h3>
-            <p class="sentence">这是一段话</p>
+            <h3>{{ item.title }}</h3>
+            <p class="sentence">{{ item.sentence }}</p>
         </div>
         <div class="footer">
             <van-row>

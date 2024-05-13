@@ -4,8 +4,15 @@ const value2 = ref("");
 import Detail from "./components/idea/detail.vue";
 import { fetchIdeaDetail } from "@/api/index";
 let list = ref([]);
-let res = await fetchIdeaDetail();
-list.value = res.data.list;
+
+const initData=()=>{
+  fetchIdeaDetail()
+  .then(res=>{
+    list.value = res.data.list;
+  });
+};
+initData();
+
 </script>
 <template>
   <Suspense>

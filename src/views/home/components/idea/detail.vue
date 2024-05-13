@@ -5,9 +5,7 @@ import dot from "@/assets/imgs/dot.png";
 import Upvote from "@/components/upvote.vue";
 import Collect from "@/components/collect.vue";
 import { useRouter } from "vue-router";
-const props = defineProps(["item"]);
-let item = props.item;
-console.log(item);
+const {item} = defineProps(["item"]);
 const handlePreviewImg = () => {
   showImagePreview(["https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"]);
 };

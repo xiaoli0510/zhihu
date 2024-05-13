@@ -7,3 +7,7 @@ export async function fetchIdeaList(){
 export async function fetchIdeaDetail(){
     return await service.get('/api/idea/id');
 }
+//想法个人主页
+export async function fetchProfile(){
+    return await service.get('/api/profile/id');
+}
