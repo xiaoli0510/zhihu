@@ -8,33 +8,47 @@ import Invent from "@/views/home/components/idea/invent.vue";
 import { fetchProfile } from '@/api/index.js'
 // const obj = ref(null);
 const obj = ref({
-  id:1,
-  imgBg:personal,//top img
-  location:'贵州',//ip
-  author:'宝宝',//姓名
-  gender:'male',//性别
-  sign:'安然入眠',//签名
-  support:1,//获赞
-  beFollow:2,//被关注
-  follow:3,//关注
-  like:4,//喜欢
-  collect:5,//喜欢
-  badge:{//徽章
-   develop:['diamond'],
-   particular:['level11','level22'],
-  },
-  product:[//创造
-   {
-      name:'宝宝',
-    time:'2024-05-13 07:00',
-    title:'这是一句话标题',
-    sentence:'这是一段话',
-    upvote: 112,
-    collect: 112,
-    comment:12,
-   }
-  ]
+   id: 1,
+   imgBg: personal,//top img
+   location: '贵州',//ip
+   author: '宝宝',//姓名
+   gender: 'male',//性别
+   sign: '安然入眠',//签名
+   support: 1,//获赞
+   beFollow: 2,//被关注
+   follow: 3,//关注
+   like: 4,//喜欢
+   collect: 5,//喜欢
+   badge: {//徽章
+      develop: ['diamond'],
+      particular: ['level11', 'level22'],
+   },
+   product: [//创造
+      {
+         name: '宝宝',
+         time: '2024-05-13 07:00',
+         title: '这是一句话标题',
+         sentence: '这是一段话',
+         upvote: 112,
+         collect: 112,
+         comment: 12,
+      }
+   ]
 });
+
+const productLabelArr = ref([{
+   name: "全部",
+   num: 53,
+},
+{
+   name: "回答",
+   num: 53,
+},
+{
+   name: "视频",
+   num: 53,
+}
+])
 
 const initData = () => {
    fetchProfile().then(res => {
@@ -116,6 +130,12 @@ initData();
       </div>
       <van-tabs v-model:active="activeName" class="tab-wrap">
          <van-tab title="创造" name="product">
+            <div class="label">
+               <div class="item" v-for="(item1, index1) in productLabelArr" :key="index1">
+                  {{ item1.name }}
+                  {{ item1.num }}
+               </div>
+            </div>
             <Invent v-for="(item, index) in obj.product" :key="index" :item="item" />
          </van-tab>
          <van-tab title="动态" name="trend">内容 2</van-tab>
@@ -170,10 +190,10 @@ initData();
                position: absolute;
                bottom: 4%;
                right: 10%;
-               background:#d4deec;
+               background: #d4deec;
                border-radius: 50%;
-               border:2px solid #fff;
-               padding:2%;
+               border: 2px solid #fff;
+               padding: 2%;
 
             }
          }
