@@ -58,8 +58,8 @@ Mock.mock("/api/profile/id", "get", {
   body: {
     id: "@increment",
     imgBg: profileBg, //top img
-    "aa": "@province()", //ip
-    "author": "@cname", //姓名
+    aa: "@province()", //ip
+    author: "@cname", //姓名
     "gender|1": ["male", "female"], //性别
     sign: "@word(1,10)", //签名
     support: "@integer(1,100)", //获赞
@@ -75,18 +75,19 @@ Mock.mock("/api/profile/id", "get", {
     "product|10": [
       //创造
       {
+        type:1,
         name: "@cname",
         time: "@datetime('yyyy-MM-dd')",
         title: "@ctitle(1,10)",
         sentence: "@cparagraph(1,10)",
-        upvote: "@integer(1,100)",
-        collect: "@integer(1,100)",
-        comment: "@integer(1,100)",
-        "imgList|10":[
+        upvote: "@integer(0,100)",
+        collect: "@integer(0,100)",
+        comment: "@integer(0,100)",
+        "imgList|10": [
           {
-            img: "@image('200x200','#fff','#000','png','@cname')",
+            img: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
           },
-]
+        ],
       },
     ],
   },

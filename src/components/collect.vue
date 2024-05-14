@@ -18,7 +18,19 @@ const cancelCollect = (item) => {
 
 </script>
 <template>
-   <van-icon :name="like" v-if="!collectRef" :badge="item.collect" size=".6rem" @click="addCollect(item)"/>
-              <van-icon :name="activeLike" v-else :badge="item.collect" size=".6rem" @click="cancelCollect(item)"/>
+  <span v-show="!collectRef" class="item">
+    <van-icon :name="like" v-show="item.collect > 0" :badge="item.collect" size=".6rem" @click="addCollect(item)" />
+    <van-icon :name="like" v-show="item.collect == 0" size=".6rem" @click="addCollect(item)" />
+    <span v-show="item.collect == 0" class="txt">收藏</span>
+  </span>
+  <van-icon :name="activeLike" v-show="collectRef" :badge="item.collect" size=".6rem" @click="cancelCollect(item)" />
 </template>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.item {
+  margin: 0 1%;
+
+  .txt {
+    vertical-align: top;
+  }
+}
+</style>

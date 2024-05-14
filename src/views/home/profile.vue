@@ -3,10 +3,11 @@ import { ref } from 'vue';
 import personal from "@/assets/imgs/personal.jpg";
 import male from "@/assets/imgs/male.png";
 import feMale from "@/assets/imgs/female.png";
-const activeName = ref('product');
+const activeName = ref('trend');
 import Invent from "@/views/home/components/idea/invent.vue";
+import FollowMatter from '@/views/home/components/idea/followMatter.vue';
+import FollowUser from '@/views/home/components/idea/followUser.vue';
 import { fetchProfile } from '@/api/index.js'
-// const obj = ref(null);
 const obj = ref({
    id: 1,
    imgBg: personal,//top img
@@ -75,9 +76,9 @@ const actions = [
 ];
 const selectMore = (action) => showToast(action.text);
 
-//创造 选择labels
-const activeLabelIndex = 0;
-const selectLabel=(index)=>{
+//创造 选择label
+const activeLabelIndex = ref(0);
+const selectLabel = (index) => {
    activeLabelIndex.value = index;
 }
 
@@ -91,7 +92,7 @@ const selectLabel=(index)=>{
          </van-col>
          <van-col span="4">
             <van-icon name="search" color="#fff" size="20px" />
-            <van-popover :actions="actions" @select="selectMore" :offset="[-30,0]" :show-arrow="false">
+            <van-popover :actions="actions" @select="selectMore" :offset="[-30, 0]" :show-arrow="false">
                <template #reference>
                   <van-icon name="ellipsis" color="#fff" class="ellipsis" size="20px" />
                </template>
@@ -159,14 +160,18 @@ const selectLabel=(index)=>{
       <van-tabs v-model:active="activeName" class="tab-wrap">
          <van-tab title="创造" name="product">
             <div class="label-wrap">
-               <div class="label" :class="{'active':activeLabelIndex===index1}" v-for="(item1, index1) in productLabelArr" :key="index1" @click="selectLabel(event)">
+               <div class="label" :class="{ 'active': activeLabelIndex === index1 }"
+                  v-for="(item1, index1) in productLabelArr" :key="index1" @click="selectLabel(index1)">
                   {{ item1.name }}
                   {{ item1.num }}
                </div>
             </div>
             <Invent v-for="(item, index) in obj.product" :key="index" :item="item" />
          </van-tab>
-         <van-tab title="动态" name="trend">内容 2</van-tab>
+         <van-tab title="动态" name="trend">
+            <FollowMatter />
+            <FollowUser/>
+         </van-tab>
          <van-tab title="赞同" name="approve">内容 3</van-tab>
       </van-tabs>
    </div>
@@ -288,7 +293,7 @@ const selectLabel=(index)=>{
          overflow-x: auto;
          padding: 2% 0 4% 0;
 
-         .label {  
+         .label {
             background: #f0efef;
             border-radius: 17px;
             padding: 0 14px;
