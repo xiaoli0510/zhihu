@@ -47,6 +47,14 @@ const productLabelArr = ref([{
 {
    name: "视频",
    num: 53,
+},
+{
+   name: "回答",
+   num: 53,
+},
+{
+   name: "视频",
+   num: 53,
 }
 ])
 
@@ -58,6 +66,21 @@ const initData = () => {
    })
 }
 initData();
+
+// 右上角...
+const actions = [
+   { text: '分享' },
+   { text: '加入黑名单' },
+   { text: '举报用户' },
+];
+const selectMore = (action) => showToast(action.text);
+
+//创造 选择labels
+const activeLabelIndex = 0;
+const selectLabel=(index)=>{
+   activeLabelIndex.value = index;
+}
+
 </script>
 <template>
    <!-- <div class="header" :style="{backgroundImage:`url(${obj.imgBg})`}"> -->
@@ -68,7 +91,12 @@ initData();
          </van-col>
          <van-col span="4">
             <van-icon name="search" color="#fff" size="20px" />
-            <van-icon name="ellipsis" color="#fff" class="ellipsis" size="20px" />
+            <van-popover :actions="actions" @select="selectMore" :offset="[-30,0]" :show-arrow="false">
+               <template #reference>
+                  <van-icon name="ellipsis" color="#fff" class="ellipsis" size="20px" />
+               </template>
+            </van-popover>
+
          </van-col>
       </van-row>
       <div class="ip"><van-icon name="location-o" color="#fff" />IP属地{{ obj.id }}</div>
@@ -130,8 +158,8 @@ initData();
       </div>
       <van-tabs v-model:active="activeName" class="tab-wrap">
          <van-tab title="创造" name="product">
-            <div class="label">
-               <div class="item" v-for="(item1, index1) in productLabelArr" :key="index1">
+            <div class="label-wrap">
+               <div class="label" :class="{'active':activeLabelIndex===index1}" v-for="(item1, index1) in productLabelArr" :key="index1" @click="selectLabel(event)">
                   {{ item1.name }}
                   {{ item1.num }}
                </div>
@@ -252,6 +280,29 @@ initData();
 
    .tab-wrap {
       margin-top: 2%;
+
+      .label-wrap {
+         background-color: #fff;
+         display: flex;
+         flex-direction: row;
+         overflow-x: auto;
+         padding: 2% 0 4% 0;
+
+         .label {  
+            background: #f0efef;
+            border-radius: 17px;
+            padding: 0 14px;
+            line-height: 30px;
+            white-space: nowrap;
+            margin: 0 2%;
+            color: #726f6f;
+
+            &.active {
+               color: #000;
+               font-weight: 700;
+            }
+         }
+      }
    }
 
 

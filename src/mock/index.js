@@ -82,6 +82,11 @@ Mock.mock("/api/profile/id", "get", {
         upvote: "@integer(1,100)",
         collect: "@integer(1,100)",
         comment: "@integer(1,100)",
+        "imgList|10":[
+          {
+            img: "@image('200x200','#fff','#000','png','@cname')",
+          },
+]
       },
     ],
   },

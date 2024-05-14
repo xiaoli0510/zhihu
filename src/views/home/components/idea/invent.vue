@@ -28,6 +28,9 @@ const {item} = defineProps(["item"])
         <div class="middle">
             <h3>{{ item.title }}</h3>
             <p class="sentence">{{ item.sentence }}</p>
+            <div class="img-wrap">
+                <img :src="item1.img" alt="" v-for="(item1,index1) in item.imgList" :key="index1">
+            </div>
         </div>
         <div class="footer">
             <van-row>
