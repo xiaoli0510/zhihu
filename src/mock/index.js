@@ -75,7 +75,7 @@ Mock.mock("/api/profile/id", "get", {
     "product|10": [
       //创造
       {
-        type:1,
+        type:1,//1回答了问题 2赞同了回答 3关注了用户 4发布了想法 5关注了问题
         name: "@cname",
         time: "@datetime('yyyy-MM-dd')",
         title: "@ctitle(1,10)",
@@ -83,7 +83,44 @@ Mock.mock("/api/profile/id", "get", {
         upvote: "@integer(0,100)",
         collect: "@integer(0,100)",
         comment: "@integer(0,100)",
-        "imgList|10": [
+        "imgList|0-10": [
+          {
+            img: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+          },
+        ],
+      },
+    ],
+    "favour|10": [
+      //赞同
+      {
+        type:2,
+        name: "@cname",
+        time: "@datetime('yyyy-MM-dd')",
+        title: "@ctitle(1,10)",
+        sentence: "@cparagraph(1,10)",
+        upvote: "@integer(0,100)",
+        collect: "@integer(0,100)",
+        comment: "@integer(0,100)",
+        "imgList|0-10": [
+          {
+            img: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+          },
+        ],
+      },
+    ],
+    "trend|10": [
+      //动态
+      {
+        "type|1":[3,4,5],
+        name: "@cname",
+        time: "@datetime('yyyy-MM-dd')",
+        title: "@ctitle(1,10)",
+        sentence: "@cparagraph(1,10)",
+        upvote: "@integer(0,100)",
+        collect: "@integer(0,100)",
+        comment: "@integer(0,100)",
+        follow: "@integer(0,100)",
+        "imgList|0-10": [
           {
             img: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
           },

@@ -11,7 +11,10 @@
   margin: 0 1%;
 
   .txt {
-    vertical-align: top;
+    vertical-align: text-top;
+    font-size:12px;
+    color:#686767;
+    margin-left:7px;
   }
 }
 </style>

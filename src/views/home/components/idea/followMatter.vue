@@ -5,29 +5,8 @@ import personal from "@/assets/imgs/personal.jpg";
 import Answer from '@/components/answer.vue';
 import Invite from '@/components/invite.vue';
 import Follow from '@/components/follow.vue';
-// const { item } = defineProps(["item"]);
-const showMore = ref(false);
-
-const actions = [
-    { name: '分享', icon: 'share-o' },
-    { name: '关注该作者：', icon: 'manager-o' },
-    { name: '举报', icon: 'warning-o' },
-];
-const showPopupMore = () => {
-    showMore.value = true;
-};
-const onSelect = (item) => {
-    // 默认情况下点击选项时不会自动收起
-    // 可以通过 close-on-click-action 属性开启自动收起
-    showMore.value = false;
-};
-const item = ref({
-    type: 1,//1回答了问题 2关注了用户 3发布了想法 4赞同了回答
-    name: '宝宝',
-    time: '2024-05-13 07:00',
-    title: '这是一句话标题',
-    sentence: '这是一段话'
-})
+import IconMore from '@/views/home/components/idea/iconMore.vue';
+const { item } = defineProps(["item"]);
 </script>
 <template>
     <div class="item">
@@ -50,14 +29,11 @@ const item = ref({
                     <Follow/>
                 </van-col>
                 <van-col span="2" offset="2">
-                    <van-icon name="ellipsis" @click="showPopupMore" />
+                    <IconMore :item="item"/>
                 </van-col>
             </van-row>
         </div>
     </div>
-
-    <!-- 右下角更多弹框 -->
-    <van-action-sheet v-model:show="showMore" :actions="actions" @select="onSelect" />
 </template>
 <style scoped lang='scss'>
 .item {

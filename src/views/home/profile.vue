@@ -5,8 +5,7 @@ import male from "@/assets/imgs/male.png";
 import feMale from "@/assets/imgs/female.png";
 const activeName = ref('trend');
 import Invent from "@/views/home/components/idea/invent.vue";
-import FollowMatter from '@/views/home/components/idea/followMatter.vue';
-import FollowUser from '@/views/home/components/idea/followUser.vue';
+import Trend from '@/views/home/components/idea/trend.vue';
 import { fetchProfile } from '@/api/index.js'
 const obj = ref({
    id: 1,
@@ -34,7 +33,9 @@ const obj = ref({
          collect: 112,
          comment: 12,
       }
-   ]
+   ],
+   favour:[],
+   trend:[],
 });
 
 const productLabelArr = ref([{
@@ -61,12 +62,16 @@ const productLabelArr = ref([{
 
 const initData = () => {
    fetchProfile().then(res => {
-      console.log(res.data.body)
       obj.value = res.data.body;
-      console.log(obj.value);
    })
 }
 initData();
+
+// 更多
+const showDetail = ref(false);
+const showModalDetail = (obj) => {
+   showDetail.value = true;
+}
 
 // 右上角...
 const actions = [
@@ -142,8 +147,8 @@ const selectLabel = (index) => {
             <van-col span="20">
                {{ obj.sign }}
             </van-col>
-            <van-col span="4">
-               更多 <van-icon name="arrow" color="#686666" />
+            <van-col span="4" @click="showModalDetail(obj)">
+               更多 <van-icon name="arrow" color="#686666"/>
             </van-col>
          </van-row>
          <div justify="space-between" class="brief">
@@ -169,12 +174,44 @@ const selectLabel = (index) => {
             <Invent v-for="(item, index) in obj.product" :key="index" :item="item" />
          </van-tab>
          <van-tab title="动态" name="trend">
-            <FollowMatter />
-            <FollowUser/>
+            <Trend :list="obj.trend"/>
          </van-tab>
-         <van-tab title="赞同" name="approve">内容 3</van-tab>
+         <van-tab title="赞同" name="approve">
+            <Invent v-for="(item, index) in obj.favour" :key="index" :item="item" />
+         </van-tab>
       </van-tabs>
    </div>
+
+   <!-- 更多-弹窗 -->
+<van-popup
+closeable
+  v-model:show="showDetail"
+  round
+  position="bottom"
+  :style="{ height: '80%' }"
+>
+<div>
+   <h3>个人资料</h3>
+   <div class="detail-item">
+      <h3>资本资料</h3>
+      <van-row>
+         <van-col span="5">用户名</van-col>
+         <van-col span="5">傻子十字</van-col>
+      </van-row>
+   </div>
+   <div class="detail-item">
+      <h3>影响力</h3>
+      <van-row>
+         <van-col span="5">Ta的徽章</van-col>
+         <van-col span="5">·</van-col>
+      </van-row>
+      <van-row>
+         <van-col span="5">Ta的徽章</van-col>
+         <van-col span="5">获得1次赞同·1次喜欢·2次收藏</van-col>
+      </van-row>
+   </div>
+</div>
+</van-popup>
 </template>
 <style scoped lang='scss'>
 .header {

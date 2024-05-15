@@ -1,20 +1,19 @@
 <script setup lang='ts'>
-import { ref } from 'vue';
 import personal from "@/assets/imgs/personal.jpg";
-const item = ref({
-    name: '宝贝',
-    follow: 12,
-})
+// const item = ref({
+//     name: '宝贝',
+//     follow: 12,
+// })
 
-
+const {item} = defineProps(['item']);
 </script>
 <template>
-    <div class="item">
-        <van-row justify="space-between" algin="bottom">
+    <div class="user-item">
+        <van-row justify="space-between" algin="center">
             <van-col span="9">
                 <van-row>
                     <van-col span="7">
-                        <van-image round width="1rem" height="1rem" :src="personal" />
+                        <van-image round width="1rem" :src="personal" />
                     </van-col>
                     <van-col span="14" offset="2">
                         <van-row>
@@ -37,13 +36,13 @@ const item = ref({
     </div>
 </template>
 <style scoped lang='scss'>
-.item {
+.user-item {
     border-radius: 10px;
-    background: #f8f7f7;
+    background: #f5f3f3;
     padding: 14px;
     .name{
         font-size:16px;
-        line-height: 24px;
+        line-height: 22px;
     }
 
     .follow {

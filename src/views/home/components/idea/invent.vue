@@ -1,26 +1,13 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import personal from "@/assets/imgs/personal.jpg";
-
 import Upvote from "@/components/upvote.vue";
 import Collect from "@/components/collect.vue";
 import Comment from "@/components/comment.vue";
+import IconMore from '@/views/home/components/idea/iconMore.vue';
 const { item } = defineProps(["item"]);
-const showMore = ref(false);
-
-const actions = [
-    { name: '分享', icon: 'share-o' },
-    { name: '关注该作者：', icon: 'manager-o' },
-    { name: '举报', icon: 'warning-o' },
-];
-const showPopupMore = () => {
-    showMore.value = true;
-};
-const onSelect = (item) => {
-    showMore.value = false;
-};
 // {
-//     type:1,//1回答了问题 2关注了用户 3发布了想法 4赞同了回答 5关注了问题
+//     type:1,
 //     name:'宝宝',
 //     time:'2024-05-13 07:00',
 //     title:'这是一句话标题',
@@ -36,8 +23,11 @@ const onSelect = (item) => {
             <van-image round width="1.5rem" height="1.5rem" :src="personal" />
             <div class="right">
                 <div>{{ item.name }} <van-icon name="gem" /></div>
-                <div class="time">{{ item.time }} 回答了问题</div>
-
+                <div class="time">{{ item.time }}
+                    <span v-if="item.type === 1">回答了问题</span>
+                    <span v-if="item.type === 2">赞同了回答</span>
+                    <span v-if="item.type === 4">发布了想法</span>
+                </div>
             </div>
         </div>
         <div class="middle">
@@ -55,14 +45,11 @@ const onSelect = (item) => {
                     <Comment :item="item" />
                 </van-col>
                 <van-col span="2" offset="2">
-                    <van-icon name="ellipsis" @click="showPopupMore" />
+                    <IconMore :item="item" />
                 </van-col>
             </van-row>
         </div>
     </div>
-
-    <!-- 右下角更多弹框 -->
-    <van-action-sheet v-model:show="showMore" :actions="actions" @select="onSelect" />
 </template>
 <style scoped lang='scss'>
 .item {
