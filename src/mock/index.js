@@ -67,6 +67,18 @@ Mock.mock("/api/profile/id", "get", {
     follow: "@integer(1,100)", //关注
     like: "@integer(1,100)", //喜欢
     collect: "@integer(1,100)", //收藏
+    "career|+1": [//职业
+      "Java",
+      "Python",
+      "前端",
+      "产品经理",
+      "UI设计师",
+      "IOS",
+      "安卓",
+    ],
+    born: "@datetime('yyyy-MM-dd')",//生日
+    intro:'是个逗比啊@',//简介
+    "label|1-2": ["@word(2,5)"],//标签
     badge: {
       //徽章
       develop: ["diamond"],

@@ -14,11 +14,15 @@ const obj = ref({
    author: '宝宝',//姓名
    gender: 'male',//性别
    sign: '安然入眠',//签名
+   career:'',
+   born: '1999-01-01',//生日
    support: 1,//获赞
    beFollow: 2,//被关注
    follow: 3,//关注
    like: 4,//喜欢
    collect: 5,//喜欢
+   intro:'',
+   label:[],
    badge: {//徽章
       develop: ['diamond'],
       particular: ['level11', 'level22'],
@@ -34,8 +38,8 @@ const obj = ref({
          comment: 12,
       }
    ],
-   favour:[],
-   trend:[],
+   favour: [],
+   trend: [],
 });
 
 const productLabelArr = ref([{
@@ -68,7 +72,7 @@ const initData = () => {
 initData();
 
 // 更多
-const showDetail = ref(false);
+const showDetail = ref(true);
 const showModalDetail = (obj) => {
    showDetail.value = true;
 }
@@ -148,7 +152,7 @@ const selectLabel = (index) => {
                {{ obj.sign }}
             </van-col>
             <van-col span="4" @click="showModalDetail(obj)">
-               更多 <van-icon name="arrow" color="#686666"/>
+               更多 <van-icon name="arrow" color="#686666" />
             </van-col>
          </van-row>
          <div justify="space-between" class="brief">
@@ -174,7 +178,7 @@ const selectLabel = (index) => {
             <Invent v-for="(item, index) in obj.product" :key="index" :item="item" />
          </van-tab>
          <van-tab title="动态" name="trend">
-            <Trend :list="obj.trend"/>
+            <Trend :list="obj.trend" />
          </van-tab>
          <van-tab title="赞同" name="approve">
             <Invent v-for="(item, index) in obj.favour" :key="index" :item="item" />
@@ -183,35 +187,61 @@ const selectLabel = (index) => {
    </div>
 
    <!-- 更多-弹窗 -->
-<van-popup
-closeable
-  v-model:show="showDetail"
-  round
-  position="bottom"
-  :style="{ height: '80%' }"
->
-<div>
-   <h3>个人资料</h3>
-   <div class="detail-item">
-      <h3>资本资料</h3>
-      <van-row>
-         <van-col span="5">用户名</van-col>
-         <van-col span="5">傻子十字</van-col>
-      </van-row>
-   </div>
-   <div class="detail-item">
-      <h3>影响力</h3>
-      <van-row>
-         <van-col span="5">Ta的徽章</van-col>
-         <van-col span="5">·</van-col>
-      </van-row>
-      <van-row>
-         <van-col span="5">Ta的徽章</van-col>
-         <van-col span="5">获得1次赞同·1次喜欢·2次收藏</van-col>
-      </van-row>
-   </div>
-</div>
-</van-popup>
+   <van-popup closeable v-model:show="showDetail" round position="bottom" :style="{ height: '94%' }">
+      <div class="detail-wrap">
+         <h3>个人资料</h3>
+         <div class="detail-item">
+            <h3>资本资料</h3>
+            <van-row class="detail-row">
+               <van-col span="6" class="detail-label">用户名</van-col>
+               <van-col span="14" offset="1">{{ obj.author }}</van-col>
+            </van-row>
+            <van-row class="detail-row">
+               <van-col span="6" class="detail-label">一句话介绍</van-col>
+               <van-col span="14" offset="1">{{ obj.sign }}</van-col>
+            </van-row>
+            <van-row class="detail-row">
+               <van-col span="6" class="detail-label">性别</van-col>
+               <van-col span="14" offset="1">{{obj.gender==='male'?'男':'女'}}</van-col>
+            </van-row>
+            <van-row class="detail-row">
+               <van-col span="6" class="detail-label">所在行业</van-col>
+               <van-col span="14" offset="1">{{ obj.career }}</van-col>
+            </van-row>
+            <van-row class="detail-row">
+               <van-col span="6" class="detail-label">生日</van-col>
+               <van-col span="14" offset="1">{{obj.born}}</van-col>
+            </van-row>
+         </div>
+         <div class="detail-item">
+            <h3>影响力</h3>
+            <van-row class="detail-row" justify="space-between">
+               <van-col span="21">
+                  <van-icon name="gem" color="#1989fa" />
+                  Ta的徽章</van-col>
+               <van-col span="3">
+                  <van-icon :name="item" color="#1989fa" v-for="(item, index) in obj.badge.develop" :key="index" />
+                  <van-icon name="arrow" />
+               </van-col>
+            </van-row>
+            <van-row class="detail-row">
+               <van-col span="24">
+                  <van-icon name="diamond" color="#1989fa" />
+                  获得{{obj.support}}次赞同·{{obj.like}}次喜欢·{{obj.collect}}次收藏</van-col>
+            </van-row>
+         </div>
+         <div class="detail-item">
+            <h3>个人简介</h3>
+            <div class="intro">{{ obj.intro }}</div>
+         </div>
+         <div class="detail-item">
+            <h3>好友印象</h3>
+            <van-space>
+               <van-tag v-for="(item, index) in obj.label" :key="index"  round type="primary" size="large" color="rgb(213 236 248)" text-color="#1989fa">{{item}}</van-tag>
+            </van-space>
+         </div>
+      </div>
+   </van-popup>
 </template>
 <style scoped lang='scss'>
 .header {
@@ -346,7 +376,46 @@ closeable
          }
       }
    }
+}
+
+.detail-wrap {
 
 
+   background: #ecebeb;
+   padding: 14px 14px 40px 14px;
+   h3{
+      line-height: 40px;
+   }
+
+   .detail-item {
+      background: #fff;
+      border-radius: 10px;
+      margin-top: 3%;
+      padding: 20px;
+      h3 {
+         line-height: 40px;
+
+      }
+
+      .detail-row {
+         border-bottom: 1px solid #e9e8e8;
+         line-height: 38px;
+         font-size: 14px;
+
+         .detail-label {
+            color: #a5a4a4;
+         }
+      }
+
+      .detail-row:last-child {
+         border-bottom: none;
+      }
+
+      .intro {
+         font-size: 12px;
+      }
+
+
+   }
 }
 </style>
