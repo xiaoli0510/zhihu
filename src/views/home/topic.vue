@@ -1,18 +1,12 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
+import IconBack from './components/idea/iconBack.vue'
 const value2 = ref("");
-import Detail from "./components/idea/detail.vue";
-import { fetchIdeaDetail } from "@/api/index";
+import TopicItem from "./components/idea/topicItem.vue";
+import { fetchTopicList } from "@/api/index.js";
 let list = ref([]);
-
-const initData=()=>{
-  fetchIdeaDetail()
-  .then(res=>{
-    list.value = res.data.list;
-  });
-};
-initData();
-
+let res = await fetchTopicList();
+list.value = res.data.list;
 </script>
 <template>
   <Suspense>
@@ -20,14 +14,16 @@ initData();
       <div class="idea-detail">
         <!-- 搜索 -->
         <van-row align="center" class="search-wrap">
-          <van-col span="1"><van-icon name="arrow-left" /></van-col>
+          <van-col span="1">
+            <IconBack />
+          </van-col>
           <van-col span="23">
             <van-cell-group inset>
               <van-field class="search" v-model="value2" clearable left-icon="search" placeholder="搜索知乎内容" />
             </van-cell-group></van-col>
         </van-row>
         <div class="item" v-for="(item, index) in list" :key="index">
-          <Detail :item="item" />
+          <TopicItem :item="item" />
         </div>
       </div>
     </template>

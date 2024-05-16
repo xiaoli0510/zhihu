@@ -3,9 +3,9 @@ import service from '@/utils/request/index.js';
 export async function fetchIdeaList(){
     return await service.get('/api/idea');
 }
-//想法详情页
-export async function fetchIdeaDetail(){
-    return await service.get('/api/idea/id');
+//主题列表
+export async function fetchTopicList(){
+    return await service.get('/api/topic');
 }
 //想法个人主页
 export async function fetchProfile(){

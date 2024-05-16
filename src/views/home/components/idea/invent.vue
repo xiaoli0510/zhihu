@@ -1,11 +1,12 @@
 <script setup lang='ts'>
-import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import personal from "@/assets/imgs/personal.jpg";
 import Upvote from "@/components/upvote.vue";
 import Collect from "@/components/collect.vue";
 import Comment from "@/components/comment.vue";
 import IconMore from '@/views/home/components/idea/iconMore.vue';
 const { item } = defineProps(["item"]);
+const router = useRouter();
 // {
 //     type:1,
 //     name:'宝宝',
@@ -16,9 +17,17 @@ const { item } = defineProps(["item"]);
 //     collect: 112,
 //     comment:12,
 // }
+const enterDetail = (item) => {
+    router.push({
+        path: '/detail',
+        query: {
+            id: item.id
+        }
+    })
+}
 </script>
 <template>
-    <div class="item">
+    <div class="item" @click="enterDetail(item)">
         <div class="top">
             <van-image round width="1.5rem" height="1.5rem" :src="personal" />
             <div class="right">
@@ -93,10 +102,5 @@ const { item } = defineProps(["item"]);
         }
     }
 
-    .footer {
-        .collect {
-            margin: 0 7%;
-        }
-    }
 }
 </style>

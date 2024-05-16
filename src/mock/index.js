@@ -16,8 +16,8 @@ Mock.mock("/api/idea", "get", {
   ],
 });
 
-//想法详情页
-Mock.mock("/api/idea/id", "get", {
+//主题页列表
+Mock.mock("/api/topic", "get", {
   status: 200, //请求成功状态码
   "list|10": [
     {
@@ -35,6 +35,7 @@ Mock.mock("/api/idea/id", "get", {
         "IOS",
         "安卓",
       ],
+      sign: "@cparagraph(1,10)", //签名
       upvote: "@integer(1,100)",
       collect: "@integer(1,100)",
       comment: "@integer(1,100)",
@@ -87,6 +88,7 @@ Mock.mock("/api/profile/id", "get", {
     "product|10": [
       //创造
       {
+        id: "@increment",
         type:1,//1回答了问题 2赞同了回答 3关注了用户 4发布了想法 5关注了问题
         name: "@cname",
         time: "@datetime('yyyy-MM-dd')",
@@ -105,6 +107,7 @@ Mock.mock("/api/profile/id", "get", {
     "favour|10": [
       //赞同
       {
+        id: "@increment",
         type:2,
         name: "@cname",
         time: "@datetime('yyyy-MM-dd')",
@@ -123,6 +126,7 @@ Mock.mock("/api/profile/id", "get", {
     "trend|10": [
       //动态
       {
+        id: "@increment",
         "type|1":[3,4,5],
         name: "@cname",
         time: "@datetime('yyyy-MM-dd')",

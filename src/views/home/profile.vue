@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import personal from "@/assets/imgs/personal.jpg";
 import male from "@/assets/imgs/male.png";
 import feMale from "@/assets/imgs/female.png";
+import IconBack from './components/idea/iconBack.vue'
 const activeName = ref('trend');
 import Invent from "@/views/home/components/idea/invent.vue";
 import Trend from '@/views/home/components/idea/trend.vue';
@@ -72,7 +73,7 @@ const initData = () => {
 initData();
 
 // 更多
-const showDetail = ref(true);
+const showDetail = ref(false);
 const showModalDetail = (obj) => {
    showDetail.value = true;
 }
@@ -97,7 +98,8 @@ const selectLabel = (index) => {
    <div class="header">
       <van-row justify="space-between">
          <van-col span="4">
-            <van-icon name="arrow-left" color="#fff" size="20px" />
+            <IconBack color="#fff" size="20px"/>
+            <!-- <van-icon name="arrow-left" color="#fff" size="20px" /> -->
          </van-col>
          <van-col span="4">
             <van-icon name="search" color="#fff" size="20px" />

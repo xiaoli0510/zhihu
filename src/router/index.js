@@ -4,9 +4,9 @@ import DiscoverView from "../views/discover/index.vue";
 import AddView from "../views/add/index.vue";
 import HotView from "../views/hot/index.vue";
 import CenterView from "../views/center/index.vue";
-import IdeaDetail from "../views/home/ideaDetail.vue";
+import Topic from "../views/home/topic.vue";
 import Profile from "../views/home/profile.vue";
-
+import Detail from "../views/home/detail.vue";
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -42,14 +42,19 @@ const router = createRouter({
       component: () => import("../views/AboutView.vue"),
     },
     {
-      path: "/idea",
-      name: "idea",
-      component: IdeaDetail,
+      path: "/topic",
+      name: "topic",
+      component: Topic,
     },
     {
       path: "/profile",
       name: "profile",
       component: Profile,
+    },
+    {
+      path: "/detail",
+      name: "detail",
+      component: Detail,
     },
   ],
 });

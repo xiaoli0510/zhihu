@@ -18,7 +18,8 @@ const tabArray = ref([
       <van-tab v-for="item in tabArray" :title="item.title" :name="item.value">
       </van-tab>
     </van-tabs>
-    <van-icon :name="warn" class="warn" />
+    <van-icon name="search" class="search" size="24px"/>
+    <van-icon :name="warn" class="warn" size="20px"/>
   </div>
   <Idea />
   <RouterView />
@@ -42,14 +43,20 @@ const tabArray = ref([
   .recent {
     position: absolute;
     left: 5px;
-    top: 30%;
+    top: 27%;
     z-index: 999;
   }
 
   .warn {
     position: absolute;
     right: 5px;
-    top: 30%;
+    top: 27%;
+    z-index: 999;
+  }
+  .search{
+    position: absolute;
+    right: 28px;
+    top: 27%;
     z-index: 999;
   }
 }

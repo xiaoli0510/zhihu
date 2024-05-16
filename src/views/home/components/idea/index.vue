@@ -4,34 +4,27 @@ import { RouterLink } from "vue-router";
 import triangle from "@/assets/imgs/upvote.png";
 import { fetchIdeaList } from '@/api/index.js';
 let list = ref([]);
-let res = await fetchIdeaList();
-list.value = res.data.list;
+
+const initData = async () => {
+  const res = await fetchIdeaList();
+  list.value = res.data.list;
+}
+
+initData();
+
 const loading = ref(false);
 const finished = ref(false);
 const refreshing = ref(false);
+
 const onLoad = () => {
-  setTimeout(() => {
+  setTimeout(async () => {
     if (refreshing.value) {
       list.value = [];
       refreshing.value = false;
     }
-
-    for (let i = 0; i < 10; i++) {
-      // list.value.push({
-      //   title: "标题",
-      //   src: img1,
-      //   id: 1,
-      //   author: "a",
-      //   avatar: img2,
-      //   like: 111,
-      //   label: ["a", "b"],
-      // });
-    }
+    initData();
     loading.value = false;
-
-    if (list.value.length >= 10) {
-      finished.value = true;
-    }
+    finished.value = true;
   }, 1000);
 };
 
@@ -47,7 +40,7 @@ const onRefresh = () => {
       <van-cell>
         <van-row justify="space-between" class="item-wrap">
           <van-col span="11" v-for="item in list" class="item">
-            <router-link to="/idea">
+            <router-link to="/topic">
               <van-image width="100%" fit="fill" :src="item.src" />
               <!-- 标题 -->
               <van-row class="detail">
