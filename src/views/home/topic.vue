@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue";
-import IconBack from './components/idea/iconBack.vue'
+import IconBack from '@/components/iconBack.vue'
 const value2 = ref("");
-import TopicItem from "./components/idea/topicItem.vue";
+import TopicItem from "@/views/home/components/idea/topicItem.vue";
 import { fetchTopicList } from "@/api/index.js";
 let list = ref([]);
 let res = await fetchTopicList();

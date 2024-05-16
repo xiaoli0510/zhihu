@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import comment from "@/assets/imgs/comment.png";
 import dot from "@/assets/imgs/dot.png";
-import Upvote from "@/components/upvote.vue";
-import Collect from "@/components/collect.vue";
+import IconUpvote from "@/components/iconUpvote.vue";
+import IconCollect from "@/components/iconCollect.vue";
 import AuthorBrief from "@/views/home/components/idea/authorBrief.vue";
-import { useRouter } from "vue-router";
 const {item} = defineProps(["item"]);
 const handlePreviewImg = () => {
   showImagePreview(["https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"]);
 };
-const router = useRouter();
-
 </script>
 <template>
   <!-- 关注分享 -->
@@ -61,10 +58,10 @@ const router = useRouter();
         <van-col span="14">
           <van-row align="center" justify="end">
             <van-col span="4">
-             <Upvote :item="item"/>
+             <IconUpvote :item="item"/>
             </van-col>
             <van-col span="4" offset="1">
-             <Collect :item="item"/>
+             <IconCollect :item="item"/>
             </van-col>
             <van-col span="4" offset="1">
               <van-icon :name="comment" :badge="item.comment" size=".6rem" />

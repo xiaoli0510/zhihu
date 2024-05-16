@@ -4,18 +4,14 @@ import { RouterLink } from "vue-router";
 import triangle from "@/assets/imgs/upvote.png";
 import { fetchIdeaList } from '@/api/index.js';
 let list = ref([]);
-
 const initData = async () => {
   const res = await fetchIdeaList();
   list.value = res.data.list;
 }
-
 initData();
-
 const loading = ref(false);
 const finished = ref(false);
 const refreshing = ref(false);
-
 const onLoad = () => {
   setTimeout(async () => {
     if (refreshing.value) {
@@ -79,33 +75,31 @@ const onRefresh = () => {
 <style scoped lang="scss">
 .list {
   margin-top: 44px;
-}
+  .item-wrap {
+    align-items: flex-start;
+    .item {
+      background: #fff;
+      border-radius: 0.1rem;
+      padding-bottom: 0.2rem;
+      margin-bottom: 3%;
+      border: 1px solid #7c7979;
+      box-shadow: #000;
+      height: max-content;
 
-.item-wrap {
-  align-items: flex-start;
-}
+      .detail {
+        font-size: 0.3rem;
+        color: #7c7979;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 3%;
 
-.item {
-  background: #fff;
-  border-radius: 0.1rem;
-  padding-bottom: 0.2rem;
-  margin-bottom: 3%;
-  border: 1px solid #7c7979;
-  box-shadow: #000;
-  height: max-content;
-
-  .detail {
-    font-size: 0.3rem;
-    color: #7c7979;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 3%;
-
-    .title {
-      font-size: 0.3rem;
-      line-height: 0.6rem;
-      color: #000;
-      text-align: left;
+        .title {
+          font-size: 0.3rem;
+          line-height: 0.6rem;
+          color: #000;
+          text-align: left;
+        }
+      }
     }
   }
 }

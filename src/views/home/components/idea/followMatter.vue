@@ -1,11 +1,10 @@
 <script setup lang='ts'>
 // 关注问题
-import { ref } from 'vue';
 import personal from "@/assets/imgs/personal.jpg";
-import Answer from '@/components/answer.vue';
-import Invite from '@/components/invite.vue';
-import Follow from '@/components/follow.vue';
-import IconMore from '@/views/home/components/idea/iconMore.vue';
+import IconAnswer from '@/components/iconAnswer.vue';
+import IconInvite from '@/components/iconInvite.vue';
+import IconFollow from '@/components/iconFollow.vue';
+import IconMore from '@/components/iconMore.vue';
 const { item } = defineProps(["item"]);
 </script>
 <template>
@@ -24,9 +23,9 @@ const { item } = defineProps(["item"]);
         <div class="footer">
             <van-row>
                 <van-col span="20">
-                    <Answer />
-                    <Invite/>
-                    <Follow/>
+                    <IconAnswer />
+                    <IconInvite/>
+                    <IconFollow/>
                 </van-col>
                 <van-col span="2" offset="2">
                     <IconMore :item="item"/>

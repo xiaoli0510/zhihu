@@ -1,10 +1,10 @@
 <script setup lang='ts'>
 import { useRouter } from 'vue-router';
 import personal from "@/assets/imgs/personal.jpg";
-import Upvote from "@/components/upvote.vue";
-import Collect from "@/components/collect.vue";
-import Comment from "@/components/comment.vue";
-import IconMore from '@/views/home/components/idea/iconMore.vue';
+import IconUpvote from "@/components/iconUpvote.vue";
+import IconCollect from "@/components/iconCollect.vue";
+import IconComment from "@/components/iconComment.vue";
+import IconMore from '@/components/iconMore.vue';
 const { item } = defineProps(["item"]);
 const router = useRouter();
 // {
@@ -49,9 +49,9 @@ const enterDetail = (item) => {
         <div class="footer">
             <van-row>
                 <van-col span="20">
-                    <Upvote :item="item" />
-                    <Collect :item="item" class="collect" />
-                    <Comment :item="item" />
+                    <IconUpvote :item="item" />
+                    <IconCollect :item="item"/>
+                    <IconComment :item="item" />
                 </van-col>
                 <van-col span="2" offset="2">
                     <IconMore :item="item" />

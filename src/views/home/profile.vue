@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import personal from "@/assets/imgs/personal.jpg";
 import male from "@/assets/imgs/male.png";
 import feMale from "@/assets/imgs/female.png";
-import IconBack from './components/idea/iconBack.vue'
+import IconBack from '@/components/iconBack.vue'
 const activeName = ref('trend');
 import Invent from "@/views/home/components/idea/invent.vue";
 import Trend from '@/views/home/components/idea/trend.vue';
@@ -94,12 +94,10 @@ const selectLabel = (index) => {
 
 </script>
 <template>
-   <!-- <div class="header" :style="{backgroundImage:`url(${obj.imgBg})`}"> -->
-   <div class="header">
+   <div class="header" :style="{backgroundImage:`url(${obj.imgBg})`}"> 
       <van-row justify="space-between">
          <van-col span="4">
             <IconBack color="#fff" size="20px"/>
-            <!-- <van-icon name="arrow-left" color="#fff" size="20px" /> -->
          </van-col>
          <van-col span="4">
             <van-icon name="search" color="#fff" size="20px" />

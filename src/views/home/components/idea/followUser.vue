@@ -1,8 +1,7 @@
 <script setup lang='ts'>
 // 关注用户
-import { ref } from 'vue';
 import User from '@/views/home/components/idea/user.vue';
-import IconMore from '@/views/home/components/idea/iconMore.vue';
+import IconMore from '@/components/iconMore.vue';
 import personal from "@/assets/imgs/personal.jpg";
 const { item } = defineProps(["item"]);
 </script>
