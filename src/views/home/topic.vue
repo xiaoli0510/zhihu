@@ -1,12 +1,15 @@
 <script setup>
 import { ref } from "vue";
 import IconBack from '@/components/iconBack.vue'
+import CommentPopup from '@/components/commentPopup.vue'
 const value2 = ref("");
 import TopicItem from "@/views/home/components/idea/topicItem.vue";
 import { fetchTopicList } from "@/api/index.js";
+
 let list = ref([]);
 let res = await fetchTopicList();
 list.value = res.data.list;
+
 </script>
 <template>
   <Suspense>
@@ -28,6 +31,8 @@ list.value = res.data.list;
       </div>
     </template>
   </Suspense>
+<CommentPopup />
+
 </template>
 <style scoped lang="scss">
 .idea-detail {

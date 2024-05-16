@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import comment from "@/assets/imgs/comment.png";
 import dot from "@/assets/imgs/dot.png";
 import IconUpvote from "@/components/iconUpvote.vue";
 import IconCollect from "@/components/iconCollect.vue";
 import AuthorBrief from "@/views/home/components/idea/authorBrief.vue";
-const {item} = defineProps(["item"]);
+import IconComment from '@/components/iconComment.vue';
+const props = defineProps({
+  item: { type: Object, required: true },
+  showComment:Function
+});
+const item = props.item;
+const emit = defineEmits(['showComment']);
+// const {item} = defineProps(["item"]);
 const handlePreviewImg = () => {
   showImagePreview(["https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"]);
 };
@@ -64,7 +70,7 @@ const handlePreviewImg = () => {
              <IconCollect :item="item"/>
             </van-col>
             <van-col span="4" offset="1">
-              <van-icon :name="comment" :badge="item.comment" size=".6rem" />
+              <IconComment :item="item" :show-comment="props.showComment"/>
             </van-col>
             <van-col span="4" offset="1">
               <van-icon :name="dot" size=".6rem" />
