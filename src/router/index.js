@@ -7,6 +7,7 @@ import CenterView from "../views/center/index.vue";
 import Topic from "../views/home/topic.vue";
 import Profile from "../views/home/profile.vue";
 import Detail from "../views/home/detail.vue";
+import Search from "../views/home/search.vue";
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -55,6 +56,11 @@ const router = createRouter({
       path: "/detail",
       name: "detail",
       component: Detail,
+    },
+    {
+      path: "/search",
+      name: "search",
+      component: Search,
     },
   ],
 });

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import Idea from "@/views/home/components/idea/index.vue";
 import recent from "@/assets/imgs/recent.png";
 import warn from "@/assets/imgs/warn.png";
@@ -10,6 +11,12 @@ const tabArray = ref([
   { title: "推荐", value: "recomment" },
   { title: "热榜", value: "hot" },
 ]);
+const router = useRouter();
+const enterSearch = () => {
+  router.push({
+    name: 'search'
+  })
+}
 </script>
 <template>
   <div class="header">
@@ -18,8 +25,8 @@ const tabArray = ref([
       <van-tab v-for="item in tabArray" :title="item.title" :name="item.value">
       </van-tab>
     </van-tabs>
-    <van-icon name="search" class="search" size="24px"/>
-    <van-icon :name="warn" class="warn" size="20px"/>
+    <van-icon name="search" class="search" size="24px" @click="enterSearch" />
+    <van-icon :name="warn" class="warn" size="20px" />
   </div>
   <Idea />
   <RouterView />
@@ -53,7 +60,8 @@ const tabArray = ref([
     top: 27%;
     z-index: 999;
   }
-  .search{
+
+  .search {
     position: absolute;
     right: 28px;
     top: 27%;

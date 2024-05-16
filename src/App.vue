@@ -11,7 +11,4 @@ import { RouterView } from "vue-router";
   </Suspense>
 </template>
 <style scoped>
-.container {
-  background: #e9e8e8;
-}
 </style>
