@@ -4,7 +4,6 @@ import { fetchHotList } from '@/api/search';
 const list = ref([]);
 fetchHotList().then(res => {
     list.value = res.data.list;
-    console.log(list.value)
 }
 ).catch(err => {
     console.log(err)

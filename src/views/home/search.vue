@@ -4,6 +4,20 @@ import History from './components/search/History.vue'
 import Guess from './components/search/Guess.vue'
 import Hot from './components/search/Hot.vue'
 import BackIcon from '@/components/BackIcon.vue'
+import Report from './components/search/Report.vue'
+import { ref } from 'vue';
+import { fetchGuessList } from '@/api/search';
+import ReportIcon from '@/components/ReportIcon.vue'
+let guessList = [];
+const initData = async () => {
+    const res = await fetchGuessList();
+    guessList = res.data.list;
+};
+initData();
+
+const isReport =ref(false);
+
+
 </script>
 <template>
     <div class="search-inner">
@@ -25,12 +39,18 @@ import BackIcon from '@/components/BackIcon.vue'
             <History />
         </div>
         <div class="record-wrap">
-            <Guess />
+            <Guess :list="guessList" />
         </div>
         <div class="record-wrap">
             <Hot />
         </div>
+
+        <div class="footer-report">
+            <ReportIcon @click="isReport=true"/>
+        </div>
     </div>
+    <Report :list="guessList" :show="isReport"/>
+
 </template>
 <style scoped lang='scss'>
 .search-inner {
@@ -38,6 +58,9 @@ import BackIcon from '@/components/BackIcon.vue'
 
     .record-wrap {
         margin-top: 10px;
+    }
+    .footer-report{
+        text-align: center;
     }
 }
 </style>

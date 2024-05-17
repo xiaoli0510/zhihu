@@ -1,13 +1,8 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { fetchGuessList } from '@/api/search';
-const list = ref([]);
-const initData = async ()=>{
-    const res = await fetchGuessList();
-    list.value = res.data.list;
-};
-initData();
+const props = defineProps(['list']);
+const list = props.list;
 
 const showEye=ref(false);
 const toggleEye = ()=>{
@@ -18,6 +13,10 @@ const router = useRouter();
 const enterResult = (item) => {
     router.push(`/result/${item.word}`);
 }
+
+const refresh = ()=>{
+    
+}
 </script>
 <template>
     <van-row class="guess-top" justify="space-between">
@@ -25,7 +24,7 @@ const enterResult = (item) => {
             <span class="type">猜你想搜</span>
         </van-col>
         <van-col span="3">
-            <van-icon name="replay" color="rgb(136 130 130)" class="refresh" @click="initData"/>
+            <van-icon name="replay" color="rgb(136 130 130)" class="refresh" @click="refresh"/>
             <van-icon name="closed-eye" color="rgb(136 130 130)" v-show="!showEye" @click="toggleEye"/>
             <van-icon name="eye-o" color="rgb(136 130 130)" v-show="showEye" @click="toggleEye"/>
         </van-col>
