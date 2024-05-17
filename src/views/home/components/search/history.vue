@@ -1,22 +1,15 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-const list = ref([
-    "你是1",
-    "你是2",
-    "你是3",
-    "你是4",
-    "你是5",
-    "你是6",
-    "你是1",
-    "你是2",
-    "你是3",
-    "你是4",
-    "你是5",
-    "你是6",
-]);
+import { fetchRecordList } from '@/api/search.js';
+const list = ref([]);
 const filterList = ref([]);
-filterList.value = list.value.slice(0, 6);
+const initData = async () => {
+    const res = await fetchRecordList();
+    list.value = res.data.list;
+    filterList.value = list.value.slice(0, 6);
+}
+initData();
 
 //折叠展开历史搜索
 const moreRef = ref(false);
@@ -66,7 +59,7 @@ const enterResult = (item) => {
     if (deleteRef.value === true) {
         return false;
     }
-    router.push(`/result/${item}`);
+    router.push(`/result/${item.word}`);
 }
 
 </script>
@@ -89,7 +82,7 @@ const enterResult = (item) => {
     </van-row>
     <div class="record-content">
         <div class="name" v-for="(item, index) in filterList" :key="index" @click="enterResult(item)">
-            <span>{{ item }}</span>
+            <span>{{ item.word }}</span>
             <van-icon v-show="deleteRef" name="cross" color="rgb(136 130 130)" @click="handleDelete(index)" />
         </div>
     </div>

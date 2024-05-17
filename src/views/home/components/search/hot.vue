@@ -1,13 +1,14 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
-const list = ref([
-    "你是1",
-    "你是2",
-    "你是3",
-    "你是4",
-    "你是5",
-    "你是6",
-])
+import { fetchHotList } from '@/api/search';
+const list = ref([]);
+fetchHotList().then(res => {
+    list.value = res.data.list;
+    console.log(list.value)
+}
+).catch(err => {
+    console.log(err)
+})
 
 </script>
 <template>
@@ -19,12 +20,12 @@ const list = ref([
     <div class="hot-content ">
         <div class="name" v-for="(item, index) in list" :key="index">
             <van-row>
-                <van-col span="22"><span class="dot" :class="{ 'active': index <= 2 }"></span>
-                <span>{{ item }}</span>
-                <span class="num">288万</span>
+                <van-col span="22">
+                    <span class="dot" :class="{ 'active': index <= 2 }"></span>
+                    <span>{{ item.word }}</span>
+                    <span class="num">{{item.follow}}万</span>
                 </van-col>
-                <van-col span="1"><van-tag color="rgb(245 238 238)"
-                        text-color="rgb(207, 40, 40)">热</van-tag></van-col>
+                <van-col span="1" v-if="item.type===1"><van-tag color="rgb(245 238 238)" text-color="rgb(207, 40, 40)">热</van-tag></van-col>
             </van-row>
         </div>
     </div>
@@ -35,6 +36,7 @@ const list = ref([
     font-size: 14px;
     font-weight: 700;
     line-height: 30px;
+
     .type {
         border-left: 4px solid rgb(207, 40, 40);
         padding: 0 4px;
@@ -59,10 +61,11 @@ const list = ref([
                 background: rgb(207, 40, 40);
             }
         }
-        .num{
-            color:rgb(136 130 130);
-            font-size:10px;
-            margin-left:4px;
+
+        .num {
+            color: rgb(136 130 130);
+            font-size: 10px;
+            margin-left: 4px;
         }
     }
 

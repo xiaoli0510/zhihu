@@ -6,6 +6,7 @@ import router from './router'
 // import store from './store/index.js'
 import 'amfe-flexible';
 import '@/mock/index'
+import '@/mock/search.js'
 
 const app = createApp(App)
 

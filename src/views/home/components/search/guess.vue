@@ -1,18 +1,23 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
-const list = ref([
-    "你是1",
-    "你是2",
-    "你是3",
-    "你是4",
-    "你是5",
-    "你是6",
-]);
+import { useRouter } from 'vue-router';
+import { fetchGuessList } from '@/api/search';
+const list = ref([]);
+const initData = async ()=>{
+    const res = await fetchGuessList();
+    list.value = res.data.list;
+};
+initData();
+
 const showEye=ref(false);
 const toggleEye = ()=>{
     showEye.value=!showEye.value;
 }
 
+const router = useRouter();
+const enterResult = (item) => {
+    router.push(`/result/${item.word}`);
+}
 </script>
 <template>
     <van-row class="guess-top" justify="space-between">
@@ -20,15 +25,17 @@ const toggleEye = ()=>{
             <span class="type">猜你想搜</span>
         </van-col>
         <van-col span="3">
-            <van-icon name="replay" color="rgb(136 130 130)" class="refresh"/>
+            <van-icon name="replay" color="rgb(136 130 130)" class="refresh" @click="initData"/>
             <van-icon name="closed-eye" color="rgb(136 130 130)" v-show="!showEye" @click="toggleEye"/>
             <van-icon name="eye-o" color="rgb(136 130 130)" v-show="showEye" @click="toggleEye"/>
         </van-col>
     </van-row>
-    <div class="guess-content">
-        <div class="name" v-for="(item,index) in list" :key="index">
-            <span class="">{{ item}}</span>
-            <van-tag color="rgb(238 242 248)" text-color="#1989fa">新</van-tag>
+    <div class="guess-content" v-show="!showEye">
+        <div class="name" v-for="(item,index) in list" :key="index" @click="enterResult(item)">
+            <span>{{ item.word}}</span>
+            <van-tag color="rgb(238 242 248)" text-color="#1989fa" v-if="item.type===1">新</van-tag>
+            <van-tag color="rgb(245 238 238)" v-if="item.type===2"
+                        text-color="rgb(207, 40, 40)">热</van-tag>
         </div>
     </div>
 
