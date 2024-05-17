@@ -3,10 +3,10 @@ import { ref } from 'vue';
 import personal from "@/assets/imgs/personal.jpg";
 import male from "@/assets/imgs/male.png";
 import feMale from "@/assets/imgs/female.png";
-import IconBack from '@/components/iconBack.vue'
+import BackIcon from '@/components/BackIcon.vue'
 const activeName = ref('trend');
-import Invent from "@/views/home/components/idea/invent.vue";
-import Trend from '@/views/home/components/idea/trend.vue';
+import Invent from "@/views/home/components/idea/Invent.vue";
+import Trend from '@/views/home/components/idea/Trend.vue';
 import { fetchProfile } from '@/api/index.js'
 const obj = ref({
    id: 1,
@@ -97,7 +97,7 @@ const selectLabel = (index) => {
    <div class="header" :style="{backgroundImage:`url(${obj.imgBg})`}"> 
       <van-row justify="space-between">
          <van-col span="4">
-            <IconBack color="#fff" size="20px"/>
+            <BackIcon color="#fff" size="20px"/>
          </van-col>
          <van-col span="4">
             <van-icon name="search" color="#fff" size="20px" />

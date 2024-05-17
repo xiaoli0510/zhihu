@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 // 关注用户
-import User from '@/views/home/components/idea/user.vue';
-import IconMore from '@/components/iconMore.vue';
+import User from '@/views/home/components/idea/User.vue';
+import MoreIcon from '@/components/MoreIcon.vue';
 import personal from "@/assets/imgs/personal.jpg";
 const { item } = defineProps(["item"]);
 </script>
@@ -20,7 +20,7 @@ const { item } = defineProps(["item"]);
         <div class="footer">
             <van-row justify="end">
                 <van-col span="2" offset="2">
-                    <IconMore :item="item" />
+                    <MoreIcon :item="item" />
                 </van-col>
             </van-row>
         </div>

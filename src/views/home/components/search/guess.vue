@@ -20,9 +20,9 @@ const toggleEye = ()=>{
             <span class="type">猜你想搜</span>
         </van-col>
         <van-col span="3">
-            <van-icon name="replay" color="#ddd" class="refresh"/>
-            <van-icon name="closed-eye" color="#ddd" v-show="!showEye" @click="toggleEye"/>
-            <van-icon name="eye-o" color="#ddd" v-show="showEye" @click="toggleEye"/>
+            <van-icon name="replay" color="rgb(136 130 130)" class="refresh"/>
+            <van-icon name="closed-eye" color="rgb(136 130 130)" v-show="!showEye" @click="toggleEye"/>
+            <van-icon name="eye-o" color="rgb(136 130 130)" v-show="showEye" @click="toggleEye"/>
         </van-col>
     </van-row>
     <div class="guess-content">

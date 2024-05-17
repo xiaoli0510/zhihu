@@ -1,7 +1,7 @@
 <script setup lang='ts'>
-import FollowUser from '@/views/home/components/idea/followUser.vue';
-import FollowMatter from '@/views/home/components/idea/followMatter.vue';
-import Invent from '@/views/home/components/idea/invent.vue';
+import FollowUser from '@/views/home/components/idea/FollowUser.vue';
+import FollowMatter from '@/views/home/components/idea/FollowMatter.vue';
+import Invent from '@/views/home/components/idea/Invent.vue';
 const { list } = defineProps(['list']);
 
 </script>

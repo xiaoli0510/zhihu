@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { store } from '@/store/index.js'
-import IconLike from './iconLike.vue'
+import LikeIcon from './LikeIcon.vue'
 </script>
 <template>
     <van-popup v-model:show="store.isComment" closeable close-icon="close" position="bottom" :style="{ height: '94%' }">
@@ -33,7 +33,7 @@ import IconLike from './iconLike.vue'
                             <van-col span="20">04-22 ip</van-col>
                             <van-col span="4">
                                 <van-icon name="comment-circle-o" class="reply"/>
-                                <IconLike />
+                                <LikeIcon />
                             </van-col>
                         </van-row>
                     </van-col>

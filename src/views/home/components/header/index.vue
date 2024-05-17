@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import Idea from "@/views/home/components/idea/index.vue";
+import Idea from "@/views/home/components/idea/Index.vue";
 import recent from "@/assets/imgs/recent.png";
 import warn from "@/assets/imgs/warn.png";
 const activeName = ref("a");

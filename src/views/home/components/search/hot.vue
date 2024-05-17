@@ -60,7 +60,7 @@ const list = ref([
             }
         }
         .num{
-            color:#ccc;
+            color:rgb(136 130 130);
             font-size:10px;
             margin-left:4px;
         }

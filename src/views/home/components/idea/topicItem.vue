@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import dot from "@/assets/imgs/dot.png";
-import IconUpvote from "@/components/iconUpvote.vue";
-import IconCollect from "@/components/iconCollect.vue";
-import AuthorBrief from "@/views/home/components/idea/authorBrief.vue";
-import IconComment from '@/components/iconComment.vue';
+import UpvoteIcon from "@/components/UpvoteIcon.vue";
+import CollectIcon from "@/components/CollectIcon.vue";
+import AuthorBrief from "@/views/home/components/idea/AuthorBrief.vue";
+import CommentIcon from '@/components/CommentIcon.vue';
 const props = defineProps({
   item: { type: Object, required: true },
   showComment:Function
@@ -64,13 +64,13 @@ const handlePreviewImg = () => {
         <van-col span="14">
           <van-row align="center" justify="end">
             <van-col span="4">
-             <IconUpvote :item="item"/>
+             <UpvoteIcon :item="item"/>
             </van-col>
             <van-col span="4" offset="1">
-             <IconCollect :item="item"/>
+             <CollectIcon :item="item"/>
             </van-col>
             <van-col span="4" offset="1">
-              <IconComment :item="item" :show-comment="props.showComment"/>
+              <CommentIcon :item="item" :show-comment="props.showComment"/>
             </van-col>
             <van-col span="4" offset="1">
               <van-icon :name="dot" size=".6rem" />

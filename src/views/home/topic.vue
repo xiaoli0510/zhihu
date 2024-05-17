@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from "vue";
-import IconBack from '@/components/iconBack.vue'
-import CommentPopup from '@/components/commentPopup.vue'
+import BackIcon from '@/components/BackIcon.vue'
+import CommentPopup from '@/components/CommentPopup.vue'
 const value2 = ref("");
-import TopicItem from "@/views/home/components/idea/topicItem.vue";
+import TopicItem from "@/views/home/components/idea/TopicItem.vue";
 import { fetchTopicList } from "@/api/index.js";
 
 let list = ref([]);
@@ -18,7 +18,7 @@ list.value = res.data.list;
         <!-- 搜索 -->
         <van-row align="center" class="search-wrap">
           <van-col span="1">
-            <IconBack />
+            <BackIcon />
           </van-col>
           <van-col span="23">
             <van-cell-group inset>

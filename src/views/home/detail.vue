@@ -1,11 +1,11 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
-import Invite from '@/components/iconInvite.vue'
-import IconAnswer from '@/components/iconAnswer.vue'
-import TopicItem from '@/views/home/components/idea/topicItem.vue'
+import InviteIcon from '@/components/InviteIcon.vue'
+import AnswerIcon from '@/components/AnswerIcon.vue'
+import TopicItem from '@/views/home/components/idea/TopicItem.vue'
 
 import { fetchTopicList } from "@/api/index";
-import IconBack from '@/components/iconBack.vue'
+import BackIcon from '@/components/BackIcon.vue'
 let list = ref([]);
 
 const initData = () => {
@@ -20,11 +20,11 @@ initData();
     <div class="detail-wrap">
         <van-row align="center" justify="space-between">
             <van-col span="4">
-                <IconBack/>
+                <BackIcon/>
             </van-col>
             <van-col span="9">
-                <Invite />
-                <IconAnswer />
+                <InviteIcon />
+                <AnswerIcon />
             </van-col>
         </van-row>
         <div class="detail-header">

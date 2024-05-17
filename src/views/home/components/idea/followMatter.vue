@@ -1,10 +1,10 @@
 <script setup lang='ts'>
 // 关注问题
 import personal from "@/assets/imgs/personal.jpg";
-import IconAnswer from '@/components/iconAnswer.vue';
-import IconInvite from '@/components/iconInvite.vue';
-import IconFollow from '@/components/iconFollow.vue';
-import IconMore from '@/components/iconMore.vue';
+import AnswerIcon from '@/components/AnswerIcon.vue';
+import InviteIcon from '@/components/InviteIcon.vue';
+import FollowIcon from '@/components/FollowIcon.vue';
+import MoreIcon from '@/components/MoreIcon.vue';
 const { item } = defineProps(["item"]);
 </script>
 <template>
@@ -23,12 +23,12 @@ const { item } = defineProps(["item"]);
         <div class="footer">
             <van-row>
                 <van-col span="20">
-                    <IconAnswer />
-                    <IconInvite/>
-                    <IconFollow/>
+                    <AnswerIcon />
+                    <InviteIcon/>
+                    <FollowIcon/>
                 </van-col>
                 <van-col span="2" offset="2">
-                    <IconMore :item="item"/>
+                    <MoreIcon :item="item"/>
                 </van-col>
             </van-row>
         </div>
