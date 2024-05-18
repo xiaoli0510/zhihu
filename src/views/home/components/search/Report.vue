@@ -10,12 +10,35 @@ const  props = defineProps(['list','isReport']);
 list.value = props.list;
 console.log(list.value)
 isReport.value=props.isReport;
-const onSubmit = (values) => {
+const onSubmitStep1 = (values) => {
     console.log('submit', values);
+    isStep1.value = false;
+    isStep2.value = true;
 };
 const fileList = ref([
     { url: 'https://fastly.jsdelivr.net/npm/@vant/assets/leaf.jpeg' }
 ]);
+
+//选择举报类型
+const activeReport = ref({
+    typeName:'',
+    reasonName:'',
+});
+const activeTypeIndex = ref(-1);
+const typeList = ref([
+    {id:1,name:'涉政有害1',reasonList:[{id:1,name:'其他1'}]},
+    {id:2,name:'涉政有害2',reasonList:[{id:2,name:'其他2'}]},
+    {id:3,name:'涉政有害3',reasonList:[{id:3,name:'其他3'}]},
+    {id:4,name:'涉政有害4',reasonList:[{id:4,name:'其他4'}]},
+    {id:5,name:'涉政有害5',reasonList:[{id:5,name:'其他5'}]},
+])
+const selectType = (value,index)=>{
+    activeReport.value.typeName=value;
+    activeTypeIndex.value=index;
+}
+const selectReason = (value)=>{
+    activeReport.value.reasonName=value;
+}
 </script>
 <template>
     <!-- 举报弹框 -->
@@ -23,7 +46,7 @@ const fileList = ref([
         :style="{ height: '90%' }">
         <h3>举报</h3>
 
-        <van-form @submit="onSubmit" v-show="isStep1">
+        <van-form @submit="onSubmitStep1" v-show="isStep1">
             <div class="txt-tips">
                 <span class="tip-icon">*</span>哪些搜索词属于不适内容
             </div>
@@ -50,35 +73,17 @@ const fileList = ref([
                     <span class="tip-icon">*</span>请选择举报类型
                 </div>
                 <div class="wrap">
-                    <div class="item active">
-                        涉政有害
-                    </div>
-                    <div class="item">
-                        涉政有害
-                    </div>
-                    <div class="item">
-                        涉政有害
-                    </div>
-                    <div class="item">
-                        涉政有害
+                    <div class="item" :class="{'active':activeReport.typeName==item.name}" @click="selectType(item.name,index)" v-for="(item,index) in typeList" :key="index">
+                        {{ item.name }}
                     </div>
                 </div>
             </div>
-            <div class="report-item">
+            <div class="report-item" v-if="activeTypeIndex!=-1">
                 <div class="type-tips">
                     <span class="tip-icon">*</span>请选择具体原因
                 </div>
                 <div class="wrap">
-                    <div class="item active">其他</div>
-                    <div class="item">其他</div>
-                    <div class="item">其他</div>
-                    <div class="item">其他</div>
-                    <div class="item">其他</div>
-                    <div class="item">其他</div>
-                    <div class="item">其他</div>
-                    <div class="item">其他</div>
-                    <div class="item">其他</div>
-                    <div class="item">其他</div>
+                    <div class="item" :class="{'active':activeReport.reasonName==item.name}" @click="selectReason(item.name)" v-for="(item,index) in typeList[activeTypeIndex].reasonList" :key="index">{{ item.name }}</div>
                 </div>
             </div>
             <div class="report-item">
@@ -101,14 +106,11 @@ const fileList = ref([
                 <div class="rule-tips">了解更多社区规则，请点击：《知乎社区规范》</div>
             </div>
             <div class="submit-report-wrap">
-                <van-button round block type="primary" native-type="submit" :disabled="!checkedWord">
+                <van-button round block type="primary" native-type="submit" :disabled="activeReport.typeName&&activeReport.reasonName">
                     提交举报
                 </van-button>
             </div>
         </div>
-
-
-
     </van-popup>
 </template>
 <style scoped lang='scss'>

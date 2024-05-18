@@ -5,17 +5,21 @@ import Guess from './components/search/Guess.vue'
 import Hot from './components/search/Hot.vue'
 import BackIcon from '@/components/BackIcon.vue'
 import Report from './components/search/Report.vue'
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { fetchGuessList } from '@/api/search';
 import ReportIcon from '@/components/ReportIcon.vue'
-let guessList = [];
+const guessList = ref([]);
 const initData = async () => {
     const res = await fetchGuessList();
-    guessList = res.data.list;
+    guessList.value = res.data.list;
+    console.log(guessList.value)
 };
-initData();
 
 const isReport =ref(false);
+
+onMounted(async ()=>{
+    await initData();
+})
 
 
 </script>
