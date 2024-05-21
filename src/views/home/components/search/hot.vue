@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import { fetchHotList } from '@/api/search';
+import { useRouter } from 'vue-router';
 const list = ref([]);
 fetchHotList().then(res => {
     list.value = res.data.list;
@@ -9,6 +10,10 @@ fetchHotList().then(res => {
     console.log(err)
 })
 
+const router = useRouter();
+const enterResult = (item)=>{
+    router.push(`/result/${item.word}`)
+}
 </script>
 <template>
     <van-row class="hot-top" justify="space-between">
@@ -17,7 +22,7 @@ fetchHotList().then(res => {
         </van-col>
     </van-row>
     <div class="hot-content ">
-        <div class="name" v-for="(item, index) in list" :key="index">
+        <div class="name" v-for="(item, index) in list" :key="index" @click="enterResult(item)">
             <van-row>
                 <van-col span="22">
                     <span class="dot" :class="{ 'active': index <= 2 }"></span>

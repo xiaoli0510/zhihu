@@ -12,7 +12,6 @@ const guessList = ref([]);
 const initData = async () => {
     const res = await fetchGuessList();
     guessList.value = res.data.list;
-    console.log(guessList.value)
 };
 
 const isReport =ref(false);
@@ -21,7 +20,9 @@ onMounted(async ()=>{
     await initData();
 })
 
-
+const hideReport = ()=>{
+    isReport.value=false;
+}
 </script>
 <template>
     <div class="search-inner">
@@ -53,7 +54,7 @@ onMounted(async ()=>{
             <ReportIcon @click="isReport=true"/>
         </div>
     </div>
-    <Report :list="guessList" :show="isReport"/>
+    <Report :list="guessList" :isReport="isReport" v-if="isReport" @hide="hideReport" />
 
 </template>
 <style scoped lang='scss'>
@@ -65,6 +66,7 @@ onMounted(async ()=>{
     }
     .footer-report{
         text-align: center;
+        margin:20px 0;
     }
 }
 </style>

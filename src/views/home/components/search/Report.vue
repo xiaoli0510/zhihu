@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue';
-const isReport = ref(true);
 const checkedWord = ref('');
 const message = ref('');
 const isStep1=ref(true);
@@ -8,10 +7,8 @@ const isStep2=ref(false);
 const list = ref([]);
 const  props = defineProps(['list','isReport']);
 list.value = props.list;
-console.log(list.value)
-isReport.value=props.isReport;
+const isReport = props.isReport;
 const onSubmitStep1 = (values) => {
-    console.log('submit', values);
     isStep1.value = false;
     isStep2.value = true;
 };
@@ -39,10 +36,22 @@ const selectType = (value,index)=>{
 const selectReason = (value)=>{
     activeReport.value.reasonName=value;
 }
+
+
+const emit = defineEmits(['hide']);
+const onClickCloseIcon = ()=>{
+    emit('hide');
+}
+
+const submitReport = (values) => {
+    isStep1.value-false;
+    isStep2.value=false;
+    onClickCloseIcon();
+};
 </script>
 <template>
     <!-- 举报弹框 -->
-    <van-popup class="report-popup" v-model:show="isReport" round closeable close-icon="close" position="bottom"
+    <van-popup class="report-popup" v-model:show="isReport" round closeable close-icon="close" position="bottom"   @click-close-icon="onClickCloseIcon"
         :style="{ height: '90%' }">
         <h3>举报</h3>
 
@@ -106,7 +115,7 @@ const selectReason = (value)=>{
                 <div class="rule-tips">了解更多社区规则，请点击：《知乎社区规范》</div>
             </div>
             <div class="submit-report-wrap">
-                <van-button round block type="primary" native-type="submit" :disabled="activeReport.typeName&&activeReport.reasonName">
+                <van-button round block type="primary" @click="submitReport" native-type="submit" :disabled="!activeReport.typeName||!activeReport.reasonName">
                     提交举报
                 </van-button>
             </div>
@@ -156,7 +165,7 @@ const selectReason = (value)=>{
                 display: flex;
                 flex-wrap: wrap;
                 align-items: center;
-                justify-content: space-around;
+                justify-content: space-between;
 
                 .item {
                     background: #eeeded;
