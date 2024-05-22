@@ -9,6 +9,7 @@ import Profile from "../views/home/profile.vue";//首页-想法-个人页
 import Detail from "../views/home/detail.vue";//首页-想法-详情页
 import Search from "../views/home/search.vue";//搜索页
 import Result from "../views/home/result.vue";//搜索结果页
+import Report from "../views/home/report.vue";//举报页
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -69,6 +70,13 @@ const router = createRouter({
       component: Result,
       props:true,
     },
+    {
+      path: "/report",
+      name: "report",
+      component: Report,
+      props:true,
+    },
+    
     
   ],
 });

@@ -171,5 +171,6 @@ const handleFilter = (type, id) => {
 
 .result-list {
     background: #f7f6f6;
+    border:1px solid red;
 }
 </style>

@@ -1,5 +1,6 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const list = ref([
     {
@@ -22,9 +23,24 @@ const list = ref([
     }
 ]);
 
-const handleDelete = (index)=>{
-    list.value.splice(index,1);
+const isReport = ref(false);
+const handleReport = (index) => {
+    isReport.value = true;
 }
+
+const actions = ref([
+    { id:0,name: '和搜索词无关', icon: 'search' },
+    { id:1,name: '内容过时', icon: 'clock-o' },
+    { id:2,name: '内容不友善', icon: 'bulb-o' },
+    { id:3,name: '内容质量差', icon: 'info-o' },
+    { id:4,name: '举报', icon: 'question-o' },
+]);
+const router = useRouter();
+const onSelect = (item) => {
+    isReport.value = false;
+    item.id!==4?showToast('反馈成功'):router.push('/report');
+};
+
 </script>
 <template>
     <div class="result-item" v-for="(item, index) in list" :key="index">
@@ -39,17 +55,19 @@ const handleDelete = (index)=>{
                 <span>{{ item.info.time }}</span>
             </van-col>
             <van-col span="1">
-                <van-icon name="cross" @click="handleDelete(index)"/>
+                <van-icon name="cross" @click="handleReport(index)" />
             </van-col>
         </van-row>
     </div>
+
+    <van-action-sheet v-model:show="isReport" :actions="actions" @select="onSelect" />
 </template>
 <style scoped lang='scss'>
 .result-item {
     background: #fff;
     padding: 10px;
     margin-top: 10px;
-    width:100%;
+    width: 100%;
 
     h3 {
         line-height: 40px;
