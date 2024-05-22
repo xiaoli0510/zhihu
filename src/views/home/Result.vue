@@ -4,6 +4,9 @@ import SearchInput from './components/search/SearchInput.vue'
 import { ref } from 'vue';
 import FilterIcon from '@/components/FilterIcon.vue'
 import ResultItem from './components/search/ResultItem.vue'
+import  {fetchResultList} from '@/api/result.js';
+import { useRouter } from 'vue-router';
+
 const props = defineProps(['keyWord']);
 const tabList = ref([
     { id: 0, label: '综合' },
@@ -18,6 +21,9 @@ const tabList = ref([
     { id: 9, label: '我的' },
 ]);
 const active = ref(0);
+const handleMore = () => {
+    active.value=1;
+};
 
 //筛选弹框
 const isFilter = ref(false);
@@ -68,6 +74,25 @@ const handleFilter = (type, id) => {
             break;
     }
 }
+
+// 获取搜索结果
+const list = ref([]);
+fetchResultList({id:active.value}).then(res=>{
+    list.value = res.data.body.list;
+}).catch(err=>{
+    console.log(err);
+})
+
+const router = useRouter();
+const enterDetail=(id)=>{
+    router.push({
+        path:'/detail',
+        query:{
+            id
+        }
+    })
+}
+
 </script>
 <template>
     <!-- 搜索 -->
@@ -92,8 +117,18 @@ const handleFilter = (type, id) => {
         <div class="result-filter" @click="toggleFilter">
             <FilterIcon />
         </div>
-        <div class="result-list">
-            <ResultItem />
+        <div class="result-list"  v-if="(active===0||active===1)&&list.length>0">
+            <van-row justify="space-between" class="suggest">
+                <van-col span="4" @click="enterDetail(list[0].id)">
+                    <van-icon name="fire" color="#ee0a24" />
+                    <span class="elite-txt">精华</span>
+                </van-col>
+                <van-col span="4" @click="handleMore">
+                    <span class="more-txt">更多</span>
+                    <van-icon name="arrow" color="#8f8c8c" />
+                </van-col>
+            </van-row>
+            <ResultItem :id="active" :list="list"/>
         </div>
         <!-- 过滤条件弹框 -->
         <van-popover :show="isFilter" @select="onSelect" placement="right" :offset=offsetArray>
@@ -102,7 +137,7 @@ const handleFilter = (type, id) => {
                     <div class="filter-item" @click="handleFilter(0, item.id)"
                         :class="{ 'active': activeFilter.type === item.id }" v-for="(item, index) in filterObj.type"
                         :key="index">{{
-                            item.name
+                        item.name
                         }}
                     </div>
                 </div>
@@ -110,7 +145,7 @@ const handleFilter = (type, id) => {
                     <div class="filter-item" @click="handleFilter(1, item.id)"
                         :class="{ 'active': activeFilter.sort === item.id }" v-for="(item, index) in filterObj.sort"
                         :key="index">{{
-                            item.name
+                        item.name
                         }}
                     </div>
                 </div>
@@ -118,7 +153,7 @@ const handleFilter = (type, id) => {
                     <div class="filter-item" @click="handleFilter(2, item.id)"
                         :class="{ 'active': activeFilter.time === item.id }" v-for="(item, index) in filterObj.time"
                         :key="index">{{
-                            item.name
+                        item.name
                         }}
                     </div>
                 </div>
@@ -171,6 +206,21 @@ const handleFilter = (type, id) => {
 
 .result-list {
     background: #f7f6f6;
-    border:1px solid red;
+    overflow: hidden;
+    .suggest{
+        background: #fff;
+        line-height: 64px;
+        padding:0 10px;
+        font-size:15px;
+        .elite-txt{
+            font-weight: 700;
+            margin-left:10px;
+        }
+        .more-txt{
+            color:#8f8c8c;
+            margin-right:5px;
+            font-size:13px;
+        }
+    }
 }
 </style>

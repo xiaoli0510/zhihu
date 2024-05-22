@@ -1,31 +1,14 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+const props = defineProps(['id','list']);
+const list = ref([]);
+list.value= props.list;
 
-const list = ref([
-    {
-        title: '这是标题',
-        sentence: '这是一句话',
-        info: {
-            agree: 459,
-            evaluate: 110,
-            time: '05-18'
-        }
-    },
-    {
-        title: '这是标题',
-        sentence: '这是一句话',
-        info: {
-            agree: 459,
-            evaluate: 110,
-            time: '05-18'
-        }
-    }
-]);
 
-const isReport = ref(false);
+const isModalSheet = ref(false);
 const handleReport = (index) => {
-    isReport.value = true;
+    isModalSheet.value = true;
 }
 
 const actions = ref([
@@ -37,21 +20,30 @@ const actions = ref([
 ]);
 const router = useRouter();
 const onSelect = (item) => {
-    isReport.value = false;
+    isModalSheet.value = false;
     item.id!==4?showToast('反馈成功'):router.push('/report');
 };
 
+const enterDetail=(id)=>{
+    router.push({
+        path:'/detail',
+        query:{
+            id
+        }
+    })
+}
+
 </script>
 <template>
-    <div class="result-item" v-for="(item, index) in list" :key="index">
+    <div class="result-item" v-for="(item, index) in list" :key="index" @click="enterDetail(item.id)">
         <h3>{{ item.title }}</h3>
         <div class="sentence">
             {{ item.sentence }}
         </div>
         <van-row justify="space-between" class="result-info">
             <van-col span="17">
-                <span> {{ item.info.agree }}赞同</span>
-                <span> {{ item.info.evaluate }}评价</span>
+                <span> {{ item.info.agree }}赞同</span><span>·</span>
+                <span> {{ item.info.evaluate }}评价</span><span>·</span>
                 <span>{{ item.info.time }}</span>
             </van-col>
             <van-col span="1">
@@ -60,7 +52,7 @@ const onSelect = (item) => {
         </van-row>
     </div>
 
-    <van-action-sheet v-model:show="isReport" :actions="actions" @select="onSelect" />
+    <van-action-sheet v-model:show="isModalSheet" :actions="actions" @select="onSelect" />
 </template>
 <style scoped lang='scss'>
 .result-item {

@@ -145,3 +145,22 @@ Mock.mock("/api/profile/id", "get", {
     ],
   },
 });
+
+//result页
+Mock.mock("/api/result/list", "get", {
+  status: 200, //请求成功状态码
+  body: {
+    "list|10":[
+      {
+        id: "@increment",
+        title: "@ctitle(1,10)",
+        sentence: "@cparagraph(1,10)",
+        info: {
+            agree: "@integer(1,100)",
+            evaluate: "@integer(1,100)",
+            time: "@datetime('MM-dd')"
+        }
+      }
+    ]
+  },
+});
