@@ -3,9 +3,7 @@ import BackIcon from '@/components/BackIcon.vue'
 import SearchInput from './components/search/SearchInput.vue'
 import { ref } from 'vue';
 import FilterIcon from '@/components/FilterIcon.vue'
-import ResultItem from './components/search/ResultItem.vue'
-import  {fetchResultList} from '@/api/result.js';
-import { useRouter } from 'vue-router';
+import AllTab from './components/search/tab/AllTab.vue'
 
 const props = defineProps(['keyWord']);
 const tabList = ref([
@@ -21,9 +19,6 @@ const tabList = ref([
     { id: 9, label: '我的' },
 ]);
 const active = ref(0);
-const handleMore = () => {
-    active.value=1;
-};
 
 //筛选弹框
 const isFilter = ref(false);
@@ -75,23 +70,7 @@ const handleFilter = (type, id) => {
     }
 }
 
-// 获取搜索结果
-const list = ref([]);
-fetchResultList({id:active.value}).then(res=>{
-    list.value = res.data.body.list;
-}).catch(err=>{
-    console.log(err);
-})
 
-const router = useRouter();
-const enterDetail=(id)=>{
-    router.push({
-        path:'/detail',
-        query:{
-            id
-        }
-    })
-}
 
 </script>
 <template>
@@ -117,18 +96,8 @@ const enterDetail=(id)=>{
         <div class="result-filter" @click="toggleFilter">
             <FilterIcon />
         </div>
-        <div class="result-list"  v-if="(active===0||active===1)&&list.length>0">
-            <van-row justify="space-between" class="suggest">
-                <van-col span="4" @click="enterDetail(list[0].id)">
-                    <van-icon name="fire" color="#ee0a24" />
-                    <span class="elite-txt">精华</span>
-                </van-col>
-                <van-col span="4" @click="handleMore">
-                    <span class="more-txt">更多</span>
-                    <van-icon name="arrow" color="#8f8c8c" />
-                </van-col>
-            </van-row>
-            <ResultItem :id="active" :list="list"/>
+        <div class="result-list" v-if="active===0||active===1">
+            <AllTab :id="active" />
         </div>
         <!-- 过滤条件弹框 -->
         <van-popover :show="isFilter" @select="onSelect" placement="right" :offset=offsetArray>
@@ -207,20 +176,6 @@ const enterDetail=(id)=>{
 .result-list {
     background: #f7f6f6;
     overflow: hidden;
-    .suggest{
-        background: #fff;
-        line-height: 64px;
-        padding:0 10px;
-        font-size:15px;
-        .elite-txt{
-            font-weight: 700;
-            margin-left:10px;
-        }
-        .more-txt{
-            color:#8f8c8c;
-            margin-right:5px;
-            font-size:13px;
-        }
-    }
+
 }
 </style>

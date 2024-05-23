@@ -1,9 +1,9 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-const props = defineProps(['id','list']);
-const list = ref([]);
-list.value= props.list;
+const props = defineProps(['id','item']);
+const item = ref(null);
+item.value= props.item;
 
 
 const isModalSheet = ref(false);
@@ -35,21 +35,23 @@ const enterDetail=(id)=>{
 
 </script>
 <template>
-    <div class="result-item" v-for="(item, index) in list" :key="index" @click="enterDetail(item.id)">
-        <h3>{{ item.title }}</h3>
-        <div class="sentence">
-            {{ item.sentence }}
+    <div class="result-item"  @click="enterDetail(item.id)">
+        <div>
+            <h3>{{ item.title }}</h3>
+            <div class="sentence">
+                {{ item.sentence }}
+            </div>
+            <van-row justify="space-between" class="result-info">
+                <van-col span="17">
+                    <span> {{ item.info.agree }}赞同</span><span>·</span>
+                    <span> {{ item.info.evaluate }}评价</span><span>·</span>
+                    <span>{{ item.info.time }}</span>
+                </van-col>
+                <van-col span="1">
+                    <van-icon name="cross" @click="handleReport(index)" />
+                </van-col>
+            </van-row>
         </div>
-        <van-row justify="space-between" class="result-info">
-            <van-col span="17">
-                <span> {{ item.info.agree }}赞同</span><span>·</span>
-                <span> {{ item.info.evaluate }}评价</span><span>·</span>
-                <span>{{ item.info.time }}</span>
-            </van-col>
-            <van-col span="1">
-                <van-icon name="cross" @click="handleReport(index)" />
-            </van-col>
-        </van-row>
     </div>
 
     <van-action-sheet v-model:show="isModalSheet" :actions="actions" @select="onSelect" />

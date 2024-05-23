@@ -20,65 +20,83 @@ const list = ref([
     { id: 14, name: '广跟' },
     { id: 15, name: '广跟' },
 ]);
-const enterResult = (value)=>{
+const enterResult = (value) => {
     useRouter().push(`/result${value}`);
 }
 
 </script>
 <template>
-    <van-row>
-        <van-col span="4">
-            <h3>大家还在搜</h3>
-        </van-col>
-        <van-col span="4">
-            <van-icon name="ellipsis" color="#ddd" />
-        </van-col>
-    </van-row>
-
-    <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-        <van-swipe-item>
-            <div class="swiper-warp">
-                <div class="item" v-for="(item, index) in list.splice(0,8)" :key="index" @click="enterResult(item.name)">
-                    <van-text-ellipsis :content="item.name"/>
+    <div class="common-search">
+        <van-row justify="space-between">
+            <van-col span="7">
+                <h3>大家还在搜</h3>
+            </van-col>
+            <van-col span="2">
+                <van-icon name="ellipsis" color="#000" />
+            </van-col>
+        </van-row>
+        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+            <van-swipe-item>
+                1
+                <div class="swiper-wrap">
+                    <div class="item" v-for="(item, index) in list" :key="index"
+                        @click="enterResult(item.name)">
+                        <van-text-ellipsis :content="item.name" class="search-txt"/>
+                    </div>
                 </div>
-            </div>
-        </van-swipe-item>
-        <van-swipe-item>
-            <div class="swiper-warp">
-                <div class="item" v-for="(item, index) in list.splice(10,8)" :key="index" @click="enterResult(item.name)">
-                    <van-text-ellipsis :content="item.name" />
+            </van-swipe-item>
+            <!-- <van-swipe-item>
+                2
+                <div class="swiper-wrap">
+                    <div class="item" v-for="(item, index) in list.splice(10, 8)" :key="index"
+                        @click="enterResult(item.name)">
+                        <van-text-ellipsis :content="item.name" />
+                    </div>
                 </div>
-            </div>
-        </van-swipe-item>
-    </van-swipe>
-
+            </van-swipe-item> -->
+        </van-swipe>
+    </div>
 
 </template>
 <style scoped lang='scss'>
-h3 {
-    font-weight: 700;
-    font-size: 14px;
-}
+.common-search{
+    background:#fff;
+    border:1px solid red;
+    margin:10px 0;
+    padding:10px;
+    h3 {
+        font-weight: 700;
+        font-size: 14px;
+    }
 
-.my-swipe .van-swipe-item {
-    color: #39a9ed;
-    font-size: 20px;
-    line-height: 150px;
-    text-align: center;
-    background-color: #fff;
+    .my-swipe .van-swipe-item {
+        color: #39a9ed;
+        font-size: 20px;
+        text-align: center;
+        background-color: #fff;
 
-    .swiper-warp {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
+        .swiper-wrap {
+            height:200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
 
-        .item {
-            border-radius: 4px;
-            line-height: 30px;
-            color: #000;
-            text-align: left;
-            width: 47%;
+            .item {
+                font-size: 14px;
+                border-radius: 20px;
+                color: #000;
+                text-align: left;
+                width: 47%;
+                margin-top: 10px;
+                padding: 0 14px;
+                font-weight: 700;
+                background: #e2e1e1;
+                .search-txt{
+                    line-height: 30px;
+                }
+            }
         }
     }
 }
+
 </style>
