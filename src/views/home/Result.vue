@@ -4,6 +4,7 @@ import SearchInput from './components/search/SearchInput.vue'
 import { ref } from 'vue';
 import FilterIcon from '@/components/FilterIcon.vue'
 import AllTab from './components/search/tab/AllTab.vue'
+import RealTimeTab from './components/search/tab/RealTimeTab.vue'
 
 const props = defineProps(['keyWord']);
 const tabList = ref([
@@ -97,7 +98,7 @@ const handleFilter = (type, id) => {
             <FilterIcon />
         </div>
         <div class="result-list" v-if="active===0||active===1">
-            <AllTab :id="active" />
+            <component :is="active===0?AllTab:RealTimeTab" :type="active"></component>
         </div>
         <!-- 过滤条件弹框 -->
         <van-popover :show="isFilter" @select="onSelect" placement="right" :offset=offsetArray>
