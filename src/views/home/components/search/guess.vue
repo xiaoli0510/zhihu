@@ -2,8 +2,6 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 const props = defineProps(['list']);
-const list = props.list;
-
 const showEye=ref(false);
 const toggleEye = ()=>{
     showEye.value=!showEye.value;
@@ -30,7 +28,7 @@ const refresh = ()=>{
         </van-col>
     </van-row>
     <div class="guess-content" v-show="!showEye">
-        <div class="name" v-for="(item,index) in list" :key="index" @click="enterResult(item)">
+        <div class="name" v-for="(item,index) in props.list" :key="index" @click="enterResult(item)">
             <span>{{ item.word}}</span>
             <van-tag color="rgb(238 242 248)" text-color="#1989fa" v-if="item.type===1">新</van-tag>
             <van-tag color="rgb(245 238 238)" v-if="item.type===2"

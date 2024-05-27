@@ -31,3 +31,12 @@ Mock.mock("/api/search/hot", "get", {
     },
   ],
 });
+//搜索结果页 综合tab 大家常搜
+Mock.mock("/api/search/common", "get", {
+  "list|20": [
+    {
+      id: "@increment",
+      word: "@ctitle(1,20)"
+    },
+  ],
+});

@@ -11,3 +11,7 @@ export async function fetchGuessList(){
 export async function fetchHotList(){
     return await service.get('/api/search/hot');
 }
+//搜索结果页 综合tab 大家常搜
+export async function fetchCommonList(){
+    return await service.get('/api/search/common');
+}

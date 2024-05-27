@@ -2,13 +2,9 @@
 import { ref } from 'vue';
 import TypeInfo from '../report/TypeInfo.vue'
 const checkedWord = ref('');
-
 const isStep1 = ref(true);
 const isStep2 = ref(false);
-const list = ref([]);
 const props = defineProps(['list', 'isReport']);
-list.value = props.list;
-const isReport = props.isReport;
 const onSubmitStep1 = (values) => {
     isStep1.value = false;
     isStep2.value = true;
@@ -28,17 +24,17 @@ const submitReport = () => {
 </script>
 <template>
     <!-- 举报弹框 -->
-    <van-popup class="report-popup" v-model:show="isReport" round closeable close-icon="close" position="bottom"
+    <van-popup class="report-popup" round closeable close-icon="close" position="bottom"
         @click-close-icon="onClickCloseIcon" :style="{ height: '90%' }">
         <h3>举报</h3>
 
-        <van-form @submit="onSubmitStep1" v-show="isStep1">
+        <van-form @submit="onSubmitStep1" v-if="isStep1">
             <div class="txt-tips">
                 <span class="tip-icon">*</span>哪些搜索词属于不适内容
             </div>
             <van-radio-group v-model="checkedWord">
                 <van-cell-group inset>
-                    <van-cell :title="item.word" clickable v-for="(item, index) in list" :key="index">
+                    <van-cell :title="item.word" clickable v-for="(item, index) in props.list" :key="index">
                         <template #right-icon>
                             <van-radio :name="item.id" />
                         </template>

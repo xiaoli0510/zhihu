@@ -1,27 +1,38 @@
 <script setup lang='ts'>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-
-const list = ref([
-    { id: 0, name: '广跟' },
-    { id: 1, name: '广跟' },
-    { id: 2, name: '广跟' },
-    { id: 3, name: '广跟' },
-    { id: 4, name: '广跟' },
-    { id: 5, name: '广跟' },
-    { id: 6, name: '广跟' },
-    { id: 7, name: '广跟' },
-    { id: 8, name: '广跟' },
-    { id: 9, name: '广跟' },
-    { id: 10, name: '广跟' },
-    { id: 11, name: '广跟' },
-    { id: 12, name: '广跟' },
-    { id: 13, name: '广跟' },
-    { id: 14, name: '广跟' },
-    { id: 15, name: '广跟' },
-]);
+import {fetchCommonList} from '@/api/search.js';
+import Report from '@/views/home/components/search/Report.vue';
+const list = ref([]);
 const enterResult = (value) => {
     useRouter().push(`/result${value}`);
+}
+
+const firstTop10 =computed(()=>{
+    return list.value.slice(0,10)
+})
+const last10 =computed(()=>{
+    return list.value.slice(10,20)
+})
+fetchCommonList().then(res=>{
+    list.value = res.data.list;
+})
+
+// 举报弹框
+const isReportSheet = ref(false);
+const isReport = ref(false);
+const actions = [
+    { name: '举报', icon: 'cart-o' },
+];
+const showReport = () => {
+    isReportSheet.value = true;
+}
+const onSelect = () => {
+    isReportSheet.value = false;
+    isReport.value=true;
+};
+const hide=()=>{
+    isReport.value=false;
 }
 
 </script>
@@ -32,36 +43,36 @@ const enterResult = (value) => {
                 <h3>大家还在搜</h3>
             </van-col>
             <van-col span="2">
-                <van-icon name="ellipsis" color="#000" />
+                <van-icon name="ellipsis" color="#000" @click="showReport"/>
             </van-col>
         </van-row>
-        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+        
+        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#39a9ed">
             <van-swipe-item>
-                1
                 <div class="swiper-wrap">
-                    <div class="item" v-for="(item, index) in list" :key="index"
-                        @click="enterResult(item.name)">
-                        <van-text-ellipsis :content="item.name" class="search-txt"/>
+                    <div class="item" v-for="(item, index) in firstTop10" :key="index"
+                        @click="enterResult(item.word)">
+                        <van-text-ellipsis :content="item.word" class="search-txt"/>
                     </div>
                 </div>
             </van-swipe-item>
-            <!-- <van-swipe-item>
-                2
+            <van-swipe-item>
                 <div class="swiper-wrap">
-                    <div class="item" v-for="(item, index) in list.splice(10, 8)" :key="index"
-                        @click="enterResult(item.name)">
-                        <van-text-ellipsis :content="item.name" />
+                    <div class="item" v-for="(item, index) in last10" :key="index"
+                        @click="enterResult(item.word)">
+                        <van-text-ellipsis :content="item.word" class="search-txt"/>
                     </div>
                 </div>
-            </van-swipe-item> -->
+            </van-swipe-item>
         </van-swipe>
     </div>
-
+    <!-- 举报弹框 -->
+    <van-action-sheet v-model:show="isReportSheet" :actions="actions" @select="onSelect" />
+    <Report :isReport="isReport" :list="list" @hide="hide"/>
 </template>
 <style scoped lang='scss'>
 .common-search{
     background:#fff;
-    border:1px solid red;
     margin:10px 0;
     padding:10px;
     h3 {
@@ -90,7 +101,7 @@ const enterResult = (value) => {
                 margin-top: 10px;
                 padding: 0 14px;
                 font-weight: 700;
-                background: #e2e1e1;
+                background: #ebeaea;
                 .search-txt{
                     line-height: 30px;
                 }

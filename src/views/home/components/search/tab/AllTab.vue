@@ -40,11 +40,15 @@ const handleMore = () => {
             <van-icon name="arrow" color="#8f8c8c" />
         </van-col>
     </van-row>
-    <div v-for="(item,index) in list" :key="index">
+    <div v-for="(item, index) in list" :key="index">
         <ResultItem :item="item" />
-        <CommonSearch v-if="index===3"/>
-        <CommonSearch v-if="index===7"/>
-        <CommonSearch v-if="index===11"/>
+        <CommonSearch v-if="index === 3" />
+        <CommonSearch v-if="index === 7" />
+        <CommonSearch v-if="index === 11" />
+    </div>
+    
+    <div class="question-bottom">
+        <van-button round size="large" type="primary">向知友提问</van-button>
     </div>
 </template>
 <style scoped lang='scss'>
@@ -64,5 +68,14 @@ const handleMore = () => {
         margin-right: 5px;
         font-size: 13px;
     }
+}
+.question-bottom{
+    background:#fff;
+    padding:5px 10px;
+    position: fixed;
+    bottom:0;
+    left:0;
+    right:0;
+
 }
 </style>
