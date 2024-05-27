@@ -8,6 +8,7 @@ const activeName = ref('trend');
 import Invent from "@/views/home/components/idea/Invent.vue";
 import Trend from '@/views/home/components/idea/Trend.vue';
 import { fetchProfile } from '@/api/index.js'
+import { onBeforeRouteLeave } from 'vue-router';
 const obj = ref({
    id: 1,
    imgBg: personal,//top img
@@ -91,6 +92,13 @@ const activeLabelIndex = ref(0);
 const selectLabel = (index) => {
    activeLabelIndex.value = index;
 }
+
+onBeforeRouteLeave((to, from) => {
+    console.log("222222", to, from)
+    if (to.name === 'result') {
+        to.query.type='2';
+    }
+})
 
 </script>
 <template>

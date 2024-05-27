@@ -20,4 +20,7 @@ provide('reload',reload);
   </Suspense>
 </template>
 <style scoped>
+.container{
+  height: 100%;
+}
 </style>

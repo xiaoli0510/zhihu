@@ -50,7 +50,7 @@ const router = createRouter({
       component: Topic,
     },
     {
-      path: "/profile",
+      path: "/profile/:id",
       name: "profile",
       component: Profile,
     },

@@ -59,7 +59,12 @@ const enterResult = (item) => {
     if (deleteRef.value === true) {
         return false;
     }
-    router.push(`/result/${item.word}`);
+    router.push({
+        path:`/result/${item.word}`,
+        query:{
+            type:0
+        }
+    });
 }
 
 </script>

@@ -1,10 +1,16 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import TypeInfo from '../report/TypeInfo.vue'
 const checkedWord = ref('');
 const isStep1 = ref(true);
 const isStep2 = ref(false);
 const props = defineProps(['list', 'isReport']);
+const isReportShow =ref(props.isReport);
+watch(isReportShow,(newVal,oldVal)=>{
+    if(!newVal){
+        emit('hide');
+    }
+})
 const onSubmitStep1 = (values) => {
     isStep1.value = false;
     isStep2.value = true;
@@ -24,7 +30,7 @@ const submitReport = () => {
 </script>
 <template>
     <!-- 举报弹框 -->
-    <van-popup class="report-popup" round closeable close-icon="close" position="bottom"
+    <van-popup class="report-popup" v-model:show="isReportShow" round closeable close-icon="close" position="bottom"
         @click-close-icon="onClickCloseIcon" :style="{ height: '90%' }">
         <h3>举报</h3>
 

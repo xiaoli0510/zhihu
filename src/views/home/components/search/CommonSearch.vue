@@ -68,7 +68,7 @@ const hide=()=>{
     </div>
     <!-- 举报弹框 -->
     <van-action-sheet v-model:show="isReportSheet" :actions="actions" @select="onSelect" />
-    <Report :isReport="isReport" :list="list" @hide="hide"/>
+    <Report v-if="isReport" :isReport="isReport" :list="list" @hide="hide"/>
 </template>
 <style scoped lang='scss'>
 .common-search{

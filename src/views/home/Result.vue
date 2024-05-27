@@ -5,7 +5,8 @@ import { ref } from 'vue';
 import FilterIcon from '@/components/FilterIcon.vue'
 import AllTab from './components/search/tab/AllTab.vue'
 import RealTimeTab from './components/search/tab/RealTimeTab.vue'
-
+import UserTab from '@/views/home/components/search/tab/UserTab.vue';
+import { useRoute } from 'vue-router';
 const props = defineProps(['keyWord']);
 const tabList = ref([
     { id: 0, label: '综合' },
@@ -20,6 +21,13 @@ const tabList = ref([
     { id: 9, label: '我的' },
 ]);
 const active = ref(0);
+console.log(useRoute().query)
+active.value=Number(useRoute().query.type);
+const tabMap = {
+    0: AllTab,
+    1: RealTimeTab,
+    2: UserTab
+}
 
 //筛选弹框
 const isFilter = ref(false);
@@ -70,26 +78,24 @@ const handleFilter = (type, id) => {
             break;
     }
 }
-
-
-
 </script>
 <template>
-    <!-- 搜索 -->
-    <van-row align="center">
-        <van-col span="1">
-            <BackIcon />
-        </van-col>
-        <van-col span="23">
-            <SearchInput :keyWord="props.keyWord" />
-        </van-col>
-    </van-row>
+    <van-sticky :offset-top="0">
+        <!-- 搜索 -->
+        <van-row align="center" class="result-search-top">
+            <van-col span="1">
+                <BackIcon />
+            </van-col>
+            <van-col span="23">
+                <SearchInput :keyWord="props.keyWord" />
+            </van-col>
+        </van-row>
+    </van-sticky>
     <div class="result-tab-wrap">
         <van-row>
             <van-col span="20">
                 <van-tabs v-model:active="active">
-                    <van-tab v-for="(item, index) in tabList" :key="index" :title="item.label" :name="item.id">
-
+                    <van-tab v-for="(item, index) in tabList" :key="index" :title="item.label" :name="item.id" :value="item.id">
                     </van-tab>
                 </van-tabs>
             </van-col>
@@ -97,86 +103,101 @@ const handleFilter = (type, id) => {
         <div class="result-filter" @click="toggleFilter">
             <FilterIcon />
         </div>
-        <div class="result-list" v-if="active===0||active===1">
-            <component :is="active===0?AllTab:RealTimeTab" :type="active"></component>
-        </div>
-        <!-- 过滤条件弹框 -->
-        <van-popover :show="isFilter" @select="onSelect" placement="right" :offset=offsetArray>
-            <div class="filter-inner">
-                <div class="result-filter-wrap">
-                    <div class="filter-item" @click="handleFilter(0, item.id)"
-                        :class="{ 'active': activeFilter.type === item.id }" v-for="(item, index) in filterObj.type"
-                        :key="index">{{
-                        item.name
-                        }}
-                    </div>
-                </div>
-                <div class="result-filter-wrap">
-                    <div class="filter-item" @click="handleFilter(1, item.id)"
-                        :class="{ 'active': activeFilter.sort === item.id }" v-for="(item, index) in filterObj.sort"
-                        :key="index">{{
-                        item.name
-                        }}
-                    </div>
-                </div>
-                <div class="result-filter-wrap">
-                    <div class="filter-item" @click="handleFilter(2, item.id)"
-                        :class="{ 'active': activeFilter.time === item.id }" v-for="(item, index) in filterObj.time"
-                        :key="index">{{
-                        item.name
-                        }}
-                    </div>
+    </div>
+    <div class="result-list">
+        <component :is="tabMap[active]" :type="active"></component>
+    </div>
+    <!-- 过滤条件弹框 -->
+    <van-popover :show="isFilter" @select="onSelect" placement="right" :offset=offsetArray>
+        <div class="filter-inner">
+            <div class="result-filter-wrap">
+                <div class="filter-item" @click="handleFilter(0, item.id)"
+                    :class="{ 'active': activeFilter.type === item.id }" v-for="(item, index) in filterObj.type"
+                    :key="index">{{
+                    item.name
+                    }}
                 </div>
             </div>
-        </van-popover>
-    </div>
+            <div class="result-filter-wrap">
+                <div class="filter-item" @click="handleFilter(1, item.id)"
+                    :class="{ 'active': activeFilter.sort === item.id }" v-for="(item, index) in filterObj.sort"
+                    :key="index">{{
+                    item.name
+                    }}
+                </div>
+            </div>
+            <div class="result-filter-wrap">
+                <div class="filter-item" @click="handleFilter(2, item.id)"
+                    :class="{ 'active': activeFilter.time === item.id }" v-for="(item, index) in filterObj.time"
+                    :key="index">{{
+                    item.name
+                    }}
+                </div>
+            </div>
+        </div>
+    </van-popover>
+
 
 
 </template>
 <style scoped lang='scss'>
+.result-search-top{
+    background:#fff;
+    height:50px;
+    box-sizing: content-box;
+}
 .result-tab-wrap {
+    height:44px;
+    box-sizing: content-box;
     position: relative;
-    // padding-right:40px;
     box-sizing: content-box;
 
     .result-filter {
         position: absolute;
-        right: 7px;
+        right: 0;
         top: 0;
-        transform: translate(0, 50%);
+        transform: translate(0, 0);
         background: #fff;
+        height:41px;
+        width: 16.66%;
+        line-height: 41px;
+        text-align: center;
     }
-}
 
-.filter-inner {
-    width: 370px;
-    padding: 10px 10px 0 10px;
 
-    .result-filter-wrap {
-        display: flex;
-        margin-bottom: 10px;
-        overflow-x: auto;
+    .filter-inner {
+        width: 370px;
+        padding: 10px 10px 0 10px;
 
-        .filter-item {
-            color: #999595;
-            font-size: 12px;
-            line-height: 30px;
-            padding: 0 4px;
-            margin-right: 7px;
-            white-space: nowrap;
+        .result-filter-wrap {
+            display: flex;
+            margin-bottom: 10px;
+            overflow-x: auto;
 
-            &.active {
-                background: #daeef8;
-                color: rgb(76, 142, 228);
-                border-radius: 7px;
+            .filter-item {
+                color: #999595;
+                font-size: 12px;
+                line-height: 30px;
+                padding: 0 4px;
+                margin-right: 7px;
+                white-space: nowrap;
+
+                &.active {
+                    background: #daeef8;
+                    color: rgb(76, 142, 228);
+                    border-radius: 7px;
+                }
             }
         }
     }
 }
-
 .result-list {
-    background: #f7f6f6;
     overflow: hidden;
+    padding-bottom: 60px;
+    height: calc(100% - 94px);
+    background:#faf8f8;
+    box-sizing: border-box;
 
 }
+
 </style>

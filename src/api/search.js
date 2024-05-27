@@ -15,3 +15,7 @@ export async function fetchHotList(){
 export async function fetchCommonList(){
     return await service.get('/api/search/common');
 }
+//搜索结果页 用户tab 
+export async function fetchUserList(params){
+    return await service.get('/api/search/user');
+}

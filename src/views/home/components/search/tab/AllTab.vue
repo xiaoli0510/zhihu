@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import ResultItem from '../ResultItem.vue'
 import CommonSearch from '../CommonSearch.vue'
+import { showToast } from 'vant';
 const props = defineProps(['type']);
 const type = props.type;
 // 获取搜索结果
@@ -28,6 +29,10 @@ const active = ref(0);
 const handleMore = () => {
     active.value = 1;
 };
+
+const ask = ()=>{
+    showToast('等待完善中');
+}
 </script>
 <template>
     <van-row justify="space-between" class="suggest">
@@ -48,7 +53,7 @@ const handleMore = () => {
     </div>
     
     <div class="question-bottom">
-        <van-button round size="large" type="primary">向知友提问</van-button>
+        <van-button round size="large" type="primary" @click="ask">向知友提问</van-button>
     </div>
 </template>
 <style scoped lang='scss'>

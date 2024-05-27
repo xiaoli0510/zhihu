@@ -40,3 +40,18 @@ Mock.mock("/api/search/common", "get", {
     },
   ],
 });
+//搜索结果页 用户tab 
+Mock.mock("/api/search/user", "get", {
+  "list|20": [
+    {
+      id: "@increment",
+      title: "@ctitle(1,10)",
+      sentence: "@cparagraph(1,10)",
+      beFollow: "@integer(1,100)", //被关注
+      product: "@integer(1,100)",//创作
+      support: "@integer(1,100)", //赞同
+      time:"@integer(1,30)",//更新时间
+      answer: "@integer(1,100)",//回答
+    },
+  ],
+});
