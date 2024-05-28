@@ -23,3 +23,8 @@ export async function fetchUserList(params){
 export async function fetchNovelList(params){
     return await service.get('/api/search/novel');
 }
+//搜索结果页 小说详情页
+export async function fetchNovelDetail(params){
+    return await service.get('/api/search/novel/detail');
+}
+

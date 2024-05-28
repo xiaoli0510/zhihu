@@ -66,7 +66,28 @@ Mock.mock("/api/search/novel", "get", {
       "type|1":[
         1,2,3,4,5,6,7,8,9,10,11,12,13,14
       ],
-      feature: "@ctitle(1,3)",
+      'feature': "@ctitle(1,3)",
+      "statu|1":[0,1],//0未完结 1已完结
+      info: {
+          agree: "@integer(0,100)",
+          evaluate: "@integer(0,100)",
+      }
+    },
+  ],
+});
+//搜索结果页 小说详情页
+Mock.mock("/api/search/novel/detail", "get", {
+  "list|20": [
+    {
+      id: "@increment",
+      avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+      name: "@cname",
+      title: "@ctitle(1,10)",
+      sentence: "@cparagraph(1,1000)",
+      "type|1":[
+        1,2,3,4,5,6,7,8,9,10,11,12,13,14
+      ],
+      'feature|1-3': ["@ctitle(1,3)"],
       "statu|1":[0,1],//0未完结 1已完结
       info: {
           agree: "@integer(0,100)",

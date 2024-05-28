@@ -16,12 +16,7 @@ const onSelect = () => {
 
 const router = useRouter();
 const enterDetail = (id) => {
-    router.push({
-        path: '/detail',
-        query: {
-            id
-        }
-    })
+    router.push(`/novel/datail/${id}`)
 }
 const NOVELIYPE = {
     0: '全部',
@@ -61,7 +56,6 @@ const NOVELIYPE = {
             </van-row>
         </div>
     </div>
-    <div class="no-data" align="center">-- 没有更多了 --</div>
     <Feedback @select="onSelect" :isModalSheet="isModalSheet" v-if="isModalSheet" />
 </template>
 <style scoped lang='scss'>
@@ -100,10 +94,5 @@ const NOVELIYPE = {
             }
         }
     }
-}
-.no-data {
-    color: #525151;
-    padding: 20px 0;
-    font-size: 14px;
 }
 </style>

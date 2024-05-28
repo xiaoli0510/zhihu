@@ -14,6 +14,13 @@ fetchNovelList({ type: props.type,keyWord:keyWord }).then(res => {
 })
 </script>
 <template>
-        <NovelItem :item="item" v-for="(item, index) in list" :key="index"/>
+    <NovelItem :item="item" v-for="(item, index) in list" :key="index" />
+    <div class="no-data" align="center">-- 没有更多了 --</div>
 </template>
-<style scoped lang='scss'></style>
+<style scoped lang='scss'>
+.no-data {
+    color: #525151;
+    padding: 20px 0;
+    font-size: 14px;
+}
+</style>
