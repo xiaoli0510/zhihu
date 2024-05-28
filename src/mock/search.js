@@ -56,3 +56,22 @@ Mock.mock("/api/search/user", "get", {
     },
   ],
 });
+//搜索结果页 小说tab 
+Mock.mock("/api/search/novel", "get", {
+  "list|20": [
+    {
+      id: "@increment",
+      title: "@ctitle(1,10)",
+      sentence: "@cparagraph(1,10)",
+      "type|1":[
+        1,2,3,4,5,6,7,8,9,10,11,12,13,14
+      ],
+      feature: "@ctitle(1,3)",
+      "statu|1":[0,1],//0未完结 1已完结
+      info: {
+          agree: "@integer(0,100)",
+          evaluate: "@integer(0,100)",
+      }
+    },
+  ],
+});

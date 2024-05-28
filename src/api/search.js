@@ -19,3 +19,7 @@ export async function fetchCommonList(){
 export async function fetchUserList(params){
     return await service.get('/api/search/user');
 }
+//搜索结果页 小说tab 
+export async function fetchNovelList(params){
+    return await service.get('/api/search/novel');
+}

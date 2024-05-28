@@ -1,14 +1,16 @@
-<script setup lang='ts'>
+<script setup>
 import BackIcon from '@/components/BackIcon.vue'
 import SearchInput from './components/search/SearchInput.vue'
-import { ref } from 'vue';
+import { ref,provide } from 'vue';
 import FilterIcon from '@/components/FilterIcon.vue'
 import AllTab from './components/search/tab/AllTab.vue'
 import RealTimeTab from './components/search/tab/RealTimeTab.vue'
 import UserTab from '@/views/home/components/search/tab/UserTab.vue';
 import NovelTab from '@/views/home/components/search/tab/NovelTab.vue';
 import { useRoute } from 'vue-router';
+import { showToast } from 'vant';
 const props = defineProps(['keyWord']);
+provide('keyWord', props.keyWord)
 const tabList = ref([
     { id: 0, label: '综合' },
     { id: 1, label: '实时' },
@@ -21,7 +23,7 @@ const tabList = ref([
     { id: 8, label: '想法' },
     { id: 9, label: '我的' },
 ]);
-const active = ref(0);
+const active = ref(3);
 active.value=Number(useRoute().query.type);
 const tabMap = {
     0: AllTab,
@@ -105,7 +107,7 @@ const handleFilter = (type, id) => {
             <FilterIcon />
         </div>
     </div>
-    <div class="result-list">
+    <div class="result-list" :class="{'white-bg':active===2}">
         <component :is="tabMap[active]" :type="active"></component>
     </div>
     <!-- 过滤条件弹框 -->
@@ -137,9 +139,6 @@ const handleFilter = (type, id) => {
             </div>
         </div>
     </van-popover>
-
-
-
 </template>
 <style scoped lang='scss'>
 .result-search-top{
@@ -198,6 +197,9 @@ const handleFilter = (type, id) => {
     height: calc(100% - 94px);
     background:#faf8f8;
     box-sizing: border-box;
+    &.white-bg{
+        background:#fff;
+    }
 
 }
 

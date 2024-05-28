@@ -13,7 +13,7 @@ const actions = ref([
 const emit = defineEmits(['select']);
 const props = defineProps(['isModalSheet']);
 const isModalSheetShow = ref(props.isModalSheet);
-watch(isModalSheetShow, (newVal, oldVal) => {
+watch(isModalSheetShow, (newVal) => {
     if (!newVal) {
         emit('select');
     }

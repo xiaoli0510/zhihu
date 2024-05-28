@@ -27,7 +27,7 @@ const enterDetail=(id)=>{
 
 </script>
 <template>
-    <div class="result-item"  @click="enterDetail(item.id)">
+    <div class="novel-item"  @click="enterDetail(item.id)">
         <div>
             <h3>{{ item.title }}</h3>
             <div class="sentence">
@@ -45,10 +45,10 @@ const enterDetail=(id)=>{
             </van-row>
         </div>
     </div>
-<Feedback @select="onSelect" v-if="isModalSheet" :isModalSheet="isModalSheet"/>
+   <Feedback @select="onSelect" v-if="isModalSheet" :isModalSheet="isModalSheet"/>
 </template>
 <style scoped lang='scss'>
-.result-item {
+.novel-item {
     background: #fff;
     padding: 10px;
     margin-top: 10px;

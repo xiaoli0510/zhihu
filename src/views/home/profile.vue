@@ -9,6 +9,7 @@ import Invent from "@/views/home/components/idea/Invent.vue";
 import Trend from '@/views/home/components/idea/Trend.vue';
 import { fetchProfile } from '@/api/index.js'
 import { onBeforeRouteLeave } from 'vue-router';
+import { showToast } from 'vant';
 const obj = ref({
    id: 1,
    imgBg: personal,//top img

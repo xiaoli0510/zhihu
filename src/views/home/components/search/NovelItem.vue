@@ -1,86 +1,109 @@
-<script setup lang='ts'>
-import { ref } from 'vue';
+<script setup>
+import { ref,inject } from 'vue';
 import { useRouter } from 'vue-router';
-const props = defineProps(['id','item']);
-const item = ref(null);
-item.value= props.item;
-
+import Feedback from './Feedback.vue'
+const props = defineProps(['id', 'item']);
+const item = ref(props.item);
+const keyWord = inject('keyWord');
 
 const isModalSheet = ref(false);
-const handleReport = (index) => {
+const handleReport = (id) => {
     isModalSheet.value = true;
 }
-
-const actions = ref([
-    { id:0,name: '和搜索词无关', icon: 'search' },
-    { id:1,name: '内容过时', icon: 'clock-o' },
-    { id:2,name: '内容不友善', icon: 'bulb-o' },
-    { id:3,name: '内容质量差', icon: 'info-o' },
-    { id:4,name: '举报', icon: 'question-o' },
-]);
-const router = useRouter();
-const onSelect = (item) => {
+const onSelect = () => {
     isModalSheet.value = false;
-    item.id!==4?showToast('反馈成功'):router.push('/report');
 };
 
-const enterDetail=(id)=>{
+const router = useRouter();
+const enterDetail = (id) => {
     router.push({
-        path:'/detail',
-        query:{
+        path: '/detail',
+        query: {
             id
         }
     })
 }
-
+const NOVELIYPE = {
+    0: '全部',
+    1: '言情',
+    2: '现实情感',
+    3: '爽文',
+    4: '大女主',
+    5: '家庭',
+    6: '复仇',
+    7: '恐怖',
+    8: '追妻火葬场',
+    9: '脑洞',
+    10: '悬疑',
+    11: '病娇',
+    12: '娱乐圈',
+    13: '沙雕文',
+    14: '重生',
+}
 </script>
 <template>
-    <div class="result-item"  @click="enterDetail(item.id)">
-        <div>
+    <div class="novel-item" @click="enterDetail(item.id)">
+        <div class="novel-item-inner">
             <h3>{{ item.title }}</h3>
-            <div class="statu">悬疑·惊悚·已完结</div>
+            <div class="state">{{ NOVELIYPE[item.type] }}·{{item.feature}}·<span>{{item.statu===0?'已':'未'}}完结</span></div>
             <div class="sentence">
                 {{ item.sentence }}
             </div>
             <van-row justify="space-between" class="result-info">
                 <van-col span="17">
                     <span>盐选专栏</span><span>·</span>
-                    <span> {{ item.info.agree }}赞同</span><span>·</span>
-                    <span> {{ item.info.evaluate }}评价</span>
+                    <span v-if="item.info.agree>0"> {{ item.info.agree }}赞同</span><span>·</span>
+                    <span v-if="item.info.evaluate>0"> {{ item.info.evaluate }}评价</span>
                 </van-col>
                 <van-col span="1">
-                    <van-icon name="cross" @click="handleReport(index)" />
+                    <van-icon name="cross" @click.stop="handleReport(item.id)" />
                 </van-col>
             </van-row>
         </div>
     </div>
-
-    <van-action-sheet v-model:show="isModalSheet" :actions="actions" @select="onSelect" />
+    <div class="no-data" align="center">-- 没有更多了 --</div>
+    <Feedback @select="onSelect" :isModalSheet="isModalSheet" v-if="isModalSheet" />
 </template>
 <style scoped lang='scss'>
-.result-item {
+.novel-item {
     background: #fff;
-    padding: 10px;
-    margin-top: 10px;
-    width: 100%;
 
-    h3 {
-        line-height: 40px;
-        font-weight: 700;
+    &:first-of-type {
+        margin-top: 10px;
     }
 
-    .sentence,
-    .result-info,.statu  {
-        font-size: 12px;
-        line-height: 20px;
-    }
+    .novel-item-inner {
+        padding: 10px;
+        width: 97%;
+        margin: 0 auto;
+        border-bottom: 1px solid #e6e4e4;
 
-    .result-info,.statu{
-        color: #837f7f;
+        h3 {
+            line-height: 40px;
+            font-weight: 700;
+        }
 
-        span {
-            margin-right: 3px;
+        .sentence,
+        .result-info,
+        .state {
+            font-size: 12px;
+            line-height: 22px;
+        }
+
+        .result-info,
+        .state {
+            font-size: 11px;
+            color: #837f7f;
+
+            span {
+                margin-right: 3px;
+            }
         }
     }
+}
+.no-data {
+    color: #525151;
+    padding: 20px 0;
+    font-size: 14px;
 }
 </style>
