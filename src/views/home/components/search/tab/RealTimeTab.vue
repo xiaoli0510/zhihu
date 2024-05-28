@@ -2,11 +2,11 @@
 import { fetchResultList } from '@/api/result.js';
 import { ref } from 'vue';
 import ResultItem from '../ResultItem.vue'
+import { showToast } from 'vant';
 const props = defineProps(['type']);
-const type = props.type;
 // 获取搜索结果
 const list = ref([]);
-fetchResultList({ type: type }).then(res => {
+fetchResultList({ type: props.type }).then(res => {
     list.value = res.data.body.list;
 }).catch(err => {
     console.log(err);

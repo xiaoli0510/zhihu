@@ -1,21 +1,29 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import Feedback from './Feedback.vue'
 const props = defineProps(['id','item']);
 const item = ref(null);
 item.value= props.item;
+
+
 const isModalSheet = ref(false);
-
-
 const handleReport = (index) => {
     isModalSheet.value = true;
 }
-const onSelect = () => {
+
+const actions = ref([
+    { id:0,name: '和搜索词无关', icon: 'search' },
+    { id:1,name: '内容过时', icon: 'clock-o' },
+    { id:2,name: '内容不友善', icon: 'bulb-o' },
+    { id:3,name: '内容质量差', icon: 'info-o' },
+    { id:4,name: '举报', icon: 'question-o' },
+]);
+const router = useRouter();
+const onSelect = (item) => {
     isModalSheet.value = false;
+    item.id!==4?showToast('反馈成功'):router.push('/report');
 };
 
-const router = useRouter();
 const enterDetail=(id)=>{
     router.push({
         path:'/detail',
@@ -30,22 +38,24 @@ const enterDetail=(id)=>{
     <div class="result-item"  @click="enterDetail(item.id)">
         <div>
             <h3>{{ item.title }}</h3>
+            <div class="statu">悬疑·惊悚·已完结</div>
             <div class="sentence">
                 {{ item.sentence }}
             </div>
             <van-row justify="space-between" class="result-info">
                 <van-col span="17">
+                    <span>盐选专栏</span><span>·</span>
                     <span> {{ item.info.agree }}赞同</span><span>·</span>
-                    <span> {{ item.info.evaluate }}评价</span><span>·</span>
-                    <span>{{ item.info.time }}</span>
+                    <span> {{ item.info.evaluate }}评价</span>
                 </van-col>
                 <van-col span="1">
-                    <van-icon name="cross" @click.stop="handleReport(item.id)" />
+                    <van-icon name="cross" @click="handleReport(index)" />
                 </van-col>
             </van-row>
         </div>
     </div>
-<Feedback @select="onSelect" v-if="isModalSheet" :isModalSheet="isModalSheet"/>
+
+    <van-action-sheet v-model:show="isModalSheet" :actions="actions" @select="onSelect" />
 </template>
 <style scoped lang='scss'>
 .result-item {
@@ -60,12 +70,12 @@ const enterDetail=(id)=>{
     }
 
     .sentence,
-    .result-info {
+    .result-info,.statu  {
         font-size: 12px;
         line-height: 20px;
     }
 
-    .result-info {
+    .result-info,.statu{
         color: #837f7f;
 
         span {

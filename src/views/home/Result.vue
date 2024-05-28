@@ -6,6 +6,7 @@ import FilterIcon from '@/components/FilterIcon.vue'
 import AllTab from './components/search/tab/AllTab.vue'
 import RealTimeTab from './components/search/tab/RealTimeTab.vue'
 import UserTab from '@/views/home/components/search/tab/UserTab.vue';
+import NovelTab from '@/views/home/components/search/tab/NovelTab.vue';
 import { useRoute } from 'vue-router';
 const props = defineProps(['keyWord']);
 const tabList = ref([
@@ -21,12 +22,12 @@ const tabList = ref([
     { id: 9, label: '我的' },
 ]);
 const active = ref(0);
-console.log(useRoute().query)
 active.value=Number(useRoute().query.type);
 const tabMap = {
     0: AllTab,
     1: RealTimeTab,
-    2: UserTab
+    2: UserTab,
+    3: NovelTab,
 }
 
 //筛选弹框
@@ -192,7 +193,7 @@ const handleFilter = (type, id) => {
     }
 }
 .result-list {
-    overflow: hidden;
+    overflow: auto;
     padding-bottom: 60px;
     height: calc(100% - 94px);
     background:#faf8f8;

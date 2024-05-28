@@ -1,5 +1,4 @@
 <script setup lang='ts'>
-import personal from '@/assets/imgs/personal.jpg';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 const props = defineProps(['item']);
@@ -32,7 +31,7 @@ const enterProfile = (id) => {
     <van-row class="user-item" justify="space-around"
         @click="enterProfile(item.id)">
         <van-col class="left" span="6">
-            <van-image width="80" height="80" :src="personal" round />
+            <van-image width="80" height="80" :src="item.avatar" round />
         </van-col>
         <van-col class="right" span="18">
             <van-row justify="space-around" align="center">

@@ -45,6 +45,7 @@ Mock.mock("/api/search/user", "get", {
   "list|20": [
     {
       id: "@increment",
+      avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
       title: "@ctitle(1,10)",
       sentence: "@cparagraph(1,10)",
       beFollow: "@integer(1,100)", //被关注
