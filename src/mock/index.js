@@ -164,3 +164,31 @@ Mock.mock("/api/result/list", "get", {
     ]
   },
 });
+
+//评论
+Mock.mock("/api/comment/id", "get", {
+  status: 200, //请求成功状态码
+  body: {
+    id: "@increment",
+    total: 10,
+    "list|10": [
+      {
+        id: "@increment",
+        "sort|1": [1, 2], //1热度 2最新
+        avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+        name: "@cname",
+        badge: {
+          //徽章
+          "develop|1": ["diamond","medal"],
+          "particular|1": ["gem", "gift"],
+        },
+        sentence: "@cparagraph(1,10)",
+        time: "@datetime('MM-dd')",
+        info: {
+          agree: "@integer(1,100)",
+          evaluate: "@integer(1,100)",
+        },
+      },
+    ],
+  },
+});

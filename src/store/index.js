@@ -4,7 +4,7 @@
 import { reactive } from 'vue'
 
 export const store = reactive({
-    isComment: true,
+    isComment: false,
     showComment(){
         this.isComment=true;
     }

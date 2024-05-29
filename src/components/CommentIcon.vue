@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import comment from "@/assets/imgs/comment.png";
 import {store} from "@/store/index.js";
 const props = defineProps(["item"]);

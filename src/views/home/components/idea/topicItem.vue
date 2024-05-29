@@ -4,6 +4,7 @@ import UpvoteIcon from "@/components/UpvoteIcon.vue";
 import CollectIcon from "@/components/CollectIcon.vue";
 import AuthorBrief from "@/views/home/components/idea/AuthorBrief.vue";
 import CommentIcon from '@/components/CommentIcon.vue';
+import { showImagePreview } from "vant";
 const props = defineProps({
   item: { type: Object, required: true },
   showComment:Function
