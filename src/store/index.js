@@ -5,7 +5,9 @@ import { reactive } from 'vue'
 
 export const store = reactive({
     isComment: false,
-    showComment(){
+    commentId:0,
+    showComment(id){
         this.isComment=true;
-    }
+        this.commentId = id;
+    },
 })

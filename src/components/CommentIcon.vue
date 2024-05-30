@@ -5,7 +5,7 @@ const props = defineProps(["item"]);
 let item = props.item;
 
 const showComment = (item) => {
-  store.showComment();
+  store.showComment(item.id);
 };
 </script>
 <template>

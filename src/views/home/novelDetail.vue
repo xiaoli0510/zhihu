@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup>
 import { ref } from 'vue';
 import { fetchNovelDetail } from "@/api/search.js";
 import BackIcon from '@/components/BackIcon.vue'
@@ -7,20 +7,22 @@ import ShareIcon from '../../components/ShareIcon.vue'
 import UpvoteIcon from '@/components/UpvoteIcon.vue'
 import CommentIcon from '@/components/CommentIcon.vue'
 import dot from '@/assets/imgs/dot.png';
+import CommentPopup from '@/components/CommentPopup.vue'
+import { store } from '@/store';
 const props = defineProps(['id']);
 let list = ref([]);
-const initData = () => {
-    fetchNovelDetail({ id: props.id })
-        .then(res => {
-            list.value = res.data.list;
-        });
-};
-initData();
+fetchNovelDetail({ id: props.id })
+    .then(res => {
+        list.value = res.data.list;
+        console.log(list.value)
+    }).catch(err => {
+        console.log(err);
+    });
 
-const item = ref({
-    upvote: 2,
-    comment: 2,
-})
+const handleComment = () => {
+    store.showComment();
+}
+
 </script>
 <template>
     <div class="novel-detail">
@@ -44,21 +46,22 @@ const item = ref({
             </van-row>
             <van-row class="info">
                 <van-col v-for="(item1, index1) in item.feature" :key="index1">{{ item1 }}·</van-col>
-                <van-col>{{ item.info.agree }}喜欢·</van-col>
-                <van-col>{{ item.info.evaluate }}弹评·</van-col>
+                <van-col>{{ item.upvote }}喜欢·</van-col>
+                <van-col>{{ item.comment }}弹评·</van-col>
             </van-row>
             <div class="sentence">{{ item.sentence }}</div>
+            <div class="comment-bottom">
+                <van-row justify="space-between" algin="center">
+                    <span class="comment-btn" @click="handleComment">发条评论吧~</span>
+                    <UpvoteIcon :item="item" />
+                    <CommentIcon :item="item" />
+                    <van-icon name="list-switch" size="24px" />
+                    <van-icon :name="dot" size="20px" color="#ddd" />
+                </van-row>
+            </div>
         </div>
     </div>
-    <div class="comment-bottom">
-        <van-row justify="space-between" algin="center">
-            <span class="comment-btn">发条评论吧~</span>
-            <UpvoteIcon :item="item" />
-            <CommentIcon :item="item" />
-            <van-icon name="list-switch" size="24px"/>
-            <van-icon :name="dot" size="20px" color="#ddd"/>
-        </van-row>
-    </div>
+    <CommentPopup/>
 </template>
 <style scoped lang='scss'>
 .novel-detail {

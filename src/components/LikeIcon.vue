@@ -1,17 +1,14 @@
-<script setup lang="ts">
-import { ref } from 'vue';
-
+<script setup>
 const props = defineProps(['item']);
-const item = ref(props.item);
-
-const toggleAgree = () => {
-  //item.info.agree = item.info.agree ++;
+const emit = defineEmits(['toggleAgree']);
+const toggleAgree = (item) => {
+  emit('toggleAgree',props.item);
 };
 </script>
 <template>
   <span class="icon-like-item" @click="toggleAgree">
-    <van-icon name="like-o" />
-    <span class="txt">{{ item.info.agree }}</span>
+    <van-icon name="like-o" :color="props.item.isAgree?'red':'#686767'"/>
+    <span class="txt" :class="{'active':props.item.isAgree}">{{ props.item.agreeCount }}</span>
   </span>
 </template>
 <style scoped lang="scss">
@@ -21,6 +18,9 @@ const toggleAgree = () => {
     font-size:12px;
     color:#686767;
     margin-left:3px;
+    &.active{
+      color:red;
+    }
   }
 }
 </style>

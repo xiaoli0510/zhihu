@@ -1,5 +1,4 @@
 import Mock from "mockjs";
-import profileBg from "@/assets/imgs/profile-bg.jpg";
 
 //想法页列表
 Mock.mock("/api/idea", "get", {
@@ -58,7 +57,7 @@ Mock.mock("/api/profile/id", "get", {
   status: 200, //请求成功状态码
   body: {
     id: "@increment",
-    imgBg: profileBg, //top img
+    imgBg: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg", //top img
     aa: "@province()", //ip
     author: "@cname", //姓名
     "gender|1": ["male", "female"], //性别
@@ -184,10 +183,32 @@ Mock.mock("/api/comment/id", "get", {
         },
         sentence: "@cparagraph(1,10)",
         time: "@datetime('MM-dd')",
-        info: {
-          agree: "@integer(1,100)",
-          evaluate: "@integer(1,100)",
-        },
+        agree: "@integer(1,100)",
+        comment: "@integer(1,100)",
+        isAgree:"@boolean",
+        agreeCount:"@integer(1,100)",
+        "subList|1-10":[
+          {
+            id: "@increment",
+            "sort|1": [1, 2], //1热度 2最新
+            avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+            name: "@cname",
+            badge: {
+              //徽章
+              "develop|1": ["diamond","medal"],
+              "particular|1": ["gem", "gift"],
+            },
+            sentence: "@cparagraph(1,10)",
+            time: "@datetime('MM-dd')",
+            agree: "@integer(1,100)",
+            comment: "@integer(1,100)",
+            isAgree:"@boolean",
+            agreeCount:"@integer(1,99)",
+            "subList|1-10":[
+              
+            ]
+          },
+        ]
       },
     ],
   },
