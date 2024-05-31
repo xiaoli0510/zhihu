@@ -5,23 +5,13 @@ import { showToast } from 'vant';
 import { useRouter } from 'vue-router';
 
 // 显示更多
-const isShow = ref(false);
 const props = defineProps(['item','isMore']);
 const item = ref(props.item);
-isShow.value = props.isMore;
-console.log(props.isMore,isShow)
-// watch(isShow, (val) => {
-//     if(!val){
-//         emit('hideMore');
-//     }
-//     // isShow.value=val;
-// })
-watch(()=>props.isMore, (val) => {
-    console.log(val);
-    if(val){
-        isShow.value=val;
+const isShow = ref(props.isMore);
+watch(()=>props.isMore, (newValue) => {
+    if(newValue){
+        isShow.value=newValue;
     }
-    // isShow.value=val;
 })
 
 //复制
@@ -33,7 +23,7 @@ const copy = (text) => {
     })
     clipboard.on('success', (e) => {
         showToast('已保存内容到剪贴板');
-        isShow.value = false;
+        emit('hideMore');
     })
 }
 
@@ -48,7 +38,7 @@ const toggleComment = () => {
         item.value.isAgree = true;
         showToast('已取消踩');
     }
-    isShow.value = false;
+    emit('hideMore');
 }
 
 //举报
@@ -70,7 +60,7 @@ const shield = () => {
         })
         .catch(() => {
         }).finally(() => {
-            isShow.value = false;
+            emit('hideMore');
         });
 }
 

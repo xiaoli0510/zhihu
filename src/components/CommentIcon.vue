@@ -1,11 +1,11 @@
-<script setup lang="ts">
+<script setup>
 import comment from "@/assets/imgs/comment.png";
-import {store} from "@/store/index.js";
 const props = defineProps(["item"]);
 let item = props.item;
 
+const emit = defineEmits(['showCommentPopup']);
 const showComment = (item) => {
-  store.showComment(item.id);
+  emit('showCommentPopup',item.id);
 };
 </script>
 <template>

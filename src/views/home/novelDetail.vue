@@ -8,19 +8,25 @@ import UpvoteIcon from '@/components/UpvoteIcon.vue'
 import CommentIcon from '@/components/CommentIcon.vue'
 import dot from '@/assets/imgs/dot.png';
 import CommentPopup from '@/components/CommentPopup.vue'
-import { store } from '@/store';
 const props = defineProps(['id']);
 let list = ref([]);
 fetchNovelDetail({ id: props.id })
     .then(res => {
         list.value = res.data.list;
-        console.log(list.value)
     }).catch(err => {
         console.log(err);
     });
 
-const handleComment = () => {
-    store.showComment();
+//显示评论弹框
+const isCommentPopup = ref(false);
+const commentId = ref(0);
+const showCommentPopup = (id) => {
+    isCommentPopup.value = true;
+    commentId.value = id;
+}
+//关闭评论弹框
+const hideCommentPopup = () => {
+    isCommentPopup.value = false;
 }
 
 </script>
@@ -52,16 +58,16 @@ const handleComment = () => {
             <div class="sentence">{{ item.sentence }}</div>
             <div class="comment-bottom">
                 <van-row justify="space-between" algin="center">
-                    <span class="comment-btn" @click="handleComment">发条评论吧~</span>
+                    <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
                     <UpvoteIcon :item="item" />
-                    <CommentIcon :item="item" />
+                    <CommentIcon :item="item" @showCommentPopup="showCommentPopup"/>
                     <van-icon name="list-switch" size="24px" />
                     <van-icon :name="dot" size="20px" color="#ddd" />
                 </van-row>
             </div>
         </div>
     </div>
-    <CommentPopup/>
+    <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId" v-if="isCommentPopup"/>
 </template>
 <style scoped lang='scss'>
 .novel-detail {

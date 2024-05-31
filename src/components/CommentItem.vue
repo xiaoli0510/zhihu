@@ -10,7 +10,6 @@ const showMore = (item) => {
     emit('showMore',item);
 }
 
-
 //toggle 点赞
 const toggleAgree = (item) => {
     if (item.isAgree) {

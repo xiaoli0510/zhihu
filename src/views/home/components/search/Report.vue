@@ -6,7 +6,7 @@ const isStep1 = ref(true);
 const isStep2 = ref(false);
 const props = defineProps(['list', 'isReport']);
 const isReportShow =ref(props.isReport);
-watch(isReportShow,(newVal,oldVal)=>{
+watch(isReportShow,(newVal)=>{
     if(!newVal){
         emit('hide');
     }
@@ -33,7 +33,6 @@ const submitReport = () => {
     <van-popup class="report-popup" v-model:show="isReportShow" round closeable close-icon="close" position="bottom"
         @click-close-icon="onClickCloseIcon" :style="{ height: '90%' }">
         <h3>举报</h3>
-
         <van-form @submit="onSubmitStep1" v-if="isStep1">
             <div class="txt-tips">
                 <span class="tip-icon">*</span>哪些搜索词属于不适内容

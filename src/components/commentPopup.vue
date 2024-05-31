@@ -1,22 +1,35 @@
 <script setup>
-import { store } from '@/store/index.js'
 import { fetchCommentList } from '@/api/index.js';
 import { ref, watch } from 'vue';
 import CommentItem from './CommentItem.vue'
 import CommentMore from './CommentMore.vue'
+const props = defineProps(['isCommentPopup','id']);
+const isCommentPopupRef =ref(props.isCommentPopup);
+watch(()=>props.isCommentPopup, (newVal) => {
+    if(newVal){
+        isCommentPopupRef.value = newVal;
+    }
+})
+const emit = defineEmits(['hideCommentPopup']);
+const onClickCloseIcon = () => {
+    emit('hideCommentPopup');
+}
+const onClickOverlay = () => {
+    emit('hideCommentPopup');
+}
 const list = ref([]);
 const filterList = ref([]);
 const total = ref(0);
-const id = store.commentId;
+const id = props.id;
 fetchCommentList({id}).then(res => {
     total.value = res.data.body.total;
     list.value = res.data.body.list;
     filterList.value = res.data.body.list;
-    console.log(filterList.value)
 }).catch((err) => {
     console.log(err)
 });
 
+// 按默认 热度 最新过滤数据
 const sortType = ref(0);
 watch(sortType, (newVal) => {
     switch (newVal) {
@@ -42,13 +55,14 @@ const showMore = (item) => {
     isMore.value = true;
     moreObj.value = item;
 }
-//关闭更够
+//关闭更多
 const hideMore= () => {
     isMore.value = false;
 }
 </script>
 <template>
-    <van-popup v-model:show="store.isComment" closeable close-icon="close" position="bottom" :style="{ height: '94%' }">
+    <van-popup v-model:show="isCommentPopupRef" @click-overlay="onClickOverlay" @click-close-icon="onClickCloseIcon"
+        round closeable close-icon="close" position="bottom" :style="{ height: '94%' }">
         <div class="comment-inner">
             <h3>全部评价</h3>
             <div class="comment-content">
@@ -69,7 +83,7 @@ const hideMore= () => {
             </div>
         </div>
     </van-popup>
-    <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore"/>
+    <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore" @hide-more="hideMore" />
 </template>
 <style scoped lang='scss'>
 .comment-inner {
