@@ -3,7 +3,7 @@ import { fetchCommentList } from '@/api/index.js';
 import { ref, watch } from 'vue';
 import CommentItem from './CommentItem.vue'
 import CommentMore from './CommentMore.vue'
-const props = defineProps(['isCommentPopup','id']);
+const props = defineProps({'isCommentPopup':Boolean,'id':Number,});
 const isCommentPopupRef =ref(props.isCommentPopup);
 watch(()=>props.isCommentPopup, (newVal) => {
     if(newVal){
@@ -79,7 +79,7 @@ const hideMore= () => {
                         </van-row>
                     </van-col>
                 </van-row>
-                <CommentItem @show-more="showMore" @hide-more="hideMore" v-for="item in filterList" :item="item" />
+                <CommentItem @show-more="showMore" v-for="item in filterList" :item="item"/>
             </div>
         </div>
     </van-popup>

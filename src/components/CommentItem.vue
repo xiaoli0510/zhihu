@@ -1,7 +1,11 @@
 <script setup>
 import { ref } from 'vue';
 import LikeIcon from './LikeIcon.vue'
-const props = defineProps(['item']);
+import { showToast } from 'vant';
+const props = defineProps({'item':Object,'isMoreIcon':{
+    type:Boolean,
+    default:true
+}});
 const item = ref(props.item);
 
 // 显示更多
@@ -19,11 +23,16 @@ const toggleAgree = (item) => {
     }
     item.isAgree = !item.isAgree;
 }
+
+//编辑评论
+const editComment = (id)=>{
+    showToast('待完善中');
+}
 </script>
 <template>
     <van-row justify="space-between" class="comment-list">
         <van-col span="3">
-            <van-image round width="1rem" height="1rem" :src="item.avatar" />
+            <van-image round class="avatar-img" :src="item.avatar" />
         </van-col>
         <van-col span="21">
             <van-row justify="space-between">
@@ -31,24 +40,35 @@ const toggleAgree = (item) => {
                     <van-icon :name="item.badge.develop" />
                     <van-icon :name="item.badge.particular" />
                 </van-col>
-                <van-col span="1"><van-icon name="ellipsis" @click="showMore(item)" /></van-col>
+                <van-col span="1"><van-icon name="ellipsis" @click="showMore(item)" v-if="props.isMoreIcon" /></van-col>
             </van-row>
             <van-row justify="space-between">
-                <van-col span="20" class="comment-txt">{{ item.sentence }}</van-col>
+                <van-col span="24" class="comment-txt">
+                    <van-text-ellipsis rows="3" :content="item.sentence" expand-text="展开"
+                        collapse-text="收起" />
+                    </van-col>
             </van-row>
             <van-row justify="space-between" class="comment-info">
-                <van-col span="20">{{ item.time }}</van-col>
-                <van-col span="4">
-                    <van-icon name="comment-circle-o" class="reply" />
-                    <LikeIcon :item="item" @toggle-agree="toggleAgree"/>
+                <van-col span="19">{{ item.time }}</van-col>
+                <van-col span="5">
+                    <van-icon name="comment-circle-o" class="reply" @click="editComment(item.id)" />
+                    <LikeIcon :item="item" @toggle-agree="toggleAgree" />
                 </van-col>
             </van-row>
+            <div v-if="item.subList.length > 0">
+                <template v-for="item1 in item.subList">
+                   <CommentItem @show-more="showMore"  :item="item1" :isMoreIcon="false" />
+                </template>
+            </div>
         </van-col>
     </van-row>
 </template>
 <style scoped lang='scss'>
 .comment-list {
-    margin-top: 20px;
+    margin-top: 10px;
+    .avatar-img{
+        width:70%;
+    }
     .name {
             font-weight: 700;
         }
@@ -67,5 +87,8 @@ const toggleAgree = (item) => {
                 margin-right: 7px;
             }
         } 
+}
+.comment-sub-list{
+    // width:80%;
 }
 </style>
