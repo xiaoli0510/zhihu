@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { provide, ref } from 'vue';
 import { fetchNovelDetail } from "@/api/search.js";
 import BackIcon from '@/components/BackIcon.vue'
 import BookIcon from '@/components/BookIcon.vue'
@@ -8,6 +8,7 @@ import UpvoteIcon from '@/components/UpvoteIcon.vue'
 import CommentIcon from '@/components/CommentIcon.vue'
 import dot from '@/assets/imgs/dot.png';
 import CommentPopup from '@/components/CommentPopup.vue'
+import CommentReply from '../../components/CommentReply.vue'
 const props = defineProps(['id']);
 let list = ref([]);
 fetchNovelDetail({ id: props.id })
@@ -27,6 +28,19 @@ const showCommentPopup = (id) => {
 //关闭评论弹框
 const hideCommentPopup = () => {
     isCommentPopup.value = false;
+}
+
+//显示回复弹框
+const isReply = ref(false);
+const replyId = ref(0);
+const showReply = (id) => {
+    isReply.value = true;
+    replyId.value = id;
+}
+provide('showReply',showReply);
+//关闭回复弹框
+const hideReply = () => {
+    isReply.value = false;
 }
 
 </script>
@@ -68,6 +82,7 @@ const hideCommentPopup = () => {
         </div>
     </div>
     <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId" v-if="isCommentPopup"/>
+    <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply"/>
 </template>
 <style scoped lang='scss'>
 .novel-detail {

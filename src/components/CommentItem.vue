@@ -1,8 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
 import LikeIcon from './LikeIcon.vue'
 import { showToast } from 'vant';
-import { useRouter } from 'vue-router';
 const props = defineProps({'item':Object,'isMoreIcon':{
     type:Boolean,
     default:true
@@ -30,10 +29,10 @@ const editComment = (id)=>{
     showToast('待完善中');
 }
 
-//进入评论回复页
-const router = useRouter();
-const enterCommentReply = (id)=>{
-    router.push(`/commentReply/${id}`)
+//评论回复
+const showReply = inject('showReply');
+const handleReply = (id)=>{
+    showReply();
 }
 </script>
 <template>
@@ -66,7 +65,7 @@ const enterCommentReply = (id)=>{
                 <template v-for="(item1,index1) in item.subList">
                    <CommentItem @show-more="showMore" v-if="index1<=1" :item="item1" :isMoreIcon="false" />
                 </template>
-                <van-button round hairline size="small" type="default" @click="enterCommentReply(item.id)">查看全部{{item.subList.length}}条回复></van-button>
+                <van-button round hairline size="small" type="default" @click="showReply(item.id)">查看全部{{item.subList.length}}条回复></van-button>
             </div>
         </van-col>
     </van-row>

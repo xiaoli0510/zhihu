@@ -3,10 +3,9 @@ import { fetchCommentReply } from '@/api/index.js';
 import { ref } from 'vue';
 import CommentItem from '@/components/CommentItem.vue';
 import CommentMore from '@/components/CommentMore.vue';
-import { useRouter } from 'vue-router';
-const props = defineProps({ 'id': String, });
-const isCommentReply = ref(false);
-const emit = defineEmits(['hideCommentPopup']);
+const props = defineProps({ 'id': Number, });
+const isReply = ref(false);
+const emit = defineEmits(['hideReply']);
 const list = ref([]);
 const subList = ref([]);
 const total = ref(0);
@@ -14,7 +13,7 @@ fetchCommentReply({ id: props.id }).then(res => {
     total.value = res.data.body.subList.length;
     list.value = res.data.body.list;
     subList.value = res.data.body.subList;
-    isCommentReply.value = true;
+    isReply.value = true;
 }).catch((err) => {
     console.log(err)
 });
@@ -31,14 +30,13 @@ const hideMore = () => {
     isMore.value = false;
 }
 
-const router = useRouter();
 const onClickCloseIcon = ()=>{
-    router.go(-1);
+    emit('hideReply')
 }
 </script>
 <template>
-    <van-popup closeable close-icon="clear" close-icon-position="top-left" @click-close-icon="onClickCloseIcon"
-        v-model:show="isCommentReply" round position="bottom" :style="{ height: '94%' }">
+    <van-popup closeable close-icon="arrow-left" close-icon-position="top-left" @click-close-icon="onClickCloseIcon"
+        v-model:show="isReply" round position="bottom" :style="{ height: '94%' }">
         <div class="reply-inner">
             <div class="main-comment">
                 <h3>评论回复</h3>
