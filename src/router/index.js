@@ -1,12 +1,16 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import HomeView from "../views/home/index.vue";
-import DiscoverView from "../views/discover/index.vue";
-import AddView from "../views/add/index.vue";
-import HotView from "../views/hot/index.vue";
-import CenterView from "../views/center/index.vue";
-import IdeaDetail from "../views/home/ideaDetail.vue";
-import Profile from "../views/home/profile.vue";
-
+import HomeView from "../views/home/index.vue";//tab-首页
+import DiscoverView from "../views/discover/index.vue";//tab-发现页
+import AddView from "../views/add/index.vue";//tab-创造页
+import HotView from "../views/hot/index.vue";//tab-热点页
+import CenterView from "../views/center/index.vue";//tab-个人中心页
+import Topic from "../views/home/topic.vue";//首页-想法-主题页
+import Profile from "../views/home/profile.vue";//首页-想法-个人页
+import Detail from "../views/home/detail.vue";//首页-想法-详情页
+import Search from "../views/home/search.vue";//搜索页
+import Result from "../views/home/result.vue";//搜索结果页
+import Report from "../views/home/report.vue";//举报页
+import NovelDetail from "../views/home/novelDetail.vue";//小说详情页
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -42,15 +46,44 @@ const router = createRouter({
       component: () => import("../views/AboutView.vue"),
     },
     {
-      path: "/idea",
-      name: "idea",
-      component: IdeaDetail,
+      path: "/topic",
+      name: "topic",
+      component: Topic,
     },
     {
-      path: "/profile",
+      path: "/profile/:id",
       name: "profile",
       component: Profile,
     },
+    {
+      path: "/detail",
+      name: "detail",
+      component: Detail,
+    },
+    {
+      path: "/search",
+      name: "search",
+      component: Search,
+    },
+    {
+      path: "/result/:keyWord",
+      name: "result",
+      component: Result,
+      props:true,
+    },
+    {
+      path: "/report",
+      name: "report",
+      component: Report,
+      props:true,
+    },
+    {
+      path: "/novel/datail/:id",
+      name: "novelDetail",
+      component: NovelDetail,
+      props:true,
+    },
+    
   ],
 });
 

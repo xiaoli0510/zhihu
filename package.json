@@ -11,6 +11,7 @@
   "dependencies": {
     "amfe-flexible": "^2.2.1",
     "axios": "^1.6.8",
+    "clipboard": "^2.0.11",
     "mockjs": "^1.1.0",
     "vant": "^4.8.11",
     "vue": "^3.4.15",
@@ -20,6 +21,8 @@
     "@vant/auto-import-resolver": "^1.1.0",
     "@vitejs/plugin-vue": "^5.0.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "eslint": "^9.2.0",
+    "eslint-plugin-vue": "^9.25.0",
     "postcss": "^8.4.35",
     "postcss-loader": "^8.1.1",
     "postcss-pxtorem": "^6.1.0",

@@ -1,52 +1,26 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import shareIcon from "@/assets/imgs/share.png";
-
-import comment from "@/assets/imgs/comment.png";
 import dot from "@/assets/imgs/dot.png";
-import Upvote from "@/components/upvote.vue";
-import Collect from "@/components/collect.vue";
-
-const props = defineProps(["item","index"]);
-let {item,index} = props;
-
-
+import UpvoteIcon from "@/components/UpvoteIcon.vue";
+import CollectIcon from "@/components/CollectIcon.vue";
+import AuthorBrief from "@/views/home/components/idea/AuthorBrief.vue";
+import CommentIcon from '@/components/CommentIcon.vue';
+import { showImagePreview } from "vant";
+const props = defineProps({
+  item: { type: Object, required: true },
+  showComment:Function
+});
+const item = props.item;
+const emit = defineEmits(['showComment']);
+// const {item} = defineProps(["item"]);
 const handlePreviewImg = () => {
   showImagePreview(["https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"]);
 };
-
-
 </script>
 <template>
   <!-- 关注分享 -->
-  <div class="author">
-    <van-row align="center">
-      <van-col span="3"
-        ><van-image round width="1rem" height="1rem" :src="item.avatar"
-      /></van-col>
-      <van-col span="13">
-        <van-row>
-          <van-col span="24">
-            <van-row>
-              <van-col span="7">{{ item.author }}</van-col>
-              <van-col span="16" offset="1"
-                ><van-icon name="gem"
-              /></van-col> </van-row
-          ></van-col>
-          <van-col span="24"
-            ><van-text-ellipsis :content="item.career" class="career"
-          /></van-col>
-        </van-row>
-      </van-col>
-      <van-col offset="1" span="4">
-        <van-button size="small" plain round icon="plus" type="primary"
-          >关注</van-button
-        >
-      </van-col>
-      <van-col span="2" offset="1">
-        <van-icon :name="shareIcon" size=".7rem" />
-      </van-col>
-    </van-row>
+  <AuthorBrief :item="item"/>
+  <div class="favour-wrap">
+    <slot name="favour"></slot>
   </div>
   <!-- 描述 -->
   <van-row>
@@ -84,7 +58,7 @@ const handlePreviewImg = () => {
                 height=".8rem"
                 :src="item.avatar"
             /></van-col>
-            <van-col span="7" offset="1">{{ item.author }}</van-col>
+            <van-col span="8" offset="1">{{ item.author }}</van-col>
             <van-col span="9" offset="1" class="tool-concern">+ 关注</van-col>
           </van-row>
           <div class="discuss" v-else>欢迎参与讨论</div>
@@ -92,13 +66,13 @@ const handlePreviewImg = () => {
         <van-col span="14">
           <van-row align="center" justify="end">
             <van-col span="4">
-             <Upvote :item="item"/>
+             <UpvoteIcon :item="item"/>
             </van-col>
             <van-col span="4" offset="1">
-             <Collect :item="item"/>
+             <CollectIcon :item="item"/>
             </van-col>
             <van-col span="4" offset="1">
-              <van-icon :name="comment" :badge="item.comment" size=".6rem" />
+              <CommentIcon :item="item" :show-comment="props.showComment"/>
             </van-col>
             <van-col span="4" offset="1">
               <van-icon :name="dot" size=".6rem" />
@@ -110,10 +84,7 @@ const handlePreviewImg = () => {
   </van-row>
 </template>
 <style scoped lang="scss">
-.author {
-  margin-top: 1%;
-  padding-top: 0.2rem;
-}
+
 .career {
   color: #969494;
   font-size: 0.3rem;
@@ -154,5 +125,9 @@ const handlePreviewImg = () => {
       color: #1989fa;
     }
   }
+}
+.favour-wrap{
+  color:#adabab;
+  font-size:14px;
 }
 </style>
