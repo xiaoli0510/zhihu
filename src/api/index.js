@@ -15,3 +15,7 @@ export async function fetchProfile(){
 export async function fetchCommentList(params){
     return await service.get('/api/comment/id');
 }
+//评论的子评论
+export async function fetchCommentReply(params){
+    return await service.get('/api/commentReply/id');
+}

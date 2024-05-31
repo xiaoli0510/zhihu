@@ -22,7 +22,7 @@ const filterList = ref([]);
 const total = ref(0);
 const id = props.id;
 fetchCommentList({id}).then(res => {
-    total.value = res.data.body.total;
+    total.value = res.data.body.list.length;
     list.value = res.data.body.list;
     filterList.value = res.data.body.list;
 }).catch((err) => {
@@ -63,9 +63,9 @@ const hideMore= () => {
 <template>
     <van-popup v-model:show="isCommentPopupRef" @click-overlay="onClickOverlay" @click-close-icon="onClickCloseIcon"
         round closeable close-icon="close" position="bottom" :style="{ height: '94%' }">
-        <div class="comment-inner">
-            <h3>全部评价</h3>
-            <div class="comment-content">
+        <div class="reply-inner">
+            <h3>全部评论</h3>
+            <div class="reply-content">
                 <van-row justify="space-between">
                     <van-col span="5">评论 {{ total }}</van-col>
                     <van-col span="9" class="sort">
@@ -86,7 +86,7 @@ const hideMore= () => {
     <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore" @hide-more="hideMore" />
 </template>
 <style scoped lang='scss'>
-.comment-inner {
+.reply-inner {
     padding: 0 3%;
 
     h3 {
@@ -94,7 +94,7 @@ const hideMore= () => {
         text-align: center;
     }
 
-    .comment-content {
+    .reply-content {
         font-size: 13px;
 
         .sort {

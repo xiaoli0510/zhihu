@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import LikeIcon from './LikeIcon.vue'
 import { showToast } from 'vant';
+import { useRouter } from 'vue-router';
 const props = defineProps({'item':Object,'isMoreIcon':{
     type:Boolean,
     default:true
@@ -27,6 +28,12 @@ const toggleAgree = (item) => {
 //编辑评论
 const editComment = (id)=>{
     showToast('待完善中');
+}
+
+//进入评论回复页
+const router = useRouter();
+const enterCommentReply = (id)=>{
+    router.push(`/commentReply/${id}`)
 }
 </script>
 <template>
@@ -55,10 +62,11 @@ const editComment = (id)=>{
                     <LikeIcon :item="item" @toggle-agree="toggleAgree" />
                 </van-col>
             </van-row>
-            <div v-if="item.subList.length > 0">
-                <template v-for="item1 in item.subList">
-                   <CommentItem @show-more="showMore"  :item="item1" :isMoreIcon="false" />
+            <div v-if="item.subList&&item.subList.length > 0">
+                <template v-for="(item1,index1) in item.subList">
+                   <CommentItem @show-more="showMore" v-if="index1<=1" :item="item1" :isMoreIcon="false" />
                 </template>
+                <van-button round hairline size="small" type="default" @click="enterCommentReply(item.id)">查看全部{{item.subList.length}}条回复></van-button>
             </div>
         </van-col>
     </van-row>
@@ -66,29 +74,36 @@ const editComment = (id)=>{
 <style scoped lang='scss'>
 .comment-list {
     margin-top: 10px;
-    .avatar-img{
-        width:70%;
+
+    .avatar-img {
+        width: 70%;
     }
+
     .name {
-            font-weight: 700;
+        font-weight: 700;
+    }
+
+    .comment-txt {
+        color: #383737;
+        line-height: 24px;
+        ;
+    }
+
+    .comment-info {
+        color: #a09d9d;
+        font-size: 12px;
+
+        .reply {
+            margin-right: 7px;
         }
+    }
 
-        .comment-txt {
-            color: #383737;
-            line-height: 24px;
-            ;
-        }
+    .view-more-btn {
+        background:#a09d9d;
+        border-radius: 10px;
+        line-height: 30px;
+        display: inline-block;
 
-        .comment-info {
-            color: #a09d9d;
-            font-size: 12px;
-
-            .reply {
-                margin-right: 7px;
-            }
-        } 
-}
-.comment-sub-list{
-    // width:80%;
+    }
 }
 </style>

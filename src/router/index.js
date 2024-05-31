@@ -11,6 +11,7 @@ import Search from "../views/home/search.vue";//搜索页
 import Result from "../views/home/result.vue";//搜索结果页
 import Report from "../views/home/report.vue";//举报页
 import NovelDetail from "../views/home/novelDetail.vue";//小说详情页
+import CommentReply from "../views/home/commentReply.vue";//评论回复页
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -81,6 +82,12 @@ const router = createRouter({
       path: "/novel/datail/:id",
       name: "novelDetail",
       component: NovelDetail,
+      props:true,
+    },
+    {
+      path: "/commentReply/:id",
+      name: "commentReply",
+      component: CommentReply,
       props:true,
     },
     

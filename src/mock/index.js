@@ -164,12 +164,11 @@ Mock.mock("/api/result/list", "get", {
   },
 });
 
-//评论
+//评论list
 Mock.mock("/api/comment/id", "get", {
   status: 200, //请求成功状态码
   body: {
     id: "@increment",
-    total: 10,
     "list|10": [
       {
         id: "@increment",
@@ -211,5 +210,51 @@ Mock.mock("/api/comment/id", "get", {
         ]
       },
     ],
+  },
+});
+//评论 根据id获取子评论
+Mock.mock("/api/commentReply/id", "get", {
+  status: 200, //请求成功状态码
+  body: {
+    id: "@increment",
+    total: 10,
+    "list|1-1": [
+      {
+        id: "@increment",
+        "sort|1": [1, 2], //1热度 2最新
+        avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+        name: "@cname",
+        badge: {
+          //徽章
+          "develop|1": ["diamond","medal"],
+          "particular|1": ["gem", "gift"],
+        },
+        sentence: "@cparagraph(1,10)",
+        time: "@datetime('MM-dd')",
+        agree: "@integer(1,100)",
+        comment: "@integer(1,100)",
+        isAgree:"@boolean",
+        agreeCount:"@integer(1,100)",
+      },
+    ],
+    "subList|1-10":[
+      {
+        id: "@increment",
+        "sort|1": [1, 2], //1热度 2最新
+        avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+        name: "@cname",
+        badge: {
+          //徽章
+          "develop|1": ["diamond","medal"],
+          "particular|1": ["gem", "gift"],
+        },
+        sentence: "@cparagraph(1,10)",
+        time: "@datetime('MM-dd')",
+        agree: "@integer(1,100)",
+        comment: "@integer(1,100)",
+        isAgree:"@boolean",
+        agreeCount:"@integer(1,99)",
+      },
+    ]
   },
 });
