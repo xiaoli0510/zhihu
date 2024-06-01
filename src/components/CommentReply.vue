@@ -35,7 +35,7 @@ const onClickCloseIcon = ()=>{
 }
 </script>
 <template>
-    <van-popup closeable close-icon="arrow-left" close-icon-position="top-left" @click-close-icon="onClickCloseIcon"
+    <van-popup closeable close-icon="arrow-left" close-icon-position="top-left" @click-close-icon="onClickCloseIcon" :overlay="false"
         v-model:show="isReply" round position="bottom" :style="{ height: '94%' }">
         <div class="reply-inner">
             <div class="main-comment">

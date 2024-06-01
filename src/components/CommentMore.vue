@@ -94,7 +94,7 @@ const onClickOverlay = () => {
 <style scoped lang='scss'>
 
 .comment-more {
-    line-height: 40px;
+    line-height: 30px;
     padding: 10px;
     font-size: 12px;
 }

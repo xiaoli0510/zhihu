@@ -1,9 +1,8 @@
-<script setup lang='ts'>
+<script setup>
 import { ref } from 'vue';
 import InviteIcon from '@/components/InviteIcon.vue'
 import AnswerIcon from '@/components/AnswerIcon.vue'
-import TopicItem from '@/views/home/components/idea/TopicItem.vue'
-
+import TopicItem from '@/views/home/components/idea/topicItem.vue'
 import { fetchTopicList } from "@/api/index";
 import BackIcon from '@/components/BackIcon.vue'
 let list = ref([]);

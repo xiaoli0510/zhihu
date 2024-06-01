@@ -3,7 +3,7 @@ import { ref } from "vue";
 import BackIcon from '@/components/BackIcon.vue'
 import CommentPopup from '@/components/CommentPopup.vue'
 const value2 = ref("");
-import TopicItem from "@/views/home/components/idea/TopicItem.vue";
+import TopicItem from "@/views/home/components/idea/topicItem.vue";
 import { fetchTopicList } from "@/api/index.js";
 
 let list = ref([]);

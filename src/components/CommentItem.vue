@@ -65,7 +65,7 @@ const handleReply = (id)=>{
                 <template v-for="(item1,index1) in item.subList">
                    <CommentItem @show-more="showMore" v-if="index1<=1" :item="item1" :isMoreIcon="false" />
                 </template>
-                <van-button round hairline size="small" type="default" @click="showReply(item.id)">查看全部{{item.subList.length}}条回复></van-button>
+                <van-button class="view-more-btn" round  plain size="small" type="default" @click="showReply(item.id)">查看全部{{item.subList.length}}条回复<van-icon name="arrow" /></van-button>
             </div>
         </van-col>
     </van-row>
@@ -98,11 +98,8 @@ const handleReply = (id)=>{
     }
 
     .view-more-btn {
-        background:#a09d9d;
-        border-radius: 10px;
-        line-height: 30px;
-        display: inline-block;
-
+        margin-left: 10%;
+        margin-top:3%;
     }
 }
 </style>
