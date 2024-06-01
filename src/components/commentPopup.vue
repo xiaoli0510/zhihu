@@ -3,6 +3,7 @@ import { fetchCommentList } from '@/api/index.js';
 import { ref, watch } from 'vue';
 import CommentItem from './CommentItem.vue'
 import CommentMore from './CommentMore.vue'
+import Discuss from './Discuss.vue'
 const props = defineProps({'isCommentPopup':Boolean,'id':Number,});
 const isCommentPopupRef =ref(props.isCommentPopup);
 watch(()=>props.isCommentPopup, (newVal) => {
@@ -59,6 +60,18 @@ const showMore = (item) => {
 const hideMore= () => {
     isMore.value = false;
 }
+
+//讨论
+const isDiscuss = ref(false);
+const discussValue =ref('');
+const showDiscuss = ()=>{
+    isDiscuss.value=true;
+}
+const hideDiscuss = (value) => {
+    console.log(value)
+    discussValue.value=value.value;
+    isDiscuss.value = false;
+}
 </script>
 <template>
     <van-popup v-model:show="isCommentPopupRef" @click-overlay="onClickOverlay" @click-close-icon="onClickCloseIcon"
@@ -82,17 +95,19 @@ const hideMore= () => {
                 <CommentItem @show-more="showMore" v-for="item in filterList" :item="item" />
             </div>
             <div class="discuss-footer">
-                <van-row align="center">
-                    <van-col span="19" class="discuss-btn">欢迎参与讨论
+                <van-row align="center" @click="showDiscuss">
+                    <van-col span="19" class="discuss-btn">
+                        <van-text-ellipsis :content="discussValue===''||!discussValue?'欢迎参与讨论':discussValue" />
                     </van-col>
                     <van-col span="3" offset="1">
-                        <van-button plain type="primary" disabled size="small">发布</van-button>
+                        <van-button plain type="primary" :disabled="discussValue===''?true:false" size="small">发布</van-button>
                     </van-col>
                 </van-row>
             </div>
         </div>
     </van-popup>
     <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore" @hide-more="hideMore" />
+    <Discuss @hide-discuss="hideDiscuss" v-if="isDiscuss" :is-discuss="isDiscuss" :discuss-value="discussValue"/>
 </template>
 <style scoped lang='scss'>
 .comment-inner {
@@ -140,7 +155,7 @@ const hideMore= () => {
             border-radius: 20px;
             padding:0 13px;
             line-height: 30px;
-            color:#686767;
+            color:#464545;
         }
     }
 

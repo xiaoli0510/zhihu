@@ -11,6 +11,7 @@ import Search from "../views/home/search.vue";//搜索页
 import Result from "../views/home/result.vue";//搜索结果页
 import Report from "../views/home/report.vue";//举报页
 import NovelDetail from "../views/home/novelDetail.vue";//小说详情页
+import Test from "../views/home/test.vue";//小说详情页
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -88,7 +89,13 @@ const router = createRouter({
       meta:{
         keepAlive:true//需要缓存
       }
+    }, 
+     {
+      path: "/test",
+      name: "test",
+      component: Test,
     },
+    
     
   ],
 });

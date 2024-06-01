@@ -15,7 +15,8 @@
     "mockjs": "^1.1.0",
     "vant": "^4.8.11",
     "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue3-emoji-picker": "^1.1.8"
   },
   "devDependencies": {
     "@vant/auto-import-resolver": "^1.1.0",
