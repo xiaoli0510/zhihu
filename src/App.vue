@@ -2,6 +2,7 @@
 import { nextTick, provide,ref } from "vue";
 import { RouterView } from "vue-router";
 const isRouterAlive = ref(true);
+//刷新页面
 const reload = ()=>{
   isRouterAlive.value = false;
   nextTick(()=>{
@@ -14,7 +15,12 @@ provide('reload',reload);
   <Suspense>
     <template #default>
       <div class="container">
-        <RouterView v-if="isRouterAlive"/>
+        <RouterView v-if="isRouterAlive&&$route.meta.keepAlive" v-slot="{Component}">
+          <keep-alive>
+            <component :is="Component"/>
+          </keep-alive>
+        </RouterView>
+        <RouterView v-if="isRouterAlive&&!$route.meta.keepAlive"/>
       </div>
     </template>
   </Suspense>

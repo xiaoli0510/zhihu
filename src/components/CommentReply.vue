@@ -37,12 +37,12 @@ const onClickCloseIcon = ()=>{
 <template>
     <van-popup closeable close-icon="arrow-left" close-icon-position="top-left" @click-close-icon="onClickCloseIcon" :overlay="false"
         v-model:show="isReply" round position="bottom" :style="{ height: '94%' }">
-        <div class="reply-inner">
+        <div class="comment-inner">
             <div class="main-comment">
                 <h3>评论回复</h3>
                 <CommentItem @show-more="showMore" :item="list[0]" />
             </div>
-            <div class="reply-content">
+            <div class="comment-content">
                 <van-row justify="space-between">
                     <van-col span="5">回复 {{ total }}</van-col>
                 </van-row>
@@ -54,7 +54,7 @@ const onClickCloseIcon = ()=>{
     <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore" @hide-more="hideMore" />
 </template>
 <style scoped lang='scss'>
-.reply-inner {
+.comment-inner {
     background: #f5f4f4;
 
     .main-comment {
@@ -66,7 +66,7 @@ const onClickCloseIcon = ()=>{
         }
     }
 
-    .reply-content {
+    .comment-content {
         background: #fff;
         padding: 2% 3% 4% 3%;
 

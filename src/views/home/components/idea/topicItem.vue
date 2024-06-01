@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import dot from "@/assets/imgs/dot.png";
 import UpvoteIcon from "@/components/UpvoteIcon.vue";
 import CollectIcon from "@/components/CollectIcon.vue";
@@ -7,9 +7,11 @@ import CommentIcon from '@/components/CommentIcon.vue';
 import { showImagePreview } from "vant";
 const props = defineProps({
   item: { type: Object, required: true },
-  showComment:Function
+  showComment:Function,
+  index:Number
 });
 const item = props.item;
+const index = props.index;
 const emit = defineEmits(['showComment']);
 // const {item} = defineProps(["item"]);
 const handlePreviewImg = () => {
@@ -49,7 +51,7 @@ const handlePreviewImg = () => {
     <van-col span="24" class="tool">
       <van-row class="tool" align="center">
         <van-col span="10" class="tool-left">
-          <van-row align="center" v-if="index==0">
+          <van-row align="center" v-if="index===0">
             <van-col span="5">
               <van-image
                 round

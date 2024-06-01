@@ -63,9 +63,9 @@ const hideMore= () => {
 <template>
     <van-popup v-model:show="isCommentPopupRef" @click-overlay="onClickOverlay" @click-close-icon="onClickCloseIcon"
         round closeable close-icon="close" position="bottom" :style="{ height: '94%' }">
-        <div class="reply-inner">
+        <div class="comment-inner">
             <h3>全部评论</h3>
-            <div class="reply-content">
+            <div class="comment-content">
                 <van-row justify="space-between">
                     <van-col span="5">评论 {{ total }}</van-col>
                     <van-col span="9" class="sort">
@@ -79,22 +79,31 @@ const hideMore= () => {
                         </van-row>
                     </van-col>
                 </van-row>
-                <CommentItem @show-more="showMore" v-for="item in filterList" :item="item"/>
+                <CommentItem @show-more="showMore" v-for="item in filterList" :item="item" />
+            </div>
+            <div class="discuss-footer">
+                <van-row align="center">
+                    <van-col span="19" class="discuss-btn">欢迎参与讨论
+                    </van-col>
+                    <van-col span="3" offset="1">
+                        <van-button plain type="primary" disabled size="small">发布</van-button>
+                    </van-col>
+                </van-row>
             </div>
         </div>
     </van-popup>
     <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore" @hide-more="hideMore" />
 </template>
 <style scoped lang='scss'>
-.reply-inner {
-    padding: 0 3%;
+.comment-inner {
+    padding: 0 10px 50px 10px;
 
     h3 {
         line-height: 50px;
         text-align: center;
     }
 
-    .reply-content {
+    .comment-content {
         font-size: 13px;
 
         .sort {
@@ -112,6 +121,26 @@ const hideMore= () => {
                 }
 
             }
+        }
+    }
+    .discuss-footer{
+        position: fixed;
+        bottom:0;
+        left:0;
+        width:100%;
+        background:#fff;
+        padding:7px 10px;
+        height:30px;
+        box-sizing: content-box;
+        border-top:1px solid #ccc;
+        .discuss-btn{
+            font-size:12px;
+            text-align: left;
+            background:#eeeeee;
+            border-radius: 20px;
+            padding:0 13px;
+            line-height: 30px;
+            color:#686767;
         }
     }
 

@@ -81,8 +81,14 @@ const hideReply = () => {
             </div>
         </div>
     </div>
-    <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId" v-if="isCommentPopup"/>
+    <keep-alive>
+        <component :is="CommentPopup" @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId" v-if="isCommentPopup"/>
+    </keep-alive>
+    <!-- <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId" v-if="isCommentPopup"/> -->
+<KeepAlive>
+    
     <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply"/>
+</KeepAlive>
 </template>
 <style scoped lang='scss'>
 .novel-detail {

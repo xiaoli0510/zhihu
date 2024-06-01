@@ -70,6 +70,9 @@ const router = createRouter({
       name: "result",
       component: Result,
       props:true,
+      meta:{
+        keepAlive:true//需要缓存
+      }
     },
     {
       path: "/report",
@@ -82,6 +85,9 @@ const router = createRouter({
       name: "novelDetail",
       component: NovelDetail,
       props:true,
+      meta:{
+        keepAlive:true//需要缓存
+      }
     },
     
   ],

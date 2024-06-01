@@ -6,14 +6,10 @@ import TopicItem from '@/views/home/components/idea/topicItem.vue'
 import { fetchTopicList } from "@/api/index";
 import BackIcon from '@/components/BackIcon.vue'
 let list = ref([]);
-
-const initData = () => {
-    fetchTopicList()
-        .then(res => {
-            list.value = res.data.list;
-        });
-};
-initData();
+fetchTopicList()
+    .then(res => {
+        list.value = res.data.list;
+    });
 </script>
 <template>
     <div class="detail-wrap">
@@ -35,9 +31,7 @@ initData();
                 <van-col><van-icon name="arrow" /></van-col>
             </van-row>
         </div>
-
-        <div></div>
-        <TopicItem :item="item" v-for="(item, index) in list" :key="index">
+        <TopicItem :item="item" v-for="(item, index) in list" :key="index" :index="index">
             <template v-slot:favour>
                 2人赞同了该回答
             </template>

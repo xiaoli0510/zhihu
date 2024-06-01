@@ -1,7 +1,8 @@
-<script setup lang='ts'>
+<script setup>
 import TypeInfo from './components/report/TypeInfo.vue';
 import dot from "@/assets/imgs/dot.png";
 import { inject, ref } from 'vue';
+import { useRouter } from 'vue-router';
 const submitReport = () => {
 }
 const showPopover = ref(false)
@@ -28,13 +29,18 @@ const selectShare = (option) => {
     showShare.value = false;
 };
 
+const router = useRouter();
+const back = () => {
+    router.back();
+};
+
 </script>
 <template>
     <div class="report-view">
         <div class="report-header">
             <van-row justify="space-between">
                 <van-col span=5>
-                    <van-icon name="cross" color="#504e4e" @click="$router.go(-1)" />
+                    <van-icon name="cross" color="#504e4e" @click="back" />
                     <h3>举报</h3>
                 </van-col>
                 <van-col span=4>

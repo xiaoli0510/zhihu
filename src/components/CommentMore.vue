@@ -44,7 +44,7 @@ const toggleComment = () => {
 //举报
 const router = useRouter();
 const enterReport = () => {
-    isShow.value = false;
+    emit('hideMore');
     router.push('/report');
 }
 
