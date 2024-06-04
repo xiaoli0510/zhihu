@@ -9,7 +9,7 @@ const props = defineProps({'item':Object,'isMoreIcon':{
 const item = ref(props.item);
 
 // 显示更多
-const emit = defineEmits(['showMore']);
+const emit = defineEmits(['showMore','showDiscuss']);
 const showMore = (item) => {
     emit('showMore',item);
 }
@@ -25,8 +25,8 @@ const toggleAgree = (item) => {
 }
 
 //编辑评论
-const editComment = (id)=>{
-    showToast('待完善中');
+const editComment = (item)=>{
+    emit('showDiscuss',item);
 }
 
 //评论回复
@@ -57,7 +57,7 @@ const handleReply = (id)=>{
             <van-row justify="space-between" class="comment-info">
                 <van-col span="19">{{ item.time }}</van-col>
                 <van-col span="5">
-                    <van-icon name="comment-circle-o" class="reply" @click="editComment(item.id)" />
+                    <van-icon name="comment-circle-o" class="reply" @click="editComment(item)" />
                     <LikeIcon :item="item" @toggle-agree="toggleAgree" />
                 </van-col>
             </van-row>

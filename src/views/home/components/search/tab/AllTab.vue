@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup>
 import { fetchResultList } from '@/api/result.js';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
@@ -8,12 +8,7 @@ import { showToast } from 'vant';
 const props = defineProps(['type']);
 const type = props.type;
 // 获取搜索结果
-const list = ref([]);
-fetchResultList({ type: type }).then(res => {
-    list.value = res.data.body.list;
-}).catch(err => {
-    console.log(err);
-})
+const list = ref((await fetchResultList({type})).data.body.list)
 
 const router = useRouter();
 const enterDetail = (id) => {

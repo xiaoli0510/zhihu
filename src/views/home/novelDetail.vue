@@ -81,9 +81,9 @@ const hideReply = () => {
             </div>
         </div>
     </div>
-    <keep-alive>
-        <component :is="CommentPopup" @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId" v-if="isCommentPopup"/>
-    </keep-alive>
+    <!-- <keep-alive> -->
+        <component a="12":is="CommentPopup" @hideCommentPopup="hideCommentPopup" :is-comment-popup="isCommentPopup" :id="commentId" v-if="isCommentPopup"/>
+    <!-- </keep-alive> -->
     <!-- <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId" v-if="isCommentPopup"/> -->
 <KeepAlive>
     

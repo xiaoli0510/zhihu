@@ -1,19 +1,27 @@
 <script setup>
-import { showToast } from 'vant';
 import { ref, watch } from 'vue';
 import Vue3EmojiPicker from 'vue3-emoji-picker'
 import 'vue3-emoji-picker/css'
 
-const props = defineProps(['isDiscuss','discussValue']);
-const discussTxt = ref(props.discussValue);
-const isShow = ref(props.isDiscuss);
-watch(props,(newVal)=>{
-    newVal.isDiscuss?isShow.value = newVal.isDiscuss:'';
-    discussTxt.value=newVal.discussValue;
+const props = defineProps(['data']);
+const discussTxt = ref(props.data.discussParams.discussValue);
+const isShow = ref(props.data.isDiscuss);
+watch(([()=>props.data.isDiscuss,()=>props.data.discussParams]),([isDiscuss,discussParams])=>{
+    isDiscuss?isShow.value = isDiscuss:'';
+    discussParams?discussTxt.value=discussParams.discussValue:'';
+    discussParams?fileList.value=discussParams.fileList:'';
+    discussParams?isSyncIdea.value=discussParams.isSyncIdea:'';
+},{
+    deep:true
 })
-const emit = defineEmits(['hideDiscuss']);
+const emit = defineEmits(['hideDiscuss','submitDiscuss']);
 const onClickOverlay = ()=>{
-    emit('hideDiscuss',discussTxt);
+    const params = {
+        discussValue:discussTxt.value,
+        isSyncIdea:isSyncIdea.value,
+        fileList
+    }
+    emit('hideDiscuss',params);
 }
 
 const isSpread = ref(false);
@@ -23,7 +31,7 @@ const toggleSpread = ()=>{
     discussTextarea.value.focus();
 }
 
-const isSyncIdea = ref(false);
+const isSyncIdea = ref(props.data.discussParams.isSyncIdea);
 const disabledGroups = ref["animals_nature",
   "food_drink",
   "activities",
@@ -37,28 +45,19 @@ const onChangeText = (text)=>{
 }
 
 const submitDiscuss = ()=>{
-    const params = {
-        txt:discussTxt.value,
-        isSpread:isSpread.value,
-
-    }
-    showToast('发布成功！');    
+    emit('submitDiscuss');
 }
 
-const fileList = ref([]);
-const afterRead = (file)=>{
-    console.log(file)
-
-}
+const fileList = ref(props.data.discussParams.fileList);
 </script>
 <template>
     <!-- 圆角弹窗（底部） -->
     <van-popup v-model:show="isShow" round position="bottom"
-        :style="{padding:'10px 0 80px 0', height: isSpread?'94%':''}" @click-overlay="onClickOverlay">
+        :style="{padding:'10px 10px 80px 10px', height: isSpread?'94%':''}" @click-overlay="onClickOverlay">
         <van-row>
             <van-col span="21">
                 <div class="emoji-wrap">
-                <Vue3EmojiPicker v-model="discussTxt" :disable-skin-tones="true" picker-type="textarea" placeholder="欢迎参与讨论"
+                <Vue3EmojiPicker :disable-skin-tones="true" picker-type="textarea"
         :native="true" :hide-group-names="true" @update:text="onChangeText" 
         :disabled-groups=disabledGroups :hide-search="true" :hide-group-icons="true"/></div>
         <van-uploader v-model="fileList" :max-count="1"><span></span></van-uploader>
@@ -79,9 +78,11 @@ const afterRead = (file)=>{
                     <van-icon name="smile-o" color="red" size="20px" @click="addEmote(1)" /> -->
                 </van-col>
                 <van-col span="2">
-                    <van-uploader :max-count="1" :after-read="afterRead">
+                    <van-uploader v-if="fileList.length===0" :max-count="1" v-model="fileList">
 
-                    <van-icon name="invitation" size="20px" /></van-uploader>
+                    <van-icon name="invitation" size="20px" />
+                </van-uploader>
+                <van-icon name="invitation" size="20px" v-if="fileList.length>0"/>
                 </van-col>
             </van-row>
             <van-row class="submit-wrap" align="center">
@@ -91,7 +92,7 @@ const afterRead = (file)=>{
                     </van-checkbox>
                 </van-col>
                 <van-col span="3" offset="1">
-                    <van-button plain type="primary" :disabled="discussTxt!==''&&discussTxt?false:true" size="small" @click="submitDiscuss">发布</van-button>
+                    <van-button plain type="primary" :disabled="(discussTxt!==''&&discussTxt)||fileList.length>0?false:true" size="small" @click="submitDiscuss">发布</van-button>
                 </van-col>
             </van-row>
         </div>
@@ -121,14 +122,9 @@ const afterRead = (file)=>{
             height:40px;
         }
     }
-    .text-area{
-        width:100%;
-        height:300px;
-        border:1px solid red;
+    :deep(.v3-input-emoji-picker .v3-input-picker-root .v3-emoji-picker-textarea) {
+        border: none;
+        min-height: auto;
+        padding-right: 40px;
     }
-        :deep(.v3-input-emoji-picker .v3-input-picker-root .v3-emoji-picker-textarea) {
-            border: none;
-            min-height: auto;
-            padding-right: 40px;
-        }
 </style>
