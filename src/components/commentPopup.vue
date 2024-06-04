@@ -97,7 +97,7 @@ const hideDiscuss = (value) => {
             <div class="discuss-footer">
                 <van-row align="center" @click="showDiscuss">
                     <van-col span="19" class="discuss-btn">
-                        <van-text-ellipsis :content="discussValue===''||!discussValue?'欢迎参与讨论':discussValue" />
+                        <van-text-ellipsis class="discuss-txt" :content="discussValue===''||!discussValue?'欢迎参与讨论':discussValue" />
                     </van-col>
                     <van-col span="3" offset="1">
                         <van-button plain type="primary" :disabled="discussValue===''?true:false" size="small">发布</van-button>
@@ -154,8 +154,12 @@ const hideDiscuss = (value) => {
             background:#eeeeee;
             border-radius: 20px;
             padding:0 13px;
-            line-height: 30px;
+            height: 30px;
             color:#464545;
+            display:inline-block;
+            .discuss-txt{
+                line-height: 30px;
+            }
         }
     }
 
