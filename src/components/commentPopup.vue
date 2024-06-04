@@ -4,7 +4,7 @@ import { ref, watch } from 'vue';
 import CommentItem from './CommentItem.vue'
 import CommentMore from './CommentMore.vue'
 import Discuss from './Discuss.vue'
-const props = defineProps({ 'isCommentPopup': Boolean, 'id': Number, 'a':String});
+const props = defineProps({ 'isCommentPopup': Boolean, 'id': Number});
 const isCommentPopupRef = ref(props.isCommentPopup);
 const emit = defineEmits(['hideCommentPopup']);
 const onClickCloseIcon = () => {
@@ -27,9 +27,9 @@ fetchCommentList({ id }).then(res => {
 
 // 按默认 热度 最新过滤数据
 const sortType = ref(0);
-watch([()=>props.isCommentPopup,sortType],([isCommentPopupVal,sortTypeVal]) => {
-    isCommentPopupVal?isCommentPopupRef.value=isCommentPopupVal:'';
-        switch (sortTypeVal) {
+watch([() => props.isCommentPopup, sortType], ([isCommentPopupVal, sortTypeVal]) => {
+    isCommentPopupVal ? isCommentPopupRef.value = isCommentPopupVal : '';
+    switch (sortTypeVal) {
         case 0:
             filterList.value = list.value;
             break;
@@ -40,7 +40,6 @@ watch([()=>props.isCommentPopup,sortType],([isCommentPopupVal,sortTypeVal]) => {
             })
             break;
     }
-
 })
 
 const changeSort = (type) => {

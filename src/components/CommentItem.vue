@@ -1,7 +1,6 @@
 <script setup>
 import { inject, ref } from 'vue';
 import LikeIcon from './LikeIcon.vue'
-import { showToast } from 'vant';
 const props = defineProps({'item':Object,'isMoreIcon':{
     type:Boolean,
     default:true
@@ -31,9 +30,6 @@ const editComment = (item)=>{
 
 //评论回复
 const showReply = inject('showReply');
-const handleReply = (id)=>{
-    showReply();
-}
 </script>
 <template>
     <van-row justify="space-between" class="comment-list">

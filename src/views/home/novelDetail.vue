@@ -37,7 +37,7 @@ const showReply = (id) => {
     isReply.value = true;
     replyId.value = id;
 }
-provide('showReply',showReply);
+provide('showReply', showReply);
 //关闭回复弹框
 const hideReply = () => {
     isReply.value = false;
@@ -74,21 +74,18 @@ const hideReply = () => {
                 <van-row justify="space-between" algin="center">
                     <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
                     <UpvoteIcon :item="item" />
-                    <CommentIcon :item="item" @showCommentPopup="showCommentPopup"/>
+                    <CommentIcon :item="item" @showCommentPopup="showCommentPopup" />
                     <van-icon name="list-switch" size="24px" />
                     <van-icon :name="dot" size="20px" color="#ddd" />
                 </van-row>
             </div>
         </div>
     </div>
-    <!-- <keep-alive> -->
-        <component a="12":is="CommentPopup" @hideCommentPopup="hideCommentPopup" :is-comment-popup="isCommentPopup" :id="commentId" v-if="isCommentPopup"/>
-    <!-- </keep-alive> -->
-    <!-- <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId" v-if="isCommentPopup"/> -->
-<KeepAlive>
-    
-    <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply"/>
-</KeepAlive>
+    <keep-alive>
+        <component :is="CommentPopup" @hideCommentPopup="hideCommentPopup" :is-comment-popup="isCommentPopup"
+            :id="commentId" v-if="isCommentPopup" />
+    </keep-alive>
+    <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
 </template>
 <style scoped lang='scss'>
 .novel-detail {
@@ -138,16 +135,17 @@ const hideReply = () => {
     background: #fff;
     height: 40px;
     padding: 9px 10px;
-    .comment-btn{
-        width:40%;
-        background:#e6e5e5;
+
+    .comment-btn {
+        width: 40%;
+        background: #e6e5e5;
         height: 28px;
         line-height: 28px;
         border-radius: 14px;
-        padding:0 7px;
-        font-size:12px;
-        color:#464444;
-        margin-right:2%;
+        padding: 0 7px;
+        font-size: 12px;
+        color: #464444;
+        margin-right: 2%;
     }
 }
 </style>
