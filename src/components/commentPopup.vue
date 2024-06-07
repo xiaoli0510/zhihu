@@ -4,7 +4,7 @@ import { ref, watch } from 'vue';
 import CommentItem from './CommentItem.vue'
 import CommentMore from './CommentMore.vue'
 import Discuss from './Discuss.vue'
-const props = defineProps({ 'isCommentPopup': Boolean, 'id': Number});
+const props = defineProps({ 'isCommentPopup': Boolean, 'id': Number });
 const isCommentPopupRef = ref(props.isCommentPopup);
 const emit = defineEmits(['hideCommentPopup']);
 const onClickCloseIcon = () => {
@@ -21,13 +21,14 @@ fetchCommentList({ id }).then(res => {
     total.value = res.data.body.list.length;
     list.value = res.data.body.list;
     filterList.value = res.data.body.list;
+   
 }).catch((err) => {
     console.log(err)
 });
 
 // 按默认 热度 最新过滤数据
 const sortType = ref(0);
-watch([() => props.isCommentPopup, sortType], ([isCommentPopupVal, sortTypeVal]) => {
+watch([sortType, () => props.isCommentPopup], ([sortTypeVal, isCommentPopupVal]) => {
     isCommentPopupVal ? isCommentPopupRef.value = isCommentPopupVal : '';
     switch (sortTypeVal) {
         case 0:
@@ -40,8 +41,11 @@ watch([() => props.isCommentPopup, sortType], ([isCommentPopupVal, sortTypeVal])
             })
             break;
     }
+}, {
+    deep: true
 })
 
+//改变排序维度
 const changeSort = (type) => {
     sortType.value = type;
 }
@@ -60,21 +64,22 @@ const hideMore = () => {
 
 //讨论
 const isDiscuss = ref(false);
+// 显示讨论
 const showDiscuss = (item) => {
-    item = item||{};
+    item = item || {};
     isDiscuss.value = true;
 }
-
 const discussParams = ref({
     fileList: [],
     discussValue: '',
     isSyncIdea: false
 });
+// 隐藏讨论
 const hideDiscuss = (obj) => {
     discussParams.value = obj;
     isDiscuss.value = false;
 }
-
+// 发布讨论
 const submitDiscuss = () => {
     discussParams.value = {
         fileList: [],
@@ -104,23 +109,26 @@ const submitDiscuss = () => {
                         </van-row>
                     </van-col>
                 </van-row>
-                <CommentItem @show-more="showMore" v-for="item in filterList" :item="item" @show-discuss="showDiscuss"/>
+                <CommentItem @show-more="showMore" v-for="item in filterList" :item="item"
+                    @show-discuss="showDiscuss" />
             </div>
             <div class="discuss-footer">
                 <van-row align="center">
-                    <van-col span="19" class="discuss-btn" >
+                    <van-col span="19" class="discuss-btn">
                         <van-text-ellipsis class="discuss-txt" @click="showDiscuss"
                             :content="discussParams.discussValue === '' || !discussParams.discussValue ? '欢迎参与讨论' : discussParams.discussValue" />
                     </van-col>
                     <van-col span="3" offset="1">
-                        <van-button plain type="primary" :disabled="discussParams.discussValue === '' ? true : false" size="small"
-                            @click="submitDiscuss">发布</van-button>
+                        <van-button plain type="primary" :disabled="discussParams.discussValue === '' ? true : false"
+                            size="small" @click="submitDiscuss">发布</van-button>
                     </van-col>
                 </van-row>
             </div>
         </div>
     </van-popup>
+    <!-- 评论右上角... -->
     <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore" @hide-more="hideMore" />
+    <!-- 讨论 -->
     <Discuss @hide-discuss="hideDiscuss" @submit-discuss="submitDiscuss" v-if="isDiscuss" :data={isDiscuss,discussParams} />
 </template>
 <style scoped lang='scss'>

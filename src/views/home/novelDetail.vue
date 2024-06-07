@@ -74,17 +74,19 @@ const hideReply = () => {
                 <van-row justify="space-between" algin="center">
                     <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
                     <UpvoteIcon :item="item" />
-                    <CommentIcon :item="item" @showCommentPopup="showCommentPopup" />
+                    <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
                     <van-icon name="list-switch" size="24px" />
                     <van-icon :name="dot" size="20px" color="#ddd" />
                 </van-row>
             </div>
         </div>
     </div>
-    <keep-alive>
-        <component :is="CommentPopup" @hideCommentPopup="hideCommentPopup" :is-comment-popup="isCommentPopup"
+    <!-- <keep-alive> -->
+        <!-- <component :is="CommentPopup" @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup"
+            :id="commentId" v-if="isCommentPopup" /> -->
+        <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup"
             :id="commentId" v-if="isCommentPopup" />
-    </keep-alive>
+    <!-- </keep-alive> -->
     <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
 </template>
 <style scoped lang='scss'>
@@ -142,7 +144,7 @@ const hideReply = () => {
         height: 28px;
         line-height: 28px;
         border-radius: 14px;
-        padding: 0 7px;
+        padding: 0 12px;
         font-size: 12px;
         color: #464444;
         margin-right: 2%;

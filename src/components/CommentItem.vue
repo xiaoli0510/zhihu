@@ -51,10 +51,10 @@ const showReply = inject('showReply');
                     </van-col>
             </van-row>
             <van-row justify="space-between" class="comment-info">
-                <van-col span="19">{{ item.time }}</van-col>
-                <van-col span="5">
-                    <van-icon name="comment-circle-o" class="reply" @click="editComment(item)" />
-                    <LikeIcon :item="item" @toggle-agree="toggleAgree" />
+                <van-col span="18">{{ item.time }}</van-col>
+                <van-col span="6">
+                    <van-icon name="comment-circle-o" class="reply" @click="editComment(item)" size="20px"/>
+                    <LikeIcon :item="item" @toggle-agree="toggleAgree" size="17px"/>
                 </van-col>
             </van-row>
             <div v-if="item.subList&&item.subList.length > 0">

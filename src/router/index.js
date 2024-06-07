@@ -82,7 +82,7 @@ const router = createRouter({
       props:true,
     },
     {
-      path: "/novel/datail/:id",
+      path: "/novel/detail/:id",
       name: "novelDetail",
       component: NovelDetail,
       props:true,

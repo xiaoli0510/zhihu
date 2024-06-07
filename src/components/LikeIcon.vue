@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps(['item']);
+const props = defineProps(['item','size']);
 const emit = defineEmits(['toggleAgree']);
 const toggleAgree = (item) => {
   emit('toggleAgree',props.item);
@@ -7,7 +7,7 @@ const toggleAgree = (item) => {
 </script>
 <template>
   <span class="icon-like-item" @click="toggleAgree">
-    <van-icon name="like-o" :color="props.item.isAgree?'red':'#686767'"/>
+    <van-icon name="like-o" :color="props.item.isAgree?'red':'#686767'" :size="props.size"/>
     <span class="txt" :class="{'active':props.item.isAgree}">{{ props.item.agreeCount }}</span>
   </span>
 </template>

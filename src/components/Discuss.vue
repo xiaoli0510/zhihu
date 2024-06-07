@@ -71,15 +71,9 @@ const fileList = ref(props.data.discussParams.fileList);
         <div class="footer">
             <van-row class="emote-wrap">
                 <van-col span="22">
-                    <!-- <van-icon name="smile-o" size="20px" />
-                    <span class="line">|</span>
-                    <van-icon name="smile-o" color="red" size="20px" @click="addEmote(1)" ref="smile" />
-                    <van-icon name="smile-o" color="red" size="20px" @click="addEmote(1)" />
-                    <van-icon name="smile-o" color="red" size="20px" @click="addEmote(1)" /> -->
                 </van-col>
                 <van-col span="2">
                     <van-uploader v-if="fileList.length===0" :max-count="1" v-model="fileList">
-
                     <van-icon name="invitation" size="20px" />
                 </van-uploader>
                 <van-icon name="invitation" size="20px" v-if="fileList.length>0"/>

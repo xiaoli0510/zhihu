@@ -16,7 +16,7 @@ const onSelect = () => {
 
 const router = useRouter();
 const enterDetail = (id) => {
-    router.push(`/novel/datail/${id}`)
+    router.push(`/novel/detail/${id}`)
 }
 const NOVELIYPE = {
     0: '全部',
