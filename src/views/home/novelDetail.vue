@@ -9,9 +9,11 @@ import CommentIcon from '@/components/CommentIcon.vue'
 import dot from '@/assets/imgs/dot.png';
 import CommentPopup from '@/components/CommentPopup.vue'
 import CommentReply from '../../components/CommentReply.vue'
+import AddBookMessage from '@/components/AddBookMessage.vue'
 const props = defineProps(['id']);
+provide('id', props.id);
 let list = ref([]);
-fetchNovelDetail({ id: props.id })
+fetchNovelDetail({ id:props.id })
     .then(res => {
         list.value = res.data.list;
     }).catch(err => {
@@ -43,6 +45,12 @@ const hideReply = () => {
     isReply.value = false;
 }
 
+// 加入书架提示
+const isAddBookMessage = ref(false);
+const showAddBookMessage = () => {
+    isAddBookMessage.value = true;
+}
+
 </script>
 <template>
     <div class="novel-detail">
@@ -51,7 +59,7 @@ const hideReply = () => {
                 <BackIcon />
             </van-col>
             <van-col span="9">
-                <BookIcon />
+                <BookIcon @showAddBookMessage="showAddBookMessage"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" />
                 <ShareIcon />
             </van-col>
@@ -81,13 +89,18 @@ const hideReply = () => {
             </div>
         </div>
     </div>
-    <!-- <keep-alive> -->
-        <!-- <component :is="CommentPopup" @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup"
-            :id="commentId" v-if="isCommentPopup" /> -->
-        <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup"
-            :id="commentId" v-if="isCommentPopup" />
-    <!-- </keep-alive> -->
+    <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId"
+        v-if="isCommentPopup" />
+
+    <!-- 评论回复 -->
     <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
+
+    <!-- 加入书架成功提示 -->
+    <van-toast v-model:show="isAddBookMessage" style="padding: 10px" word-break="'break-word'">
+        <template #message>
+            <AddBookMessage />
+        </template>
+    </van-toast>
 </template>
 <style scoped lang='scss'>
 .novel-detail {

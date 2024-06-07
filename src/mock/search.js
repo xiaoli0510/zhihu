@@ -77,13 +77,13 @@ Mock.mock("/api/search/novel", "get", {
 });
 //搜索结果页 小说详情页
 Mock.mock("/api/search/novel/detail", "get", {
-  "list|10": [
+  "list|2": [
     {
       id: "@increment",
       avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
       name: "@cname",
       title: "@ctitle(1,10)",
-      sentence: "@cparagraph(1,1000)",
+      sentence: "@cparagraph(1,100)",
       "type|1":[
         1,2,3,4,5,6,7,8,9,10,11,12,13,14
       ],
