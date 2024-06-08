@@ -11,6 +11,7 @@ import CommentPopup from '@/components/CommentPopup.vue'
 import CommentReply from '../../components/CommentReply.vue'
 import AddBookMessage from '@/components/AddBookMessage.vue'
 import { useRouter } from 'vue-router';
+import Share from '../../components/Share.vue'
 const props = defineProps(['id']);
 provide('id', props.id);
 let list = ref([]);
@@ -58,6 +59,16 @@ const enterVipWelfare = () => {
     router.push('/vipWelfare');
 }
 
+//分享
+const isShare = ref(false);
+const showShare = () => {
+    isShare.value = true;
+}
+const hideShare = () => {
+    isShare.value = false;
+}
+
+
 </script>
 <template>
     <div class="novel-detail">
@@ -68,7 +79,7 @@ const enterVipWelfare = () => {
             <van-col span="9">
                 <BookIcon @showAddBookMessage="showAddBookMessage"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare"/>
-                <ShareIcon />
+                <ShareIcon @showShare="showShare" />
             </van-col>
         </van-row>
         <div class="novel-content" v-for="(item, index) in list" :key="index">
@@ -108,6 +119,8 @@ const enterVipWelfare = () => {
             <AddBookMessage />
         </template>
     </van-toast>
+    <!-- 分享 -->
+    <Share :isShare="isShare" @hideShare="hideShare" v-if="isShare"/>
 </template>
 <style scoped lang='scss'>
 .novel-detail {
