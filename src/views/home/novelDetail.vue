@@ -10,6 +10,7 @@ import dot from '@/assets/imgs/dot.png';
 import CommentPopup from '@/components/CommentPopup.vue'
 import CommentReply from '../../components/CommentReply.vue'
 import AddBookMessage from '@/components/AddBookMessage.vue'
+import { useRouter } from 'vue-router';
 const props = defineProps(['id']);
 provide('id', props.id);
 let list = ref([]);
@@ -51,6 +52,12 @@ const showAddBookMessage = () => {
     isAddBookMessage.value = true;
 }
 
+//进入专属会员福利
+const router = useRouter();
+const enterVipWelfare = () => {
+    router.push('/vipWelfare');
+}
+
 </script>
 <template>
     <div class="novel-detail">
@@ -60,7 +67,7 @@ const showAddBookMessage = () => {
             </van-col>
             <van-col span="9">
                 <BookIcon @showAddBookMessage="showAddBookMessage"/>
-                <van-icon name="cash-back-record" color="red" size="20px" class="money" />
+                <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare"/>
                 <ShareIcon />
             </van-col>
         </van-row>

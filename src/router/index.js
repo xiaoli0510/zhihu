@@ -12,6 +12,8 @@ import Result from "../views/home/result.vue";//搜索结果页
 import Report from "../views/home/report.vue";//举报页
 import NovelDetail from "../views/home/novelDetail.vue";//小说详情页
 import Test from "../views/home/test.vue";//小说详情页
+import VipWelfare from "../views/center/vipWelfare.vue";//专属会员福利
+
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -91,12 +93,15 @@ const router = createRouter({
       }
     }, 
      {
+      path: "/vipWelfare",
+      name: "vipWelfare",
+      component: VipWelfare,
+    },
+     {
       path: "/test",
       name: "test",
       component: Test,
     },
-    
-    
   ],
 });
 
