@@ -11,7 +11,8 @@ import CommentPopup from '@/components/CommentPopup.vue'
 import CommentReply from '../../components/CommentReply.vue'
 import AddBookMessage from '@/components/AddBookMessage.vue'
 import { useRouter } from 'vue-router';
-import Share from '../../components/Share.vue'
+import Share from '../../components/BookShare.vue'
+import { showToast } from 'vant';
 const props = defineProps(['id']);
 provide('id', props.id);
 let list = ref([]);
@@ -68,6 +69,16 @@ const hideShare = () => {
     isShare.value = false;
 }
 
+//目录
+const isCatalog = ref(false);
+const showCatalog = () => {
+    showToast({ message: '功能开发中...' });
+    isCatalog.value = true;
+}
+const hideCatalog = () => {
+    isCatalog.value = false;
+}
+
 
 </script>
 <template>
@@ -101,8 +112,8 @@ const hideShare = () => {
                     <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
                     <UpvoteIcon :item="item" />
                     <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
-                    <van-icon name="list-switch" size="24px" />
-                    <van-icon :name="dot" size="20px" color="#ddd" />
+                    <van-icon name="list-switch" size="24px" @click="showCatalog"/>
+                    <van-icon :name="dot" size="20px" color="#ddd" @click="showShare"/>
                 </van-row>
             </div>
         </div>
