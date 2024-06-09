@@ -13,6 +13,10 @@ import Report from "../views/home/report.vue";//举报页
 import NovelDetail from "../views/home/novelDetail.vue";//小说详情页
 import Test from "../views/home/test.vue";//小说详情页
 import VipWelfare from "../views/center/vipWelfare.vue";//专属会员福利
+import BulletComment from "../views/home/bulletComment.vue";//弹评
+import Private from "../views/home/private.vue";//私信
+import Contact from "../views/home/contact.vue";//联系小管家
+
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -20,7 +24,7 @@ const router = createRouter({
     {
       path: "/home",
       name: "home",
-      alias:'/',
+      alias: "/",
       component: HomeView,
     },
     {
@@ -72,32 +76,47 @@ const router = createRouter({
       path: "/result/:keyWord",
       name: "result",
       component: Result,
-      props:true,
-      meta:{
-        keepAlive:true//需要缓存
-      }
+      props: true,
+      meta: {
+        keepAlive: true, //需要缓存
+      },
     },
     {
       path: "/report",
       name: "report",
       component: Report,
-      props:true,
+      props: true,
     },
     {
       path: "/novel/detail/:id",
       name: "novelDetail",
       component: NovelDetail,
-      props:true,
-      meta:{
-        keepAlive:true//需要缓存
-      }
-    }, 
-     {
+      props: true,
+      meta: {
+        keepAlive: true, //需要缓存
+      },
+    },
+    {
       path: "/vipWelfare",
       name: "vipWelfare",
       component: VipWelfare,
     },
-     {
+    {
+      path: "/bullet",
+      name: "bulletComment",
+      component: BulletComment,
+    },
+    {
+      path: "/private",
+      name: "private",
+      component: Private,
+    },
+    {
+      path: "/contact",
+      name: "contact",
+      component: Contact,
+    },
+    {
       path: "/test",
       name: "test",
       component: Test,

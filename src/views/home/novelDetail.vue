@@ -11,17 +11,45 @@ import CommentPopup from '@/components/CommentPopup.vue'
 import CommentReply from '../../components/CommentReply.vue'
 import AddBookMessage from '@/components/AddBookMessage.vue'
 import { useRouter } from 'vue-router';
-import Share from '../../components/BookShare.vue'
-import { showToast } from 'vant';
+import BookShare from '../../components/BookShare.vue'
+import ReadSet from '../../components/ReadSet.vue'
+import MoreShare from '@/components/MoreShare.vue'
 const props = defineProps(['id']);
 provide('id', props.id);
 let list = ref([]);
-fetchNovelDetail({ id:props.id })
-    .then(res => {
-        list.value = res.data.list;
-    }).catch(err => {
-        console.log(err);
-    });
+const initData = () => {
+    fetchNovelDetail({ id: props.id })
+        .then(res => {
+            list.value = res.data.list;
+        }).catch(err => {
+            console.log(err);
+        });
+}
+initData();
+
+// 下拉加载
+const loading = ref(false);
+const onRefresh = () => {
+    setTimeout(() => {
+        initData();
+        loading.value = false;
+    }, 1000);
+};
+
+//上拉加载
+const onScroll = (e) => {
+    const novel = ref();
+    console.log(novel)
+    const clientHeight = e.target.clientHeight;
+    const scrollHeight = e.target.scrollHeight;
+    const scrollTop = e.target.scrollTop;
+    const distance = 50;
+    console.log(scrollTop,clientHeight,scrollHeight,distance)
+    console.log(scrollTop + clientHeight,scrollHeight + distance)
+    if ((scrollTop + clientHeight) >= (scrollHeight + distance)) {
+        initData();
+    }
+}
 
 //显示评论弹框
 const isCommentPopup = ref(false);
@@ -60,15 +88,6 @@ const enterVipWelfare = () => {
     router.push('/vipWelfare');
 }
 
-//分享
-const isShare = ref(false);
-const showShare = () => {
-    isShare.value = true;
-}
-const hideShare = () => {
-    isShare.value = false;
-}
-
 //目录
 const isCatalog = ref(false);
 const showCatalog = () => {
@@ -79,6 +98,44 @@ const hideCatalog = () => {
     isCatalog.value = false;
 }
 
+//分享
+const isShare = ref(false);
+const showShare = () => {
+    isShare.value = true;
+}
+const hideShare = () => {
+    isShare.value = false;
+}
+
+//阅读设置的默认选项
+const readsetObj = ref({
+    fontSize: 17,
+    light: 70,
+    isShowOtherNote: true
+})
+const isReadset = ref(false);
+//显示阅读设置弹框
+const showReadset = () => {
+    isReadset.value = true;
+    hideShare();
+}
+//关闭阅读设置弹框
+const hideReadset = () => {
+    isReadset.value = false;
+}
+const onChangeReadset = (type, val) => {
+    readsetObj.value[type] = val;
+}
+//打开更多分享
+const isMoreShare = ref(false);
+const showMoreShare = () => {
+    isMoreShare.value = true;
+    hideShare();
+}
+// 关闭更多分享
+const hideMoreShare = () => {
+    isMoreShare.value = false;
+}
 
 </script>
 <template>
@@ -88,35 +145,45 @@ const hideCatalog = () => {
                 <BackIcon />
             </van-col>
             <van-col span="9">
-                <BookIcon @showAddBookMessage="showAddBookMessage"/>
-                <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare"/>
+                <BookIcon @showAddBookMessage="showAddBookMessage" />
+                <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
                 <ShareIcon @showShare="showShare" />
             </van-col>
         </van-row>
-        <div class="novel-content" v-for="(item, index) in list" :key="index">
-            <h1>{{ item.title }}</h1>
-            <van-row justify="start" class="author">
-                <van-col>
-                    <van-image round width="20px" height="20px" :src="item.avatar" />
-                </van-col>
-                <van-col>{{ item.name }}</van-col>
-            </van-row>
-            <van-row class="info">
-                <van-col v-for="(item1, index1) in item.feature" :key="index1">{{ item1 }}·</van-col>
-                <van-col>{{ item.upvote }}喜欢·</van-col>
-                <van-col>{{ item.comment }}弹评·</van-col>
-            </van-row>
-            <div class="sentence">{{ item.sentence }}</div>
-            <div class="comment-bottom">
-                <van-row justify="space-between" algin="center">
-                    <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
-                    <UpvoteIcon :item="item" />
-                    <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
-                    <van-icon name="list-switch" size="24px" @click="showCatalog"/>
-                    <van-icon :name="dot" size="20px" color="#ddd" @click="showShare"/>
-                </van-row>
+        <van-pull-refresh v-model="loading" @refresh="onRefresh" pulling-text="下拉查看^" loosing-text="松开查看">
+            <div class="novel-content" ref="novel" @scroll="onScroll">
+                <div class="novel-item" v-for="(item, index) in list" :key="index">
+                    <div class="inner">
+                        <h1>{{ item.title }}</h1>
+                        <van-row justify="start" class="author">
+                            <van-col>
+                                <van-image round width="20px" height="20px" :src="item.avatar" />
+                            </van-col>
+                            <van-col>{{ item.name }}</van-col>
+                        </van-row>
+                        <van-row class="info">
+                            <van-col v-for="(item1, index1) in item.feature" :key="index1">{{ item1 }}·</van-col>
+                            <van-col>{{ item.upvote }}喜欢·</van-col>
+                            <van-col>{{ item.comment }}弹评·</van-col>
+                        </van-row>
+                        <div class="sentence" v-if="index === 0" :style="{ fontSize: readsetObj.fontSize + 'px' }">{{
+                            item.sentence }}</div>
+                        <div class="comment-bottom">
+                            <van-row justify="space-between" algin="center">
+                                <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
+                                <UpvoteIcon :item="item" />
+                                <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
+                                <van-icon name="list-switch" size="24px" @click="showCatalog" />
+                                <van-icon :name="dot" size="20px" color="#ddd" @click="showShare" />
+                            </van-row>
+                        </div>
+                    </div>
+                    <div class="content-next-tip" v-if="index === 0">
+                        该专栏的下一个内容
+                    </div>
+                </div>
             </div>
-        </div>
+        </van-pull-refresh>
     </div>
     <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId"
         v-if="isCommentPopup" />
@@ -131,7 +198,13 @@ const hideCatalog = () => {
         </template>
     </van-toast>
     <!-- 分享 -->
-    <Share :isShare="isShare" @hideShare="hideShare" v-if="isShare"/>
+    <BookShare :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
+        @showMoreShare="showMoreShare" />
+    <!-- 更多分享 -->
+    <MoreShare v-if="isMoreShare" :isMoreShare="isMoreShare" @hideMoreShare="hideMoreShare" />
+    <!-- 阅读设置 -->
+    <ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
+        @hideMoreShare="hideMoreShare" />
 </template>
 <style scoped lang='scss'>
 .novel-detail {
@@ -146,6 +219,8 @@ const hideCatalog = () => {
         left: 0;
         width: 100%;
         padding: 0 4px;
+        // border: 1px solid red;
+        z-index: 999;
     }
 
     .money {
@@ -153,21 +228,47 @@ const hideCatalog = () => {
     }
 
     .novel-content {
-        margin-top: 20px 0;
-        padding: 60px 10px;
+        background: #eeecec;
+        height: calc(100% - 380px);
+        overflow: auto;
+        border:1px solid #000;
+        margin-top:41px;
 
-        .author {
-            margin: 20px 0 7px 0;
+        
+        .novel-item {
+            &:nth-child(2) {
+                .inner {
+                    padding-bottom: 41px;
+                }
+            }
+
+            .inner {
+                border-radius: 11px;
+                padding: 10px 10px 10px 10px;
+                background: #fff;
+
+
+
+                .author {
+                    margin: 20px 0 7px 0;
+                }
+
+                .info {
+                    color: #929292;
+                    font-size: 14px;
+                    line-height: 30px;
+                }
+
+                .sentence {
+                    padding: 20px 0;
+                }
+            }
         }
 
-        .info {
-            color: #929292;
-            font-size: 14px;
-            line-height: 30px;
-        }
-
-        .sentence {
-            padding: 20px 0;
+        .content-next-tip {
+            line-height: 57px;
+            text-align: center;
+            color: #2b2b2b;
         }
     }
 
@@ -181,6 +282,7 @@ const hideCatalog = () => {
     background: #fff;
     height: 40px;
     padding: 9px 10px;
+    border:1px solid red;
 
     .comment-btn {
         width: 40%;

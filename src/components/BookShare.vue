@@ -1,75 +1,95 @@
 <script setup>
-import { ref, watch } from 'vue';
-const props = defineProps(['isShare']);
-
+import { ref } from 'vue';
+import Clipboard from 'clipboard';
+import { useRouter } from 'vue-router';
+const props = defineProps(['isShare', 'url']);
+const emit = defineEmits(['hideShare', 'showReadSet','showMoreShare']);
 const showShare = ref(props.isShare);
-watch(() => props.isShare, (val, val1) => {
-    console.log('watch', val, val1)
-    console.log(val)
-    showShare.value = val;
-}, {
-    deep: true
-});
-const options = [[
-    { name: '微信好友', icon: 'wechat' },
-    { name: 'QQ', icon: 'qq' },
-    { name: '复制链接', icon: 'link' },
-    { name: '朋友圈', icon: 'wechat-moments' },
-    { name: '分享到想法', icon: 'cluster' },
-    { name: '生成长图', icon: 'photo' },
-    { name: '知乎私信', icon: 'share' },
-    { name: 'QQ空间', icon: 'star' },
-    { name: '更多', icon: 'weapp-nav' },
+const options = ref([[
+    { name: '微信好友', icon: 'wechat', className: 'wechat' },
+    { name: 'QQ', icon: 'qq', className: 'qq' },
+    { name: '复制链接', icon: 'link', className: 'copy' },
+    { name: '朋友圈', icon: 'wechat-moments', className: 'wechatMoments' },
+    { name: '分享到想法', icon: 'cluster', className: 'add' },
+    { name: '生成长图', icon: 'photo', className: 'photo' },
+    { name: '知乎私信', icon: 'share', className: 'private' },
+    { name: 'QQ空间', icon: 'star', className: 'qqzone' },
+    { name: '更多', icon: 'weapp-nav', className: 'more' },
 ],
 [
-    { name: '反对', icon: 'info-o' },
-    { name: '弹评', icon: 'guide-o' },
-    { name: '加入浮窗', icon: 'completed-o' },
-    { name: '阅读设置', icon: 'setting-o' },
-    { name: '联系小管家', icon: 'notes-o' },
-],];
+    { name: '反对', icon: 'info-o', className: 'oppose' },
+    { name: '弹评', icon: 'guide-o', className: 'comment' },
+    { name: '加入浮窗', icon: 'completed-o', className: 'floatWindow' },
+    { name: '阅读设置', icon: 'setting-o', className: 'readSet' },
+    { name: '联系小管家', icon: 'notes-o', className: 'contact' },
+],]);
 
-const onSelect = (option, index) => {
-    console.log(option, index)
-    showToast('待完善中');
-    switch (index) {
-        case 0:
+const router = useRouter();
+const onSelect = (option) => {
+    const className = option.className;
+    switch (className) {
+        case 'wechat':
+        case 'qq':
+        case 'wechatMoments':
+        case 'qqzone':
+            showToast('待完善中');
+            emit('hideShare');
+            break;
+        case 'copy':
+            let clipboard = new Clipboard('.copy', {
+                text: function () {
+                    return window.location.href;
+                }
+            })
+            clipboard.on('success', (e) => {
+                showToast('已复制到剪贴板');
+            })
+            break;
+        case 'add':
+            router.push('/add');
+            break;
+        case 'photo':
+            showToast('生成长图');
+            break;
+        case 'private':
+            router.push('/private');
+            break;
+        case 'more':
+            emit('showMoreShare');
+            break;
+        case 'oppose':
             if (option.icon === 'info-o') {
-                options[1].icon = 'info';
+                options.value[1][0].icon = 'info';
                 showToast('已反对');
-            } else {
-                options[1][0].icon = 'info-o';
-                showToast('已已取消');
+            } else if (option.icon === 'info') {
+                options.value[1][0].icon = 'info-o';
+                showToast('已取消');
             }
             break;
-        case 1:
+        case 'comment':
+            router.push('/bullet');
             break;
-        case 2:
+        case 'floatWindow':
+            showToast('加入浮窗');
             break;
-        case 3:
+        case 'readSet':
+            emit('showReadSet');
             break;
-        case 4:
-            break;
-        case 5:
-            break;
-        case 6:
-            break;
-        case 7:
-            break;
-        case 8:
-            break;
-        default:
+        case 'contact':
+            router.push('/contact');
             break;
     }
 };
 
-const emit = defineEmits(['hideShare']);
 const clickOverlay = () => {
     emit('hideShare');
 }
+
 </script>
 <template>
     <van-share-sheet v-model:show="showShare" title="分享到..." cancel-text="" :options="options" @select="onSelect"
-        @click-overlay="clickOverlay" />
+        @click-overlay="clickOverlay">
+        <span class="copy"></span>
+        </van-share-sheet>
 </template>
 <style scoped lang='scss'></style>
