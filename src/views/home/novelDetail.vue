@@ -46,6 +46,8 @@ const onScroll = (e) => {
     console.log(scrollTop, clientHeight, scrollHeight, distance)
     if ((scrollTop + clientHeight) >= scrollHeight) {
         isScrollBottom.value = true;
+    }else{
+        isScrollBottom.value = false;
     }
 }
 
@@ -187,7 +189,7 @@ const onTouchEnd = (e) => {
                     </van-row>
                     <div class="sentence" :style="{ fontSize: readsetObj.fontSize + 'px' }">{{
                         item.sentence }}</div>
-                    <div class="comment-bottom">
+                    <div class="comment-bottom" :class="'pos-r',isScrollBottom">
                         <van-row justify="space-between" algin="center">
                             <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
                             <UpvoteIcon :item="item" />
@@ -215,17 +217,6 @@ const onTouchEnd = (e) => {
                         <van-col>{{ item.upvote }}喜欢·</van-col>
                         <van-col>{{ item.comment }}弹评·</van-col>
                     </van-row>
-                    <div class="sentence" v-if="index === 0" :style="{ fontSize: readsetObj.fontSize + 'px' }">{{
-                        item.sentence }}</div>
-                    <div class="comment-bottom">
-                        <van-row justify="space-between" algin="center">
-                            <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
-                            <UpvoteIcon :item="item" />
-                            <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
-                            <van-icon name="list-switch" size="24px" @click="showCatalog" />
-                            <van-icon :name="dot" size="20px" color="#ddd" @click="showShare" />
-                        </van-row>
-                    </div>
                 </div>
             </div>
         </div>
@@ -325,7 +316,11 @@ const onTouchEnd = (e) => {
     background: #fff;
     height: 40px;
     padding: 9px 10px;
-    border: 1px solid red;
+    border-top: 1px solid #ccc;
+    &.pos-r{
+        position: relative;
+    }
+    
 
     .comment-btn {
         width: 40%;
