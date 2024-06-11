@@ -14,42 +14,71 @@ import { useRouter } from 'vue-router';
 import BookShare from '../../components/BookShare.vue'
 import ReadSet from '../../components/ReadSet.vue'
 import MoreShare from '@/components/MoreShare.vue'
+import debounce from 'lodash/debounce';
+console.log(debounce)
 const props = defineProps(['id']);
+let id = ref(props.id);
 provide('id', props.id);
 let list = ref([]);
-const initData = () => {
-    fetchNovelDetail({ id: props.id })
+const initData = (id) => {
+    fetchNovelDetail({ id })
         .then(res => {
+            isScrollBottom.value = false;
             list.value = res.data.list;
         }).catch(err => {
             console.log(err);
         });
 }
-initData();
+initData(id);
 
 // 下拉加载
 const loading = ref(false);
 const onRefresh = () => {
     setTimeout(() => {
-        initData();
+        initData(id++);
         loading.value = false;
     }, 1000);
 };
 
 const isScrollBottom = ref(false);
 //上拉加载
-const onScroll = (e) => {
+let distance = 0;
+
+const novelScroll = (e) => {
     const clientHeight = e.target.clientHeight;
-    const scrollHeight = e.target.scrollHeight;
+    let scrollHeight = e.target.scrollHeight;
     const scrollTop = e.target.scrollTop;
-    const distance = 50;
-    console.log(scrollTop, clientHeight, scrollHeight, distance)
+    const previouScrollHeight = scrollHeight;
+    console.log(scrollTop, clientHeight, scrollHeight)
+    console.log('previouScrollHeight', previouScrollHeight)
+    console.log('scrollHeight', scrollHeight)
+    console.log((scrollTop + clientHeight) >= scrollHeight, scrollHeight, distance)
+    if (previouScrollHeight !== scrollHeight) {
+
+    }
+    // if ((scrollTop + clientHeight) >= scrollHeight&&distance) {
     if ((scrollTop + clientHeight) >= scrollHeight) {
         isScrollBottom.value = true;
-    }else{
-        isScrollBottom.value = false;
+        scrollHeight = e.target.scrollHeight;
+        distance = scrollHeight - previouScrollHeight;
+
+    } else {
+        if (distance) {
+           // isScrollBottom.value = true;
+        //    isScrollBottom.value = false;
+        }
+        if ((scrollTop + clientHeight) >= scrollHeight) {
+
+            isScrollBottom.value = false;
+            distance = 0;
+        }
     }
+    console.log(isScrollBottom.value, '@@@@@@@')
 }
+
+const onScroll = debounce((e) => {
+    onScroll(e);
+}, 100);
 
 //显示评论弹框
 const isCommentPopup = ref(false);
@@ -144,23 +173,22 @@ const onTouchStart = (e) => {
     startY = e.touches[0].pageY;
 }
 const onTouchMove = (e) => {
-    currentY =e.touches[0].pageY;
+    currentY = e.touches[0].pageY;
 }
 const novel = ref();
 const onTouchEnd = (e) => {
-
-    if (currentY - startY <= -50&&isScrollBottom.value) {
-        novel.value.scrollTo(0, 0);
+    if (currentY - startY <= -50 && isScrollBottom.value) {
+        //novel.value.scrollTo(0, 0);
         //获取下一章数据
-        isScrollBottom.value = false;
-        initData();
+        //      isScrollBottom.value = false;
+        //    initData(id++);
     }
 }
 
 </script>
 <template>
-    <div class="novel-detail" @scroll="onScroll" ref="novel"  @touchstart="onTouchStart" @touchend="onTouchEnd"
-                @touchmove="onTouchMove">
+    <div class="novel-detail" @scroll="novelScroll" ref="novel" @touchstart="onTouchStart" @touchend="onTouchEnd"
+        @touchmove="onTouchMove">
         <van-row align="center" justify="space-between" class="header-fixed">
             <van-col span="4">
                 <BackIcon />
@@ -173,55 +201,58 @@ const onTouchEnd = (e) => {
         </van-row>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" pulling-text="下拉查看^" loosing-text="松开查看">
             <div class="novel-content">
-            <div class="novel-item" v-for="(item, index) in list" :key="index">
-                <div class="inner" v-if="index===0">
-                    <h1>{{ item.title }}</h1>
-                    <van-row justify="start" class="author">
-                        <van-col>
-                            <van-image round width="20px" height="20px" :src="item.avatar" />
-                        </van-col>
-                        <van-col>{{ item.name }}</van-col>
-                    </van-row>
-                    <van-row class="info">
-                        <van-col v-for="(item1, index1) in item.feature" :key="index1">{{ item1 }}·</van-col>
-                        <van-col>{{ item.upvote }}喜欢·</van-col>
-                        <van-col>{{ item.comment }}弹评·</van-col>
-                    </van-row>
-                    <div class="sentence" :style="{ fontSize: readsetObj.fontSize + 'px' }">{{
-                        item.sentence }}</div>
-                    <div class="comment-bottom" :class="'pos-r',isScrollBottom">
-                        <van-row justify="space-between" algin="center">
-                            <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
-                            <UpvoteIcon :item="item" />
-                            <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
-                            <van-icon name="list-switch" size="24px" @click="showCatalog" />
-                            <van-icon :name="dot" size="20px" color="#ddd" @click="showShare" />
+                <div class="novel-item" v-for="(item, index) in list" :key="index">
+                    <div class="inner" v-if="index === 0">
+                        <h1>{{ item.title }}</h1>
+                        <van-row justify="start" class="author">
+                            <van-col>
+                                <van-image round width="20px" height="20px" :src="item.avatar" />
+                            </van-col>
+                            <van-col>{{ item.name }}</van-col>
+                        </van-row>
+                        <van-row class="info">
+                            <van-col v-for="(item1, index1) in item.feature" :key="index1">{{ item1 }}·</van-col>
+                            <van-col>{{ item.upvote }}喜欢·</van-col>
+                            <van-col>{{ item.comment }}弹评·</van-col>
+                        </van-row>
+                        <div class="sentence" :style="{ fontSize: readsetObj.fontSize + 'px' }">{{
+                            item.sentence }}</div>
+                        <div class="comment-bottom" :class="{ 'pos-r': isScrollBottom }">
+                            <van-row justify="space-between" algin="center">
+                                <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
+                                <UpvoteIcon :item="item" />
+                                <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
+                                <van-icon name="list-switch" size="24px" @click="showCatalog" />
+                                <van-icon :name="dot" size="20px" color="#ddd" @click="showShare" />
+                            </van-row>
+                        </div>
+                    </div>
+                    <div class="content-next-tip" v-if="index === 1 && isScrollBottom">
+                        该专栏的下一个内容
+                    </div>
+                </div>
+                <div class="novel-item" v-for="(item, index) in list" :key="index">
+                    <div class="inner" v-if="index === 1 && isScrollBottom">
+                        <h1>{{ item.title }}</h1>
+                        <van-row justify="start" class="author">
+                            <van-col>
+                                <van-image round width="20px" height="20px" :src="item.avatar" />
+                            </van-col>
+                            <van-col>{{ item.name }}</van-col>
+                        </van-row>
+                        <van-row class="info">
+                            <van-col v-for="(item1, index1) in item.feature" :key="index1">{{ item1 }}·</van-col>
+                            <van-col>{{ item.upvote }}喜欢·</van-col>
+                            <van-col>{{ item.comment }}弹评·</van-col>
                         </van-row>
                     </div>
                 </div>
-                <div class="content-next-tip" v-if="index===1&&isScrollBottom">
-                        该专栏的下一个内容
-                </div>
             </div>
-            <div class="novel-item" v-for="(item, index) in list" :key="index">
-                <div class="inner" v-if="index===1&&isScrollBottom">
-                    <h1>{{ item.title }}</h1>
-                    <van-row justify="start" class="author">
-                        <van-col>
-                            <van-image round width="20px" height="20px" :src="item.avatar" />
-                        </van-col>
-                        <van-col>{{ item.name }}</van-col>
-                    </van-row>
-                    <van-row class="info">
-                        <van-col v-for="(item1, index1) in item.feature" :key="index1">{{ item1 }}·</van-col>
-                        <van-col>{{ item.upvote }}喜欢·</van-col>
-                        <van-col>{{ item.comment }}弹评·</van-col>
-                    </van-row>
-                </div>
-            </div>
-        </div>
 
         </van-pull-refresh>
+        <div class="novel-next" @click="initData(id++)">
+            <van-icon name="arrow-down" />
+        </div>
     </div>
     <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId"
         v-if="isCommentPopup" />
@@ -234,21 +265,21 @@ const onTouchEnd = (e) => {
         <template #message>
             <AddBookMessage />
         </template>
-</van-toast>
-<!-- 分享 -->
-<BookShare :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
-    @showMoreShare="showMoreShare" />
-<!-- 更多分享 -->
-<MoreShare v-if="isMoreShare" :isMoreShare="isMoreShare" @hideMoreShare="hideMoreShare" />
-<!-- 阅读设置 -->
-<ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
-    @hideMoreShare="hideMoreShare" />
+    </van-toast>
+    <!-- 分享 -->
+    <BookShare :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
+        @showMoreShare="showMoreShare" />
+    <!-- 更多分享 -->
+    <MoreShare v-if="isMoreShare" :isMoreShare="isMoreShare" @hideMoreShare="hideMoreShare" />
+    <!-- 阅读设置 -->
+    <ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
+        @hideMoreShare="hideMoreShare" />
 </template>
 <style scoped lang='scss'>
 .novel-detail {
     background: #fff;
     margin: 0 auto;
-    height:100%;
+    height: 100%;
     overflow: auto;
 
     .header-fixed {
@@ -259,7 +290,6 @@ const onTouchEnd = (e) => {
         left: 0;
         width: 100%;
         padding: 0 4px;
-        // border: 1px solid red;
         z-index: 999;
     }
 
@@ -272,7 +302,7 @@ const onTouchEnd = (e) => {
         height: calc(100% - 380px);
         overflow: auto;
         margin-top: 41px;
-        padding-bottom:40px;
+        padding-bottom: 40px;
 
         .novel-item {
 
@@ -306,6 +336,19 @@ const onTouchEnd = (e) => {
         }
     }
 
+    .novel-next {
+        position: fixed;
+        right: 3%;
+        bottom: 30%;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #fff;
+        text-align: center;
+        line-height: 40px;
+        box-shadow: rgb(63, 63, 63) 0 0 5px;
+    }
+
 }
 
 .comment-bottom {
@@ -317,10 +360,11 @@ const onTouchEnd = (e) => {
     height: 40px;
     padding: 9px 10px;
     border-top: 1px solid #ccc;
-    &.pos-r{
+
+    &.pos-r {
         position: relative;
     }
-    
+
 
     .comment-btn {
         width: 40%;
