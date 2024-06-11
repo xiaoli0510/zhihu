@@ -36,18 +36,16 @@ const onRefresh = () => {
     }, 1000);
 };
 
+const isScrollBottom = ref(false);
 //上拉加载
 const onScroll = (e) => {
-    const novel = ref();
-    console.log(novel)
     const clientHeight = e.target.clientHeight;
     const scrollHeight = e.target.scrollHeight;
     const scrollTop = e.target.scrollTop;
     const distance = 50;
-    console.log(scrollTop,clientHeight,scrollHeight,distance)
-    console.log(scrollTop + clientHeight,scrollHeight + distance)
-    if ((scrollTop + clientHeight) >= (scrollHeight + distance)) {
-        initData();
+    console.log(scrollTop, clientHeight, scrollHeight, distance)
+    if ((scrollTop + clientHeight) >= scrollHeight) {
+        isScrollBottom.value = true;
     }
 }
 
@@ -137,9 +135,30 @@ const hideMoreShare = () => {
     isMoreShare.value = false;
 }
 
+//上拉
+let startY = 0;
+let currentY = 0;
+const onTouchStart = (e) => {
+    startY = e.touches[0].pageY;
+}
+const onTouchMove = (e) => {
+    currentY =e.touches[0].pageY;
+}
+const novel = ref();
+const onTouchEnd = (e) => {
+
+    if (currentY - startY <= -50&&isScrollBottom.value) {
+        novel.value.scrollTo(0, 0);
+        //获取下一章数据
+        isScrollBottom.value = false;
+        initData();
+    }
+}
+
 </script>
 <template>
-    <div class="novel-detail">
+    <div class="novel-detail" @scroll="onScroll" ref="novel"  @touchstart="onTouchStart" @touchend="onTouchEnd"
+                @touchmove="onTouchMove">
         <van-row align="center" justify="space-between" class="header-fixed">
             <van-col span="4">
                 <BackIcon />
@@ -151,38 +170,66 @@ const hideMoreShare = () => {
             </van-col>
         </van-row>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" pulling-text="下拉查看^" loosing-text="松开查看">
-            <div class="novel-content" ref="novel" @scroll="onScroll">
-                <div class="novel-item" v-for="(item, index) in list" :key="index">
-                    <div class="inner">
-                        <h1>{{ item.title }}</h1>
-                        <van-row justify="start" class="author">
-                            <van-col>
-                                <van-image round width="20px" height="20px" :src="item.avatar" />
-                            </van-col>
-                            <van-col>{{ item.name }}</van-col>
+            <div class="novel-content">
+            <div class="novel-item" v-for="(item, index) in list" :key="index">
+                <div class="inner" v-if="index===0">
+                    <h1>{{ item.title }}</h1>
+                    <van-row justify="start" class="author">
+                        <van-col>
+                            <van-image round width="20px" height="20px" :src="item.avatar" />
+                        </van-col>
+                        <van-col>{{ item.name }}</van-col>
+                    </van-row>
+                    <van-row class="info">
+                        <van-col v-for="(item1, index1) in item.feature" :key="index1">{{ item1 }}·</van-col>
+                        <van-col>{{ item.upvote }}喜欢·</van-col>
+                        <van-col>{{ item.comment }}弹评·</van-col>
+                    </van-row>
+                    <div class="sentence" :style="{ fontSize: readsetObj.fontSize + 'px' }">{{
+                        item.sentence }}</div>
+                    <div class="comment-bottom">
+                        <van-row justify="space-between" algin="center">
+                            <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
+                            <UpvoteIcon :item="item" />
+                            <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
+                            <van-icon name="list-switch" size="24px" @click="showCatalog" />
+                            <van-icon :name="dot" size="20px" color="#ddd" @click="showShare" />
                         </van-row>
-                        <van-row class="info">
-                            <van-col v-for="(item1, index1) in item.feature" :key="index1">{{ item1 }}·</van-col>
-                            <van-col>{{ item.upvote }}喜欢·</van-col>
-                            <van-col>{{ item.comment }}弹评·</van-col>
-                        </van-row>
-                        <div class="sentence" v-if="index === 0" :style="{ fontSize: readsetObj.fontSize + 'px' }">{{
-                            item.sentence }}</div>
-                        <div class="comment-bottom">
-                            <van-row justify="space-between" algin="center">
-                                <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
-                                <UpvoteIcon :item="item" />
-                                <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
-                                <van-icon name="list-switch" size="24px" @click="showCatalog" />
-                                <van-icon :name="dot" size="20px" color="#ddd" @click="showShare" />
-                            </van-row>
-                        </div>
                     </div>
-                    <div class="content-next-tip" v-if="index === 0">
+                </div>
+                <div class="content-next-tip" v-if="index===1&&isScrollBottom">
                         该专栏的下一个内容
+                </div>
+            </div>
+            <div class="novel-item" v-for="(item, index) in list" :key="index">
+                <div class="inner" v-if="index===1&&isScrollBottom">
+                    <h1>{{ item.title }}</h1>
+                    <van-row justify="start" class="author">
+                        <van-col>
+                            <van-image round width="20px" height="20px" :src="item.avatar" />
+                        </van-col>
+                        <van-col>{{ item.name }}</van-col>
+                    </van-row>
+                    <van-row class="info">
+                        <van-col v-for="(item1, index1) in item.feature" :key="index1">{{ item1 }}·</van-col>
+                        <van-col>{{ item.upvote }}喜欢·</van-col>
+                        <van-col>{{ item.comment }}弹评·</van-col>
+                    </van-row>
+                    <div class="sentence" v-if="index === 0" :style="{ fontSize: readsetObj.fontSize + 'px' }">{{
+                        item.sentence }}</div>
+                    <div class="comment-bottom">
+                        <van-row justify="space-between" algin="center">
+                            <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
+                            <UpvoteIcon :item="item" />
+                            <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
+                            <van-icon name="list-switch" size="24px" @click="showCatalog" />
+                            <van-icon :name="dot" size="20px" color="#ddd" @click="showShare" />
+                        </van-row>
                     </div>
                 </div>
             </div>
+        </div>
+
         </van-pull-refresh>
     </div>
     <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId"
@@ -196,20 +243,22 @@ const hideMoreShare = () => {
         <template #message>
             <AddBookMessage />
         </template>
-    </van-toast>
-    <!-- 分享 -->
-    <BookShare :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
-        @showMoreShare="showMoreShare" />
-    <!-- 更多分享 -->
-    <MoreShare v-if="isMoreShare" :isMoreShare="isMoreShare" @hideMoreShare="hideMoreShare" />
-    <!-- 阅读设置 -->
-    <ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
-        @hideMoreShare="hideMoreShare" />
+</van-toast>
+<!-- 分享 -->
+<BookShare :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
+    @showMoreShare="showMoreShare" />
+<!-- 更多分享 -->
+<MoreShare v-if="isMoreShare" :isMoreShare="isMoreShare" @hideMoreShare="hideMoreShare" />
+<!-- 阅读设置 -->
+<ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
+    @hideMoreShare="hideMoreShare" />
 </template>
 <style scoped lang='scss'>
 .novel-detail {
     background: #fff;
     margin: 0 auto;
+    height:100%;
+    overflow: auto;
 
     .header-fixed {
         height: 40px;
@@ -231,16 +280,10 @@ const hideMoreShare = () => {
         background: #eeecec;
         height: calc(100% - 380px);
         overflow: auto;
-        border:1px solid #000;
-        margin-top:41px;
+        margin-top: 41px;
+        padding-bottom:40px;
 
-        
         .novel-item {
-            &:nth-child(2) {
-                .inner {
-                    padding-bottom: 41px;
-                }
-            }
 
             .inner {
                 border-radius: 11px;
@@ -282,7 +325,7 @@ const hideMoreShare = () => {
     background: #fff;
     height: 40px;
     padding: 9px 10px;
-    border:1px solid red;
+    border: 1px solid red;
 
     .comment-btn {
         width: 40%;

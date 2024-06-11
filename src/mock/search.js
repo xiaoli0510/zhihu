@@ -83,7 +83,7 @@ Mock.mock("/api/search/novel/detail", "get", {
       avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
       name: "@cname",
       title: "@ctitle(1,10)",
-      sentence: "@cparagraph(1,100)",
+      sentence: "@cparagraph(100,200)",
       "type|1":[
         1,2,3,4,5,6,7,8,9,10,11,12,13,14
       ],
