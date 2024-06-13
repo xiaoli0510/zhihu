@@ -1,15 +1,23 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { fetchWatchList } from '@/api/search.js';
+import { fetchTodoList } from '@/api/search.js';
+import {useTodoStore} from '@/stores/todo.js';
+const todo = useTodoStore();
 const list = ref([]);
-fetchWatchList()
+fetchTodoList()
     .then(res => {
         list.value = res.data.list;
     })
     .catch(err => {
         console.log(err);
     })
+
+watch(list,()=>{
+    todo.initList(list.value);
+},{
+    immediate:true
+})
 
 const total = computed(() => {
     return list.value.length;
@@ -22,8 +30,8 @@ const showList = () => {
 const hideList = () => {
     isSpread.value = false;
 }
-const handleDelete = (index) => {
-    list.value.splice(index, 1);
+const handleDelete = (id) => {
+    todo.delete(id);
 }
 
 const isSure = ref(false);
@@ -41,9 +49,9 @@ const enterDetail = (id) => {
 }
 </script>
 <template>
-    <div class="float-window" align="center" @click="showList" v-if="total > 0">
+    <div class="float-window" align="center" @click="showList" v-if="todo.total > 0">
         <van-icon name="sign" color="#1989fa" size="25px" />
-        <span>{{ total }}</span>
+        <span>{{ todo.total }}</span>
     </div>
 
     <div class="wrap-mask" v-if="isSpread && total > 0" @click.self="hideList">
@@ -62,7 +70,7 @@ const enterDetail = (id) => {
                 </van-col>
             </van-row>
             <div class="item-wrap">
-                <div class="item" v-for="(item, index) in list" @click="enterDetail(item.id)">
+                <div class="item" v-for="item in todo.watchList" @click="enterDetail(item.id)">
                     <van-row align="center" justify="space-around">
                         <van-col span="21" class="item-left">
                             <van-row>
@@ -76,7 +84,7 @@ const enterDetail = (id) => {
                             </van-row>
                         </van-col>
                         <van-col span="2" offset="1">
-                            <van-icon name="cross" @click.stop="handleDelete(index)" color="#555555" />
+                            <van-icon name="cross" @click.stop="handleDelete(item.id)" color="#555555" />
                         </van-col>
                     </van-row>
                 </div>

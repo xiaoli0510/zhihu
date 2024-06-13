@@ -1,7 +1,7 @@
 <script setup>
 import { nextTick, provide,ref } from "vue";
 import { RouterView } from "vue-router";
-import FloatWindow from './components/FloatWindow.vue'
+import Todo from './components/Todo.vue'
 const isRouterAlive = ref(true);
 //刷新页面
 const reload = ()=>{
@@ -25,7 +25,7 @@ provide('reload',reload);
       </div>
     </template>
     </Suspense>
-  <FloatWindow />
+  <Todo />
 </template>
 <style scoped>
 .container{

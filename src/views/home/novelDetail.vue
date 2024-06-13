@@ -241,7 +241,7 @@ const onTouchEnd = (e) => {
         </template>
     </van-toast>
     <!-- 分享 -->
-    <BookShare :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
+    <BookShare :item="list[0]" :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
         @showMoreShare="showMoreShare" />
     <!-- 更多分享 -->
     <MoreShare v-if="isMoreShare" :isMoreShare="isMoreShare" @hideMoreShare="hideMoreShare" />

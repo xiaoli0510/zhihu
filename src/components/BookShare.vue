@@ -1,9 +1,13 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Clipboard from 'clipboard';
 import { useRouter } from 'vue-router';
-const props = defineProps(['isShare', 'url']);
-const emit = defineEmits(['hideShare', 'showReadSet','showMoreShare']);
+import { useTodoStore } from '@/stores/todo.js';
+const todo = useTodoStore();
+const props = defineProps(['isShare', 'url', 'item']);
+const item = props.item;
+const isInList = todo.isInList(item.id);
+const emit = defineEmits(['hideShare', 'showReadSet', 'showMoreShare']);
 const showShare = ref(props.isShare);
 const options = ref([[
     { name: '微信好友', icon: 'wechat', className: 'wechat' },
@@ -23,6 +27,10 @@ const options = ref([[
     { name: '阅读设置', icon: 'setting-o', className: 'readSet' },
     { name: '联系小管家', icon: 'notes-o', className: 'contact' },
 ],]);
+isInList ? options.value[1][2].name = '移出浮窗' : '';
+watch(() => props.id, (newVal) => {
+    showShare.value = newVal;
+});
 
 const router = useRouter();
 const onSelect = (option) => {
@@ -70,7 +78,15 @@ const onSelect = (option) => {
             router.push('/bullet');
             break;
         case 'floatWindow':
-            showToast('加入浮窗');
+            if (option.name === '加入浮窗') {
+                todo.add(item);
+                options.value[1][2].name = '移出浮窗';
+                router.go(-1);
+            } else {
+                todo.delete(item.id);
+                options.value[1][2].name = '加入浮窗';
+                showToast('已移出浮窗');
+            }
             break;
         case 'readSet':
             emit('showReadSet');
@@ -90,6 +106,6 @@ const clickOverlay = () => {
     <van-share-sheet v-model:show="showShare" title="分享到..." cancel-text="" :options="options" @select="onSelect"
         @click-overlay="clickOverlay">
         <span class="copy"></span>
-        </van-share-sheet>
+    </van-share-sheet>
 </template>
 <style scoped lang='scss'></style>
