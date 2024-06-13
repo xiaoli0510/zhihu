@@ -1,12 +1,21 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const list = ref([{
     id: 1,
     title: '标题',
     sentence: '内容',
     img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
+}, {
+    id: 1,
+    title: '标题',
+    sentence: '内容',
+    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
 }]);
+const total = computed(() => {
+    return list.value.length;
+})
 
 const isSpread = ref(false);
 const showList = () => {
@@ -15,47 +24,63 @@ const showList = () => {
 const hideList = () => {
     isSpread.value = false;
 }
-const handleDelete = () => {
-    this.list.value.splice(index, 1);
+const handleDelete = (index) => {
+    list.value.splice(index, 1);
 }
+
+const isSure = ref(false);
 const clear = () => {
-    this.list.value = [];
+    isSure.value = true;
+}
+const sureClear = () => {
+    list.value = [];
+}
+
+const router = useRouter();
+const enterDetail = (id) => {
+    isSpread.value = false;
+    router.push(`/novel/detail/${id}`);
 }
 </script>
 <template>
-    <div class="float-window" align="center" @click="showList">
-        <van-icon name="sign" color="#1989fa" />
-        <span>2</span>
+    <div class="float-window" align="center" @click="showList" v-if="total > 0">
+        <van-icon name="sign" color="#1989fa" size="25px" />
+        <span>{{ total }}</span>
     </div>
 
-    <div class="wrap-mask" v-show="showList">
+    <div class="wrap-mask" v-if="isSpread && total > 0" @click.self="hideList">
         <div class="inner">
-            <van-row justify="space-around">
-                <van-col span="4">
-                    <van-icon name="sign" />
-                    <span>2</span>
+            <van-row justify="space-between">
+                <van-col span="3" offset="1">
+                    <van-icon name="sign" size="20px" />
+                    <span>{{ total }}</span>
                 </van-col>
-                <van-col span="4" class="clear" @click="clear">
+                <van-col span="3" class="clear" @click.stop="clear" v-if="!isSure">
                     清空
+                </van-col>
+                <van-col span="6" class="clear" @click.stop="sureClear" v-else>
+                    <van-icon name="cross" color="#1989fa" />
+                    确认清空
                 </van-col>
             </van-row>
             <div class="item-wrap">
-                <div class="float-item" v-for="item in list">
-                    <van-row justify="space-around">
-                        <van-col span="14">
-                            <h3>{{ item.title }}</h3>
-                            <p class="sentence">{{ item.sentence }}</p>
-                        </van-col>
-                        <van-col span="7">
-                            <van-image width="100" height="100" radius="5px" :src="item.img" />
-
+                <div class="item" v-for="(item, index) in list" @click="enterDetail(item.id)">
+                    <van-row align="center" justify="space-around">
+                        <van-col span="21" class="item-left">
+                            <van-row>
+                                <van-col span="19" class="txt-wrap">
+                                    <h3>{{ item.title }}</h3>
+                                    <p class="sentence">{{ item.sentence }}</p>
+                                </van-col>
+                                <van-col span="4">
+                                    <van-image width="60" height="60" radius="5px" :src="item.img" />
+                                </van-col>
+                            </van-row>
                         </van-col>
                         <van-col span="2" offset="1">
-                            <van-icon name="cross" @click="handleDelete" color="#555555" />
+                            <van-icon name="cross" @click.stop="handleDelete(index)" color="#555555" />
                         </van-col>
                     </van-row>
-                    <van-divider />
-
                 </div>
             </div>
         </div>
@@ -66,12 +91,18 @@ const clear = () => {
     position: fixed;
     right: 0;
     top: 34%;
-    height: 40px;
-    line-height: 40px;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    height: 44px;
+    line-height: 44px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     color: #1989fa;
     font-weight: 700;
-    border-radius: 10px 0 0 10px;
+    border-radius: 20px 0 0 20px;
+    width: 67px;
+    background: #fff;
+
+    >span {
+        vertical-align: top;
+    }
 }
 
 .wrap-mask {
@@ -82,6 +113,7 @@ const clear = () => {
     bottom: 0;
     background: #ccc;
     color: #2b2b2b;
+    z-index: 999;
 
     .inner {
         position: absolute;
@@ -97,10 +129,33 @@ const clear = () => {
         .item-wrap {
             background: #fff;
             padding: 7px 10px;
+            margin-top: 10px;
 
-            .sentence {
-                font-size: #555555;
-                font-size: 10px;
+            .item {
+
+                &:not(:last-child) {
+                    .item-left {
+                        border-bottom: 1px solid #eeebeb;
+                    }
+                }
+
+                .item-left {
+
+                    padding: 10px 0;
+
+                    .txt-wrap {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+
+                        .sentence {
+                            color: #797777;
+                            font-size: 15px;
+                        }
+                    }
+
+                }
+
             }
         }
     }

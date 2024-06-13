@@ -15,7 +15,6 @@ import BookShare from '../../components/BookShare.vue'
 import ReadSet from '../../components/ReadSet.vue'
 import MoreShare from '@/components/MoreShare.vue'
 import debounce from 'lodash/debounce';
-console.log(debounce)
 const props = defineProps(['id']);
 let id = ref(props.id);
 provide('id', props.id);
@@ -42,38 +41,13 @@ const onRefresh = () => {
 
 const isScrollBottom = ref(false);
 //上拉加载
-let distance = 0;
-
 const novelScroll = (e) => {
     const clientHeight = e.target.clientHeight;
-    let scrollHeight = e.target.scrollHeight;
+    const scrollHeight = e.target.scrollHeight;
     const scrollTop = e.target.scrollTop;
-    const previouScrollHeight = scrollHeight;
-    console.log(scrollTop, clientHeight, scrollHeight)
-    console.log('previouScrollHeight', previouScrollHeight)
-    console.log('scrollHeight', scrollHeight)
-    console.log((scrollTop + clientHeight) >= scrollHeight, scrollHeight, distance)
-    if (previouScrollHeight !== scrollHeight) {
-
-    }
-    // if ((scrollTop + clientHeight) >= scrollHeight&&distance) {
     if ((scrollTop + clientHeight) >= scrollHeight) {
         isScrollBottom.value = true;
-        scrollHeight = e.target.scrollHeight;
-        distance = scrollHeight - previouScrollHeight;
-
-    } else {
-        if (distance) {
-           // isScrollBottom.value = true;
-        //    isScrollBottom.value = false;
-        }
-        if ((scrollTop + clientHeight) >= scrollHeight) {
-
-            isScrollBottom.value = false;
-            distance = 0;
-        }
     }
-    console.log(isScrollBottom.value, '@@@@@@@')
 }
 
 const onScroll = debounce((e) => {
@@ -178,10 +152,10 @@ const onTouchMove = (e) => {
 const novel = ref();
 const onTouchEnd = (e) => {
     if (currentY - startY <= -50 && isScrollBottom.value) {
-        //novel.value.scrollTo(0, 0);
-        //获取下一章数据
-        //      isScrollBottom.value = false;
-        //    initData(id++);
+        novel.value.scrollTo(0, 0);
+        // 获取下一章数据
+        isScrollBottom.value = false;
+        initData(id++);
     }
 }
 

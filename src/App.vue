@@ -1,6 +1,7 @@
 <script setup>
 import { nextTick, provide,ref } from "vue";
 import { RouterView } from "vue-router";
+import FloatWindow from './components/FloatWindow.vue'
 const isRouterAlive = ref(true);
 //刷新页面
 const reload = ()=>{
@@ -23,7 +24,8 @@ provide('reload',reload);
         <RouterView v-if="isRouterAlive&&!$route.meta.keepAlive"/>
       </div>
     </template>
-  </Suspense>
+    </Suspense>
+  <FloatWindow />
 </template>
 <style scoped>
 .container{
