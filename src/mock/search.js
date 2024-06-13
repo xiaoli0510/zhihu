@@ -94,3 +94,14 @@ Mock.mock("/api/search/novel/detail", "get", {
     },
   ],
 });
+//搜索结果页 浮窗-在看
+Mock.mock("/api/watch", "get", {
+  "list|2": [
+    {
+      id: "@increment",
+      avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+      title: "@ctitle(1,10)",
+      sentence: "@cparagraph(1,3)",
+    },
+  ],
+});

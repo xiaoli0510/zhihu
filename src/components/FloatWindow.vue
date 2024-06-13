@@ -1,18 +1,16 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { fetchWatchList } from '@/api/search.js';
+const list = ref([]);
+fetchWatchList()
+    .then(res => {
+        list.value = res.data.list;
+    })
+    .catch(err => {
+        console.log(err);
+    })
 
-const list = ref([{
-    id: 1,
-    title: '标题',
-    sentence: '内容',
-    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-}, {
-    id: 1,
-    title: '标题',
-    sentence: '内容',
-    img: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-}]);
 const total = computed(() => {
     return list.value.length;
 })
@@ -70,10 +68,10 @@ const enterDetail = (id) => {
                             <van-row>
                                 <van-col span="19" class="txt-wrap">
                                     <h3>{{ item.title }}</h3>
-                                    <p class="sentence">{{ item.sentence }}</p>
+                                    <van-text-ellipsis class="sentence" :content="item.sentence" />
                                 </van-col>
                                 <van-col span="4">
-                                    <van-image width="60" height="60" radius="5px" :src="item.img" />
+                                    <van-image width="60" height="60" radius="5px" :src="item.avatar" />
                                 </van-col>
                             </van-row>
                         </van-col>

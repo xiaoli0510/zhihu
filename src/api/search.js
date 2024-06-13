@@ -27,4 +27,8 @@ export async function fetchNovelList(params){
 export async function fetchNovelDetail(params){
     return await service.get('/api/search/novel/detail');
 }
+//搜索结果页 浮窗
+export async function fetchWatchList(params){
+    return await service.get('/api/watch');
+}
 
