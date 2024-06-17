@@ -15,6 +15,7 @@ import BookShare from '../../components/BookShare.vue'
 import ReadSet from '../../components/ReadSet.vue'
 import MoreShare from '@/components/MoreShare.vue'
 import debounce from 'lodash/debounce';
+import Catalog from '@/components/Catalog.vue'
 const props = defineProps(['id']);
 let id = ref(props.id);
 provide('id', props.id);
@@ -248,6 +249,8 @@ const onTouchEnd = (e) => {
     <!-- 阅读设置 -->
     <ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
         @hideMoreShare="hideMoreShare" />
+    <!-- 目录 -->
+    <Catalog />
 </template>
 <style scoped lang='scss'>
 .novel-detail {
