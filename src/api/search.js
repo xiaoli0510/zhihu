@@ -31,4 +31,8 @@ export async function fetchNovelDetail(params){
 export async function fetchTodoList(params){
     return await service.get('/api/todo');
 }
+//搜索结果页 小说-目录
+export async function fetchCatalogList(params){
+    return await service.get('/api/novel/catalog');
+}
 

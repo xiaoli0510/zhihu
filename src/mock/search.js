@@ -90,7 +90,24 @@ Mock.mock("/api/search/novel/detail", "get", {
       'feature|1-3': ["@ctitle(1,3)"],
       "statu|1":[0,1],//0未完结 1已完结
       upvote: "@integer(0,100)",
-      comment: "@integer(0,100)"
+      comment: "@integer(0,100)",
+    },
+  ],
+});
+//搜索结果页 小说-目录
+Mock.mock("/api/novel/catalog", "get", {
+  id: "@increment",
+  title: "@ctitle(1,10)",
+  total: "@integer(0,100)",
+  "state|1":[0,1],//0未完结 1已完结
+  "list|7": [
+    {
+      id: "@increment",
+      title: "@ctitle(1,10)",
+      sentence: "@cparagraph(100,200)",
+      totalTxt:"@integer(0,100)",
+      comment: "@integer(0,100)",  
+      section: "@integer(0,100)",
     },
   ],
 });
