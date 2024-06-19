@@ -99,6 +99,7 @@ Mock.mock("/api/novel/catalog", "get", {
   id: "@increment",
   title: "@ctitle(1,10)",
   total: "@integer(0,100)",
+  cover: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
   "state|1":[0,1],//0未完结 1已完结
   "list|7": [
     {

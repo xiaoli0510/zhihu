@@ -1,24 +1,15 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 const props = defineProps(['list']);
 const list = ref(props.list);
-
-
-
-// const list = ref([{
-//   id:1,
-//   title:'Title',
-//   sentence:'sentence',
-//   'feature': ['2222'],
-//   totalTxt:111,
-//   upvote:22,
-//   rate:0.98,
-// }])
+const router = useRouter();
+const enterNovelDetail = (id) => {
+  router.push(`/novel/detail/${id}`);
+}
 </script>
 <template>
-  <!-- {{list}}
-  {{list[0]}} -->
-  <div v-for="item in list" class="catalog-item">
+  <div v-for="item in list" class="catalog-item" @click="enterNovelDetail(item.id)">
     <van-row>
       <van-col>第{{ item.section }}节 </van-col>
       <van-col offset="1">{{ item.title }} </van-col>
@@ -33,7 +24,6 @@ const list = ref(props.list);
       <van-col span="4"></van-col>
     </van-row>
     <van-divider />
-
   </div>
 </template>
 <style scoped lang='scss'>

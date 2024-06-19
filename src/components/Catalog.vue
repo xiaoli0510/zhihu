@@ -4,11 +4,19 @@ import CatalogItem from './CatalogItem.vue'
 import BookIcon from './BookIcon.vue'
 import { fetchCatalogList } from '@/api/search.js';
 import { useRouter } from 'vue-router';
-const isShow = ref(true);
-const res = await fetchCatalogList();
-console.log(res.data)
 
-const { id, title, total, state } = res.data;
+const props = defineProps(['isCatalog']);
+const isShow = ref(props.isCatalog);
+watch(() => props.isShow, (newVal) => {
+  isShow.value = newVal.isCatalog;
+})
+const emit = defineEmits(['close']);
+const close = () => {
+  emit('close');
+}
+
+const res = await fetchCatalogList();
+const { id, title, total, state,cover } = res.data;
 const list = ref(res.data.list);
 const router = useRouter();
 const enterNovelHomepage = () => {
@@ -18,9 +26,8 @@ const enterNovelHomepage = () => {
 const sortType = ref(0);//0升序 1降序
 const toggleSort = () => {
   sortType.value = sortType.value == 0 ? 1 : 0;
-
 }
-watch(sortType, (newVal, oldVal) => {
+watch(sortType, (newVal) => {
   if (newVal === 1) {
     list.value.sort((a, b) => {
       return b.id - a.id;
@@ -34,12 +41,12 @@ watch(sortType, (newVal, oldVal) => {
 
 </script>
 <template>
-  <van-popup v-model:show="isShow" round position="bottom" :style="{ height: '90%', padding: '10px' }" closeable
-    close-icon="close">
+  <van-popup v-model:show="isShow" round position="bottom" :style="{ height: '95%', padding: '10px' }" closeable
+    @close="close" close-icon="close">
     <h2>目录</h2>
     <van-row justify="space-around" class="brief">
       <van-col span="7">
-        <van-image width="100" height="100" radius="5px" src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
+        <van-image width="100" height="100" radius="5px" :src="cover"/>
       </van-col>
       <van-col class="txt" span="17" justify="space-around" align="bottom">
         <h3>{{ title }}</h3>
@@ -53,12 +60,12 @@ watch(sortType, (newVal, oldVal) => {
     </van-row>
     <van-row justify="space-between" class="total-sort">
       <van-col class="grey-font">共{{ total }}节·{{ state == 1 ? '已' : '未' }}完结</van-col>
-      <van-col class="grey-font"><van-icon name="exchange" @click="toggleSort" />{{ sortType === 0 ? '正序' : '倒序 ' }}</van-col>
+      <van-col class="grey-font"><van-icon name="exchange" @click="toggleSort" />{{ sortType === 0 ? '正序' : '倒序 '
+        }}</van-col>
     </van-row>
     <div class="catalog-list">
       <CatalogItem :list="list" />
     </div>
-
   </van-popup>
 </template>
 <style scoped lang='scss'>
@@ -77,7 +84,6 @@ watch(sortType, (newVal, oldVal) => {
 }
 
 .catalog-list {
-  border: 1px solid red;
   overflow: auto;
   height: 520px;
 }

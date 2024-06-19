@@ -1,5 +1,5 @@
 <script setup>
-import { provide, ref } from 'vue';
+import { provide, ref, watch } from 'vue';
 import { fetchNovelDetail } from "@/api/search.js";
 import BackIcon from '@/components/BackIcon.vue'
 import BookIcon from '@/components/BookIcon.vue'
@@ -17,9 +17,10 @@ import MoreShare from '@/components/MoreShare.vue'
 import debounce from 'lodash/debounce';
 import Catalog from '@/components/Catalog.vue'
 const props = defineProps(['id']);
-let id = ref(props.id);
+const id = ref(props.id);
+const isCatalog = ref(false);
 provide('id', props.id);
-let list = ref([]);
+const list = ref([]);
 const initData = (id) => {
     fetchNovelDetail({ id })
         .then(res => {
@@ -29,7 +30,13 @@ const initData = (id) => {
             console.log(err);
         });
 }
-initData(id);
+watch(()=>props.id, (newVal) => {
+    id.value = newVal;
+    initData(newVal);
+    isCatalog.value=false;
+},{
+    immediate:true
+});
 
 // 下拉加载
 const loading = ref(false);
@@ -93,9 +100,7 @@ const enterVipWelfare = () => {
 }
 
 //目录
-const isCatalog = ref(false);
 const showCatalog = () => {
-    showToast({ message: '功能开发中...' });
     isCatalog.value = true;
 }
 const hideCatalog = () => {
@@ -225,6 +230,7 @@ const onTouchEnd = (e) => {
             </div>
 
         </van-pull-refresh>
+        <!-- 下一章 -->
         <div class="novel-next" @click="initData(id++)">
             <van-icon name="arrow-down" />
         </div>
@@ -250,7 +256,7 @@ const onTouchEnd = (e) => {
     <ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
         @hideMoreShare="hideMoreShare" />
     <!-- 目录 -->
-    <Catalog />
+    <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog"/>
 </template>
 <style scoped lang='scss'>
 .novel-detail {
