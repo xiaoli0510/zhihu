@@ -44,14 +44,14 @@ watch(sortType, (newVal) => {
   <van-popup v-model:show="isShow" round position="bottom" :style="{ height: '95%', padding: '10px' }" closeable
     @close="close" close-icon="close">
     <h2>目录</h2>
-    <van-row justify="space-around" class="brief">
+    <van-row justify="space-around" class="brief" @click="enterNovelHomepage">
       <van-col span="7">
         <van-image width="100" height="100" radius="5px" :src="cover"/>
       </van-col>
       <van-col class="txt" span="17" justify="space-around" align="bottom">
         <h3>{{ title }}</h3>
         <van-row justify="space-between">
-          <van-col class="grey-font" @click="enterNovelHomepage">查看详情<van-icon name="arrow" /></van-col>
+          <van-col class="grey-font">查看详情<van-icon name="arrow" /></van-col>
           <van-col span="9">
             <BookIcon />
           </van-col>
