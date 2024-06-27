@@ -165,6 +165,11 @@ const onTouchEnd = (e) => {
     }
 }
 
+//进入profile
+const enterProfile = (id)=>{
+    router.push(`/profile/${id}`);
+}
+
 </script>
 <template>
     <div class="novel-detail" @scroll="novelScroll" ref="novel" @touchstart="onTouchStart" @touchend="onTouchEnd"
@@ -184,7 +189,7 @@ const onTouchEnd = (e) => {
                 <div class="novel-item" v-for="(item, index) in list" :key="index">
                     <div class="inner" v-if="index === 0">
                         <h1>{{ item.title }}</h1>
-                        <van-row justify="start" class="author">
+                        <van-row justify="start" class="author" @click="enterProfile(item.id)">
                             <van-col>
                                 <van-image round width="20px" height="20px" :src="item.avatar" />
                             </van-col>

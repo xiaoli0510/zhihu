@@ -1,6 +1,7 @@
-<script setup lang='ts'>
+<script setup>
 import { ref } from 'vue';
 import personal from "@/assets/imgs/personal.jpg";
+import profileBg from "@/assets/imgs/profile-bg.jpg";
 import male from "@/assets/imgs/male.png";
 import feMale from "@/assets/imgs/female.png";
 import BackIcon from '@/components/BackIcon.vue'
@@ -95,7 +96,7 @@ const selectLabel = (index) => {
 
 </script>
 <template>
-   <div class="header" :style="{backgroundImage:`url(${obj.imgBg})`}"> 
+   <div class="header" :style="{backgroundImage:`url(${profileBg})`}"> 
       <van-row justify="space-between">
          <van-col span="4">
             <BackIcon color="#fff" size="20px"/>

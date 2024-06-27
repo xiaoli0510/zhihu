@@ -1,16 +1,23 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch } from 'vue'; 
 // import CatalogItem from './CatalogItem.vue'
 // import BookIcon from './BookIcon.vue'
-import { fetchCatalogList } from '@/api/search.js';
+import { fetchCatalogList,fetchNovelDetail} from '@/api/search.js';
 import { useRouter } from 'vue-router';
+import Score from '../../components/Score.vue'
+import MarkScore from '../../components/MarkScore.vue'
 
 const res = await fetchCatalogList();
-const { id, title, total, state, cover } = res.data;
+const detailRes = await fetchNovelDetail();
+const obj = res.data;
+console.log(detailRes.data.list[0])
+Object.assign(obj, detailRes.data.list[0]);
+console.log('obj',obj)
+
 const list = ref(res.data.list);
 const router = useRouter();
 const enterNovelHomepage = () => {
-    router.push(`/novel/homepage/${id}`)
+    router.push(`/novel/homepage/${obj.id}`)
 }
 
 const sortType = ref(0);//0升序 1降序
@@ -51,9 +58,20 @@ const hideShare = () => {
 
 // tab
 const active = ref(0);
+ 
+const isTitle = ref(false);
+const toggleTitleDetail = () => {
+    isTitle.value = !isTitle.value;
+}
 
-const text =
-    '那一天我二十一岁，在我一生的黄金时代。我有好多奢望。我想爱，想吃，还想在一瞬间变成天上半明半暗的云。后来我才知道，生活就是个缓慢受锤的过程，人一天天老下去，奢望也一天天消失，最后变得像挨了锤的牛一样。可是我过二十一岁生日时没有预见到这一点。我觉得自己会永远生猛下去，什么也锤不了我。';
+const enterProfile = () => {
+    router.push({
+        name: 'profile',
+        query: {
+           id:obj.id
+        }
+    })
+}
 </script>
 <template>
     <div class="novel-home">
@@ -71,12 +89,12 @@ const text =
         <div class="brief">
             <van-row justify="space-around" @click="enterNovelHomepage">
                 <van-col span="7">
-                    <van-image width="100" height="100" radius="9px" :src="cover" class="img-cover" />
+                    <van-image width="100" height="100" radius="9px" :src="obj.cover" class="img-cover" />
                 </van-col>
                 <van-col class="txt" span="16" offset="1" justify="space-around" align="bottom">
-                    <h3>{{ title }}</h3>
+                    <h3>{{ obj.title }}</h3>
                     <van-row justify="space-between">
-                        <van-col class="grey-font" span="24">11 人正在看 | 共 33篇</van-col>
+                        <van-col class="grey-font" span="24">{{ obj.view }} 人正在看 | 共 {{ obj.total }}篇</van-col>
                         <van-col span="24">
                             <span class="charge">会员免费</span>
                             <span class="origin-price grey-font">¥12.2</span>
@@ -85,11 +103,12 @@ const text =
                 </van-col>
             </van-row>
             <van-row class="comment-box">
+               
                 <van-col class="score">
-                    <span>8.5</span> <van-icon name="star-o" color="#f5500f" size="14px" />
+                    <Score :score="obj.score"/>
                 </van-col>
-                <van-col class="grey-font">12人已评.</van-col>
-                <van-col class="comment-go">我要评价</van-col>
+                <van-col class="grey-font" offset="1">{{ obj.comment }}人已评.</van-col>
+                <van-col class="comment-go" offset="1">我要评价<van-icon name="play" color="#f5500f" size="10px"/></van-col>
             </van-row>
         </div>
 
@@ -103,26 +122,66 @@ const text =
 
         <!-- 简介 -->
         <div class="profile tab-list">
-            <h3>简介</h3>
-            <van-text-ellipsis rows="2" :content="text" expand-text="详情" collapse-text="收起" />
-            <span class="tag">现实情感<van-icon name="arrow" /></span>
-            <span class="tag">现实情感<van-icon name="arrow" /></span>
-            <span class="tag">现实情感<van-icon name="arrow" /></span>
+            <h2>简介</h2>
+            <van-text-ellipsis rows="2" :content="obj.sentence" expand-text="详情" collapse-text="收起" />
+            <span class="tag" v-for="item in obj.feature">{{ item }}<van-icon name="arrow" /></span>
+        </div>
+        <!-- 分享助力 -->
+        <div class="tab-list share">
+            <van-row justify="space-between">
+                <van-col span="19">
+                    <van-icon name="point-gift" size="20px" />
+                    好友助力，<span class="discount-price">1元</span>开通盐选会员
+                </van-col>
+                <van-col span="5">
+                    <van-icon name="wechat" size="20px"/>
+                    分享
+                    <van-icon name="arrow" />
+                </van-col>
+
+            </van-row>
+        </div>
+        <!-- 作者 -->
+        <div class="author tab-list">
+            <h2>作者</h2>
+            <van-row align="center" @click="enterProfile(id)" justify="space-between">
+                <van-col span="3"><van-image round width="1rem" height="1rem" :src="obj.avatar" /></van-col>
+                <van-col span="13">
+                    <van-row>
+                        <van-col span="24">
+                            {{ obj.name }}</van-col>
+                    </van-row>
+                </van-col>
+                <van-col offset="1" span="5">
+                    <van-button size="small" plain round icon="plus" type="primary">关注</van-button>
+                </van-col>
+                <van-col span="24">代表作
+                    <span v-for="item in obj.classic">《{{ item }}》</span>
+                </van-col>
+            </van-row>
         </div>
         <!-- 目录 -->
-        <van-row justify="space-between" class="total-sort">
-            <van-col class="grey-font">共{{ total }}节·{{ state == 1 ? '已' : '未' }}完结</van-col>
-            <van-col class="grey-font"><van-icon name="exchange" @click="toggleSort" />{{ sortType === 0 ? '正序' : '倒序 '
-                }}</van-col>
-        </van-row>
         <div class="catalog-list tab-list">
+            <h2>目录</h2>
+            <van-row justify="space-between" class="total-sort">
+                <van-col class="grey-font">{{ obj.statu == 1 ? '已' : '未' }}完结·共{{ obj.total }}节·</van-col>
+                <van-col class="grey-font">
+                    <span @click="toggleTitleDetail">仅看标题</span>
+                    <span @click="toggleSort" class="sort-wrap">
+                        <van-icon name="exchange" />
+                        {{ sortType === 0 ? '正序' : '倒序 '
+                        }}
+                    </span>
+                </van-col>
+            </van-row>
             <CatalogItem :list="list" />
         </div>
     </div>
+    <MarkScore />
 </template>
 <style scoped lang='scss'>
 .novel-home {
-    background: #f0efef;
+    background: #f1f1f1;
     padding: 10px;
 
     .header-fixed {
@@ -164,7 +223,6 @@ const text =
         .comment-box {
             line-height: 30px;
 
-            .score,
             .comment-go {
                 color: #f5500f;
                 font-size: 12px;
@@ -174,6 +232,10 @@ const text =
 
     .total-sort {
         margin: 20px 0;
+
+        .sort-wrap {
+            margin-left: 9px;
+        }
     }
 
     .tab-list {
@@ -195,10 +257,20 @@ const text =
                 font-size: 11px;
             }
         }
+
+        &.share {
+            font-weight: 700;
+
+            .discount-price {
+                color: #f5500f;
+                font-size: 12px;
+            }
+
+        }
     }
 
     .catalog-list {
-        height: 520px;
+        // height: 520px;
     }
 
     .grey-font {

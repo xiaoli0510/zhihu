@@ -16,7 +16,7 @@ Mock.mock("/api/search/guess", "get", {
     {
       id: "@increment",
       word: "@ctitle(1,10)",
-      "type|1": [1,2,3],//1热 2新
+      "type|1": [1, 2, 3], //1热 2新
     },
   ],
 });
@@ -26,8 +26,8 @@ Mock.mock("/api/search/hot", "get", {
     {
       id: "@increment",
       word: "@ctitle(1,20)",
-      "type|1": [1,3],//1热 
-      "follow":"@integer(1,100)",
+      "type|1": [1, 3], //1热
+      follow: "@integer(1,100)",
     },
   ],
 });
@@ -36,11 +36,11 @@ Mock.mock("/api/search/common", "get", {
   "list|20": [
     {
       id: "@increment",
-      word: "@ctitle(1,20)"
+      word: "@ctitle(1,20)",
     },
   ],
 });
-//搜索结果页 用户tab 
+//搜索结果页 用户tab
 Mock.mock("/api/search/user", "get", {
   "list|20": [
     {
@@ -49,29 +49,27 @@ Mock.mock("/api/search/user", "get", {
       title: "@ctitle(1,10)",
       sentence: "@cparagraph(1,10)",
       beFollow: "@integer(1,100)", //被关注
-      product: "@integer(1,100)",//创作
+      product: "@integer(1,100)", //创作
       support: "@integer(1,100)", //赞同
-      time:"@integer(1,30)",//更新时间
-      answer: "@integer(1,100)",//回答
+      time: "@integer(1,30)", //更新时间
+      answer: "@integer(1,100)", //回答
     },
   ],
 });
-//搜索结果页 小说tab 
+//搜索结果页 小说tab
 Mock.mock("/api/search/novel", "get", {
   "list|20": [
     {
       id: "@increment",
       title: "@ctitle(1,10)",
       sentence: "@cparagraph(1,10)",
-      "type|1":[
-        1,2,3,4,5,6,7,8,9,10,11,12,13,14
-      ],
-      'feature': "@ctitle(1,3)",
-      "statu|1":[0,1],//0未完结 1已完结
+      "type|1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+      feature: "@ctitle(1,3)",
+      "statu|1": [0, 1], //0未完结 1已完结
       info: {
-          agree: "@integer(0,100)",
-          evaluate: "@integer(0,100)",
-      }
+        agree: "@integer(0,100)",
+        evaluate: "@integer(0,100)",
+      },
     },
   ],
 });
@@ -84,30 +82,28 @@ Mock.mock("/api/search/novel/detail", "get", {
       name: "@cname",
       title: "@ctitle(1,10)",
       sentence: "@cparagraph(100,200)",
-      "type|1":[
-        1,2,3,4,5,6,7,8,9,10,11,12,13,14
-      ],
-      'feature|1-3': ["@ctitle(1,3)"],
-      "statu|1":[0,1],//0未完结 1已完结
+      "type|1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+      "feature|1-3": ["@ctitle(1,3)"],
+      "statu|1": [0, 1], //0未完结 1已完结
       upvote: "@integer(0,100)",
       comment: "@integer(0,100)",
+      cover: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+      score:"@integer(0,10)",
+      view:"@integer(0,10)",
     },
   ],
 });
 //搜索结果页 小说-目录
 Mock.mock("/api/novel/catalog", "get", {
-  id: "@increment",
-  title: "@ctitle(1,10)",
   total: "@integer(0,100)",
-  cover: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
-  "state|1":[0,1],//0未完结 1已完结
+  "classic|2": ["@ctitle(1,3)"],
   "list|7": [
     {
       id: "@increment",
       title: "@ctitle(1,10)",
       sentence: "@cparagraph(100,200)",
-      totalTxt:"@integer(0,100)",
-      comment: "@integer(0,100)",  
+      totalTxt: "@integer(0,100)",
+      comment: "@integer(0,100)",
       section: "@integer(0,100)",
     },
   ],
