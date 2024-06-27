@@ -72,6 +72,15 @@ const enterProfile = () => {
         }
     })
 }
+
+//我要拼评价
+const isMarkScore = ref(false);
+const showMarkScore = () => {
+    isMarkScore.value = true;
+}
+const hideMarkScore = () => {
+    isMarkScore.value = false;
+}
 </script>
 <template>
     <div class="novel-home">
@@ -108,7 +117,7 @@ const enterProfile = () => {
                     <Score :score="obj.score"/>
                 </van-col>
                 <van-col class="grey-font" offset="1">{{ obj.comment }}人已评.</van-col>
-                <van-col class="comment-go" offset="1">我要评价<van-icon name="play" color="#f5500f" size="10px"/></van-col>
+                <van-col class="comment-go" offset="1" @click="showMarkScore">我要评价<van-icon name="play" color="#f5500f" size="10px"/></van-col>
             </van-row>
         </div>
 
@@ -177,7 +186,7 @@ const enterProfile = () => {
             <CatalogItem :list="list" />
         </div>
     </div>
-    <MarkScore />
+    <MarkScore :isMarkScore="isMarkScore" :data="{id:obj.id,title:obj.title}" @close="hideMarkScore" />
 </template>
 <style scoped lang='scss'>
 .novel-home {

@@ -1,11 +1,17 @@
 <script setup>
-import { ref } from 'vue';
-
-const isShow = ref(true);
-const obj = ref({
-    author: 'zz',
-    score:3,
-});
+import { ref, watch } from 'vue';
+const props = defineProps(['isMarkScore', 'data']);
+const isShow = ref(props.isMarkScore);
+const obj = ref(props.data);
+watch(() => props.isMarkScore, (newVal) => {
+    isShow.value = newVal;
+}, {
+    immediate: true
+})
+const emit = defineEmits(['close']);
+const close = () => {
+    emit('close');
+}
 const SCORE_TXT = {
     1: '极不满意',
     2: '不满意',
@@ -13,35 +19,61 @@ const SCORE_TXT = {
     4: '比较满意',
     5: '非常满意',
 }
-
-const toggleScore = (index) => {
-    obj.value.score = index +1;
+const isGegerateImg = ref(false);
+const fileList = ref([]);
+const submit = () => {
+    Object.assign(obj,{fileList:fileList.value},{isGegerateImg:isGegerateImg.value});
+    emit('close');
 }
-
-
 </script>
 <template>
-    <van-popup v-model:show="isShow" round closeable close-icon="close" position="bottom"
+    <van-popup v-model:show="isShow" round closeable close-icon="close" position="bottom" @click-close-icon="close"
         :style="{ height: '95%', padding: '10px' }">
-        <p>付费阅读内容仅会员可评论</p>
+        <p class="comment-power">付费阅读内容仅会员可评论</p>
+        <van-uploader v-model="fileList" :max-count="1"><span></span></van-uploader>
         <div class="mark-wrap">
-            <h3>明I</h3>
+            <h3>{{ obj.title }}</h3>
             <p class="score-tip">这是我知乎评价的第一个内容</p>
-            <van-icon name="star" :color="index<=obj.score-1?'#f5500f':'rgb(230 187 170)'" size="20px" v-for="(i, index) in 5"
-                @click="toggleScore(index)" />
-            <!-- <van-icon name="star" :color="obj.score<=activeIndex?'#f5500f':rgb(230 187 170)" size="20px" v-for="(i, index) in 5"
-                @click="toggleScore(index)" /> -->
-            <!-- <van-icon name="star" color="#f5500f" size="14px" v-for="i in 5" /> -->
-            <p v-show="obj.score > 0" class="score-txt">{{ SCORE_TXT[obj.score] }}</p>
+            <van-rate :size="35" icon="star" color="#f5500f" void-color=" rgb(230 187 170)" v-model="obj.score"
+                allow-half />
+            <p v-show="obj.score > 0" class="score-txt">{{ SCORE_TXT[Math.ceil(obj.score)] }}</p>
+        </div>
+        <div class="footer">
+            <van-row class="emote-wrap">
+                <van-col span="22">
+                </van-col>
+                <van-col span="2">
+                    <van-uploader v-if="fileList.length === 0" :max-count="1" v-model="fileList">
+                        <van-icon name="invitation" size="20px" />
+                    </van-uploader>
+                    <van-icon name="invitation" size="20px" v-if="fileList.length > 0" />
+                </van-col>
+            </van-row>
+            <van-row class="submit-wrap" align="center">
+                <van-col span="20">
+                    <van-checkbox v-model="isGegerateImg">
+                        生成大图海报
+                    </van-checkbox>
+                </van-col>
+                <van-col span="3" offset="1">
+                    <van-button plain type="primary"
+                        :disabled="((obj.score !== '') || fileList.length > 0) ? false : true" size="small"
+                        @click="submit">发布</van-button>
+                </van-col>
+            </van-row>
         </div>
     </van-popup>
 </template>
 <style scoped lang='scss'>
+.comment-power {
+    line-height: 40px;
+}
+
 .mark-wrap {
     background: #f7f7f7;
     border-radius: 9px;
     width: 94%;
-    padding: 10px 0 40px 0;
+    padding: 10px 0 20px 0;
     margin: 30px auto 40px;
     text-align: center;
     line-height: 30px;
@@ -50,9 +82,36 @@ const toggleScore = (index) => {
         color: #686666;
         font-size: 12px;
     }
-    .score-txt{
-        font-size:10px;
-        color:#f5500f;
+
+    .score-txt {
+        font-size: 10px;
+        color: #f5500f;
+    }
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+
+    .line {
+        margin: 0 4px;
+        height: 24px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .submit-wrap {
+        background: #eeeeee;
+        padding: 5px;
+        height: 50px;
+    }
+
+    .emote-wrap {
+        padding: 7px;
+        background: #fff;
+        height: 40px;
     }
 }
 </style>
