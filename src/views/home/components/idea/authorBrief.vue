@@ -4,12 +4,7 @@ import shareIcon from "@/assets/imgs/share.png";
 const router = useRouter();
 const { item } = defineProps(['item']);
 const enterProfile = (id) => {
- router.push({
-    name: 'profile',
-    query: {
-      id
-    }
-  })
+ router.push(`/profile/${id}`)
 }
 
 </script>

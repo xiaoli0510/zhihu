@@ -1,9 +1,14 @@
-<script setup lang="ts">
+<script setup>
+const props = defineProps(['isFollow']);
+const emit = defineEmits(['toggleFollow']);
+const toggleFollow = ()=>{
+  emit('toggleFollow');
+}
 </script>
 <template>
   <span class="item">
-    <van-icon name="add-o" size=".6rem"/>
-    <span class="txt">关注问题</span>
+    <van-button v-if="props.isFollow" size="small" plain round @click="toggleFollow">已关注</van-button>
+    <van-button v-else size="small" plain round icon="plus" type="primary" @click="toggleFollow">关注</van-button>
   </span>
 </template>
 <style scoped lang="scss">

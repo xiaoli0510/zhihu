@@ -1,11 +1,12 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter} from 'vue-router';
 import {fetchCommonList} from '@/api/search.js';
 import Report from '@/views/home/components/search/Report.vue';
 const list = ref([]);
+const router = useRouter();
 const enterResult = (value) => {
-    useRouter().push(`/result${value}`);
+    router.push(`/result/${value}`);
 }
 
 const firstTop10 =computed(()=>{

@@ -1,18 +1,23 @@
 <script setup>
-import { ref, watch } from 'vue'; 
+import { provide, ref, watch } from 'vue';
 import CatalogItem from '@/components/CatalogItem.vue'
 import BookIcon from '@/components/BookIcon.vue'
-import { fetchCatalogList,fetchNovelDetail} from '@/api/search.js';
+import { fetchCatalogList, fetchNovelDetail } from '@/api/search.js';
+import { fetchCommentList } from '@/api/index.js';
 import { useRouter } from 'vue-router';
 import Score from '../../components/Score.vue'
 import MarkScore from '../../components/MarkScore.vue'
+import FollowIcon from '@/components/FollowIcon.vue'
+import { showToast } from 'vant';
+import CommentItem from '@/components/CommentItem.vue'
 
 const res = await fetchCatalogList();
 const detailRes = await fetchNovelDetail();
-const obj = res.data;
+const obj = ref(res.data);
 console.log(detailRes.data.list[0])
-Object.assign(obj, detailRes.data.list[0]);
-console.log('obj',obj)
+console.log('obj', obj.value)
+Object.assign(obj.value, detailRes.data.list[0]);
+console.log('obj', obj.value)
 
 const list = ref(res.data.list);
 const router = useRouter();
@@ -42,11 +47,6 @@ const showAddBookMessage = () => {
     isAddBookMessage.value = true;
 }
 
-//进入专属会员福利
-const enterVipWelfare = () => {
-    router.push('/vipWelfare');
-}
-
 //分享
 const isShare = ref(false);
 const showShare = () => {
@@ -56,9 +56,23 @@ const hideShare = () => {
     isShare.value = false;
 }
 
+//我要评价
+const isMarkScore = ref(false);
+const showMarkScore = () => {
+    isMarkScore.value = true;
+}
+const hideMarkScore = () => {
+    isMarkScore.value = false;
+}
+
 // tab
 const active = ref(0);
- 
+
+//进入专属会员福利
+const enterVipWelfare = () => {
+    router.push('/vipWelfare');
+}
+
 const isTitle = ref(false);
 const toggleTitleDetail = () => {
     isTitle.value = !isTitle.value;
@@ -68,19 +82,88 @@ const enterProfile = () => {
     router.push({
         name: 'profile',
         query: {
-           id:obj.id
+            id: obj.id
         }
     })
 }
 
-//我要拼评价
-const isMarkScore = ref(false);
-const showMarkScore = () => {
-    isMarkScore.value = true;
+//关注
+const toggleFollow = () => {
+    obj.value.isFollow = !obj.value.isFollow;
 }
-const hideMarkScore = () => {
-    isMarkScore.value = false;
+
+const viewMoreCatalog = () => {
+    showToast('完善中')
 }
+
+//评论
+const commentList = ref([]);
+fetchCommentList({ id: obj.id }).then(res => {
+    //total.value = res.data.body.list.length;
+    commentList.value = res.data.body.list.splice(0, 5);
+    //filterList.value = res.data.body.list;
+
+}).catch((err) => {
+    console.log(err)
+});
+// 显示更多评论
+const isMoreComment = ref(false);
+const moreObj = ref(null);
+const showMore = (item) => {
+    isMoreComment.value = true;
+    moreObj.value = item;
+}
+//关闭更多评论
+const hideMore = () => {
+    isMore.value = false;
+}
+const viewMoreComment = () => {
+    showToast('完善中');
+}
+
+//讨论
+const isDiscuss = ref(false);
+// 显示讨论
+const showDiscuss = (item) => {
+    item = item || {};
+    isDiscuss.value = true;
+}
+const discussParams = ref({
+    fileList: [],
+    discussValue: '',
+    isSyncIdea: false
+});
+// 隐藏讨论
+const hideDiscuss = (obj) => {
+    discussParams.value = obj;
+    isDiscuss.value = false;
+}
+// 发布讨论
+const submitDiscuss = () => {
+    discussParams.value = {
+        fileList: [],
+        discussValue: '',
+        isSyncIdea: false
+    };
+    showToast('发布成功！');
+    isDiscuss.value = false;
+}
+
+//显示回复弹框
+const isReply = ref(false);
+const replyId = ref(0);
+const showReply = (id) => {
+    isReply.value = true;
+    replyId.value = id;
+}
+provide('showReply', showReply);
+//关闭回复弹框
+const hideReply = () => {
+    isReply.value = false;
+}
+
+
+
 </script>
 <template>
     <div class="novel-home">
@@ -112,12 +195,13 @@ const hideMarkScore = () => {
                 </van-col>
             </van-row>
             <van-row class="comment-box">
-               
+
                 <van-col class="score">
-                    <Score :score="obj.score"/>
+                    <Score :score="obj.score" />
                 </van-col>
                 <van-col class="grey-font" offset="1">{{ obj.comment }}人已评.</van-col>
-                <van-col class="comment-go" offset="1" @click="showMarkScore">我要评价<van-icon name="play" color="#f5500f" size="10px"/></van-col>
+                <van-col class="comment-go" offset="1" @click="showMarkScore">我要评价<van-icon name="play" color="#f5500f"
+                        size="10px" /></van-col>
             </van-row>
         </div>
 
@@ -136,14 +220,14 @@ const hideMarkScore = () => {
             <span class="tag" v-for="item in obj.feature">{{ item }}<van-icon name="arrow" /></span>
         </div>
         <!-- 分享助力 -->
-        <div class="tab-list share">
+        <div class="tab-list share" @click="enterVipWelfare">
             <van-row justify="space-between">
                 <van-col span="19">
                     <van-icon name="point-gift" size="20px" />
                     好友助力，<span class="discount-price">1元</span>开通盐选会员
                 </van-col>
                 <van-col span="5">
-                    <van-icon name="wechat" size="20px"/>
+                    <van-icon name="wechat" size="20px" />
                     分享
                     <van-icon name="arrow" />
                 </van-col>
@@ -153,16 +237,17 @@ const hideMarkScore = () => {
         <!-- 作者 -->
         <div class="author tab-list">
             <h2>作者</h2>
-            <van-row align="center" @click="enterProfile(id)" justify="space-between">
-                <van-col span="3"><van-image round width="1rem" height="1rem" :src="obj.avatar" /></van-col>
-                <van-col span="13">
+            <van-row align="center" justify="space-between">
+                <van-col span="3" @click="enterProfile(id)"><van-image round width="1rem" height="1rem"
+                        :src="obj.avatar" /></van-col>
+                <van-col span="13" @click="enterProfile(id)">
                     <van-row>
                         <van-col span="24">
                             {{ obj.name }}</van-col>
                     </van-row>
                 </van-col>
                 <van-col offset="1" span="5">
-                    <van-button size="small" plain round icon="plus" type="primary">关注</van-button>
+                    <FollowIcon :isFollow="obj.isFollow" @toggleFollow="toggleFollow" />
                 </van-col>
                 <van-col span="24">代表作
                     <span v-for="item in obj.classic">《{{ item }}》</span>
@@ -170,10 +255,10 @@ const hideMarkScore = () => {
             </van-row>
         </div>
         <!-- 目录 -->
-        <div class="catalog-list tab-list">
+        <div class="catalog tab-list">
             <h2>目录</h2>
             <van-row justify="space-between" class="total-sort">
-                <van-col class="grey-font">{{ obj.statu == 1 ? '已' : '未' }}完结·共{{ obj.total }}节·</van-col>
+                <van-col class="grey-font">{{ obj.statu === 1 ? '已' : '未' }}完结·共{{ obj.total }}节·</van-col>
                 <van-col class="grey-font">
                     <span @click="toggleTitleDetail">仅看标题</span>
                     <span @click="toggleSort" class="sort-wrap">
@@ -184,9 +269,18 @@ const hideMarkScore = () => {
                 </van-col>
             </van-row>
             <CatalogItem :list="list" />
+            <p class="more-txt" @click="viewMoreCatalog">查看更多目录<van-icon name="arrow" color="#1989fa" /></p>
+        </div>
+
+        <!-- 评论 -->
+        <div class="tab-list comment">
+            <h2>精彩评论 <span class="comment-total">(共8条)</span></h2>
+            <CommentItem @show-more="showMore" v-for="item in commentList" :item="item" @show-discuss="showDiscuss" />
+            <p class="more-txt" @click="viewMoreComment">查看全部评价<van-icon name="arrow" color="#1989fa" /></p>
         </div>
     </div>
-    <MarkScore :isMarkScore="isMarkScore" :data="{id:obj.id,title:obj.title,isVip:obj.isVip}" @close="hideMarkScore" />
+    <MarkScore :isMarkScore="isMarkScore" :data="{ id: obj.id, title: obj.title, isVip: obj.isVip }"
+        @close="hideMarkScore" />
 </template>
 <style scoped lang='scss'>
 .novel-home {
@@ -240,7 +334,7 @@ const hideMarkScore = () => {
     }
 
     .total-sort {
-        margin: 20px 0;
+        margin-bottom: 20px;
 
         .sort-wrap {
             margin-left: 9px;
@@ -254,6 +348,10 @@ const hideMarkScore = () => {
         overflow: auto;
         margin-top: 10px;
         font-size: 12px;
+
+        h2 {
+            line-height: 50px;
+        }
 
         &.profile {
             .tag {
@@ -276,11 +374,24 @@ const hideMarkScore = () => {
             }
 
         }
+
+        &.catalog {}
+
+        &.comment {
+            .comment-total {
+                color: #cb9e4c;
+                font-size: 12px;
+            }
+        }
+
+        // height: 520px;
+        .more-txt {
+            color: #1989fa;
+            text-align: center;
+        }
     }
 
-    .catalog-list {
-        // height: 520px;
-    }
+
 
     .grey-font {
         color: #616060;

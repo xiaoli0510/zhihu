@@ -90,7 +90,8 @@ Mock.mock("/api/search/novel/detail", "get", {
       cover: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
       score:"@integer(0,10)",
       view:"@integer(0,10)",
-      'isVip':"@boolean"
+      'isVip':"@boolean",
+      'isFollow':"@boolean",
     },
   ],
 });

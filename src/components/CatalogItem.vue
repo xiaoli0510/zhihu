@@ -23,7 +23,7 @@ const enterNovelDetail = (id) => {
       </van-col>
       <van-col span="4"></van-col>
     </van-row>
-    <van-divider />
+    <van-divider :style="{ borderColor: '#ddd' }" />
   </div>
 </template>
 <style scoped lang='scss'>

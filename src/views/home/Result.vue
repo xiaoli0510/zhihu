@@ -1,7 +1,7 @@
 <script setup>
 import BackIcon from '@/components/BackIcon.vue'
 import SearchInput from './components/search/SearchInput.vue'
-import { ref,provide } from 'vue';
+import { ref,provide, watch, inject } from 'vue';
 import FilterIcon from '@/components/FilterIcon.vue'
 import AllTab from './components/search/tab/AllTab.vue'
 import RealTimeTab from './components/search/tab/RealTimeTab.vue'
@@ -10,6 +10,10 @@ import NovelTab from '@/views/home/components/search/tab/NovelTab.vue';
 import { useRoute } from 'vue-router';
 import { showToast } from 'vant';
 const props = defineProps(['keyWord']);
+const reload = inject('reload');
+watch(() => props.keyWord, (newVal, oldVal) => {
+    newVal?reload():'';
+})
 provide('keyWord', props.keyWord)
 const tabList = ref([
     { id: 0, label: '综合' },
