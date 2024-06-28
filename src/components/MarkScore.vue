@@ -22,13 +22,20 @@ const SCORE_TXT = {
 const isGegerateImg = ref(false);
 const fileList = ref([]);
 const submit = () => {
-    Object.assign(obj,{fileList:fileList.value},{isGegerateImg:isGegerateImg.value});
-    emit('close');
+    if (obj.value.isVip) {
+        Object.assign(obj, { fileList: fileList.value }, { isGegerateImg: isGegerateImg.value });
+        emit('close');
+    } else {
+        showToast({
+            message: '付费阅读内容仅会员可评论',
+            position: 'bottom',
+        })
+    }
 }
 </script>
 <template>
-    <van-popup v-model:show="isShow" round closeable close-icon="close" position="bottom" @click-close-icon="close"
-        :style="{ height: '95%', padding: '10px' }">
+    <van-popup v-model:show="isShow" :close-on-click-overlay="false" round closeable close-icon="close" position="bottom" @click-close-icon="close"
+        :style="{ height: '97%', padding: '10px' }">
         <p class="comment-power">付费阅读内容仅会员可评论</p>
         <van-uploader v-model="fileList" :max-count="1"><span></span></van-uploader>
         <div class="mark-wrap">
@@ -39,9 +46,7 @@ const submit = () => {
             <p v-show="obj.score > 0" class="score-txt">{{ SCORE_TXT[Math.ceil(obj.score)] }}</p>
         </div>
         <div class="footer">
-            <van-row class="emote-wrap">
-                <van-col span="22">
-                </van-col>
+            <van-row class="emote-wrap" justify="end">
                 <van-col span="2">
                     <van-uploader v-if="fileList.length === 0" :max-count="1" v-model="fileList">
                         <van-icon name="invitation" size="20px" />
@@ -67,6 +72,7 @@ const submit = () => {
 <style scoped lang='scss'>
 .comment-power {
     line-height: 40px;
+    color: #b8b6b6;
 }
 
 .mark-wrap {

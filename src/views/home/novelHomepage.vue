@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'; 
-// import CatalogItem from './CatalogItem.vue'
-// import BookIcon from './BookIcon.vue'
+import CatalogItem from '@/components/CatalogItem.vue'
+import BookIcon from '@/components/BookIcon.vue'
 import { fetchCatalogList,fetchNovelDetail} from '@/api/search.js';
 import { useRouter } from 'vue-router';
 import Score from '../../components/Score.vue'
@@ -186,7 +186,7 @@ const hideMarkScore = () => {
             <CatalogItem :list="list" />
         </div>
     </div>
-    <MarkScore :isMarkScore="isMarkScore" :data="{id:obj.id,title:obj.title}" @close="hideMarkScore" />
+    <MarkScore :isMarkScore="isMarkScore" :data="{id:obj.id,title:obj.title,isVip:obj.isVip}" @close="hideMarkScore" />
 </template>
 <style scoped lang='scss'>
 .novel-home {
