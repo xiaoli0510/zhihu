@@ -124,6 +124,7 @@ const router = createRouter({
     },
     {
       path: "/novel/homepage/:id",
+      props:true,
       name: "novelHomepage",
       component: NovelHomepage,
     },

@@ -1,26 +1,20 @@
 <script setup>
-import { ref } from "vue";
-const isAdd = ref(false);
-const emit = defineEmits([
-  'showAddBookMessage'
-])
-
-const toggleBook = ({ id }) => {
-  isAdd.value = !isAdd.value;
-  if (isAdd.value) {
-    emit('showAddBookMessage')
-  } else {
-    showToast({
-      message: '已移出书架',
-      position: 'top',
-    })
+import { inject } from "vue";
+const props = defineProps({
+  isBookshelf:{
+    type:Boolean,
   }
+})
+
+const toggleBookshelf = inject('toggleBookshelf');
+const toggleBook = () => {
+  toggleBookshelf();
 };
 </script>
 <template>
   <div class="book-item">
-    <van-icon name="bookmark-o" @click="toggleBook" v-if="!isAdd" color="rgb(25, 137, 250)" />
-    <span class="txt" :class="{ 'has': isAdd === true }" @click="toggleBook">{{ isAdd === true ? '已' : ''
+    <van-icon name="bookmark-o" @click="toggleBook" v-if="!props.isBookshelf" color="rgb(25, 137, 250)" />
+    <span class="txt" :class="{ 'has': props.isBookshelf === true }" @click="toggleBook">{{ props.isBookshelf === true ? '已' : ''
       }}加入书架</span>
   </div>
 </template>

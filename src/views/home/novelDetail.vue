@@ -16,9 +16,11 @@ import ReadSet from '../../components/ReadSet.vue'
 import MoreShare from '@/components/MoreShare.vue'
 import debounce from 'lodash/debounce';
 import Catalog from '@/components/Catalog.vue'
+import { showToast } from 'vant';
 const props = defineProps(['id']);
 const id = ref(props.id);
 const isCatalog = ref(false);
+const catalogData = ref({});
 provide('id', props.id);
 const list = ref([]);
 const initData = (id) => {
@@ -26,6 +28,7 @@ const initData = (id) => {
         .then(res => {
             isScrollBottom.value = false;
             list.value = res.data.list;
+            catalogData.value = {id:list.value[0].id,cover:list.value[0].cover,title:list.value[0].title,isBookshelf:list.value[0].isBookshelf};
         }).catch(err => {
             console.log(err);
         });
@@ -36,7 +39,7 @@ watch(()=>props.id, (newVal) => {
     isCatalog.value=false;
 },{
     immediate:true
-});
+});  
 
 // 下拉加载
 const loading = ref(false);
@@ -87,12 +90,6 @@ const hideReply = () => {
     isReply.value = false;
 }
 
-// 加入书架提示
-const isAddBookMessage = ref(false);
-const showAddBookMessage = () => {
-    isAddBookMessage.value = true;
-}
-
 //进入专属会员福利
 const router = useRouter();
 const enterVipWelfare = () => {
@@ -106,6 +103,18 @@ const showCatalog = () => {
 const hideCatalog = () => {
     isCatalog.value = false;
 }
+// 加入书架提示
+const isAddBookMessage = ref(false);
+const toggleBookshelf = () => {
+    catalogData.value.isBookshelf = !catalogData.value.isBookshelf;
+    if (catalogData.value.isBookshelf) {
+        isAddBookMessage.value = true
+    } else {
+        isAddBookMessage.value = false;
+        showToast('已移出书架');
+    }
+}
+provide('toggleBookshelf',toggleBookshelf)
 
 //分享
 const isShare = ref(false);
@@ -179,7 +188,7 @@ const enterProfile = (id)=>{
                 <BackIcon />
             </van-col>
             <van-col span="9">
-                <BookIcon @showAddBookMessage="showAddBookMessage" />
+                <BookIcon @toggleBookshelf="toggleBookshelf" :isBookshelf="catalogData.isBookshelf"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
                 <ShareIcon @showShare="showShare" />
             </van-col>
@@ -261,7 +270,7 @@ const enterProfile = (id)=>{
     <ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
         @hideMoreShare="hideMoreShare" />
     <!-- 目录 -->
-    <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog"/>
+    <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData"/>
 </template>
 <style scoped lang='scss'>
 .novel-detail {

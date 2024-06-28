@@ -12,18 +12,20 @@ import { showToast } from 'vant';
 import CommentItem from '@/components/CommentItem.vue'
 import personal from '@/assets/imgs/personal.jpg';
 import NovelRecommend from './components/search/NovelRecommend.vue'
-import { throttle } from 'lodash';
+import throttle from 'lodash/throttle';
 
 const isTop = ref(true);
 const isTab = ref(false);
 const scroll = throttle((e) => {
-    console.log(e.target.scrollTop)
     e.target.scrollTop > 0 ? isTop.value = false : isTop.value = true;
-    e.target.scrollTop > 100 ? isTab.value = true : isTab.value = false;
+    e.target.scrollTop > 90 ? isTab.value = true : isTab.value = false;
 }, 300)
 
+const catalogData = ref({});
 const res = await fetchCatalogList();
 const detailRes = await fetchNovelDetail();
+catalogData.value = {id:detailRes.data.list[0].id,cover:detailRes.data.list[0].cover,title:detailRes.data.list[0].title,isBookshelf:detailRes.data.list[0].isBookshelf};
+
 const obj = ref(res.data);
 console.log(detailRes.data.list[0])
 console.log('obj', obj.value)
@@ -38,7 +40,7 @@ const enterNovelHomepage = () => {
 
 const sortType = ref(0);//0升序 1降序
 const toggleSort = () => {
-    sortType.value = sortType.value == 0 ? 1 : 0;
+    sortType.value = sortType.value === 0 ? 1 : 0;
 }
 watch(sortType, (newVal) => {
     if (newVal === 1) {
@@ -52,10 +54,19 @@ watch(sortType, (newVal) => {
     }
 })
 
-// 加入书架提示
-const isAddBookMessage = ref(false);
-const showAddBookMessage = () => {
-    isAddBookMessage.value = true;
+const props = defineProps(['id']);
+const isCatalog = ref(false);
+watch(()=>props.id, (newVal) => {
+    isCatalog.value=false;
+},{
+    immediate:true
+});
+//目录
+const showCatalog = () => {
+    isCatalog.value = true;
+}
+const hideCatalog = () => {
+    isCatalog.value = false;
 }
 
 //分享
@@ -67,7 +78,7 @@ const hideShare = () => {
     isShare.value = false;
 }
 
-//我要评价
+//我要评论
 const isMarkScore = ref(false);
 const showMarkScore = () => {
     isMarkScore.value = true;
@@ -85,6 +96,7 @@ const enterVipWelfare = () => {
 }
 
 const isTitle = ref(false);
+provide('isTitle', isTitle);
 const toggleTitleDetail = () => {
     isTitle.value = !isTitle.value;
 }
@@ -101,10 +113,6 @@ const enterProfile = () => {
 //关注
 const toggleFollow = () => {
     obj.value.isFollow = !obj.value.isFollow;
-}
-
-const viewMoreCatalog = () => {
-    showToast('完善中')
 }
 
 //评论
@@ -179,6 +187,13 @@ fetchRecommendList().then(res => {
     recommendList.value = res.data.list;
 })
 
+// 加入书架提示
+const isAddBookMessage = ref(false);
+const toggleBookshelf = () => {
+    showToast('完善中');
+}
+provide('toggleBookshelf',toggleBookshelf)
+
 
 </script>
 <template>
@@ -198,7 +213,7 @@ fetchRecommendList().then(res => {
                 </van-row>
             </van-col>
             <van-col span="8">
-                <BookIcon @showAddBookMessage="showAddBookMessage" />
+                <BookIcon :isBookshelf="obj.isBookshelf"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
                 <ShareIcon @showShare="showShare" />
             </van-col>
@@ -225,7 +240,7 @@ fetchRecommendList().then(res => {
                     <Score :score="obj.score" />
                 </van-col>
                 <van-col class="grey-font" offset="1">{{ obj.comment }}人已评.</van-col>
-                <van-col class="comment-go" offset="1" @click="showMarkScore">我要评价<van-icon name="play" color="#f5500f"
+                <van-col class="comment-go" offset="1" @click="showMarkScore">我要评论<van-icon name="play" color="#f5500f"
                         size="10px" /></van-col>
             </van-row>
         </div>
@@ -241,8 +256,8 @@ fetchRecommendList().then(res => {
                 </van-tab>
                 <van-tab>
                     <template #title>
-                        <van-badge content="8" color="#ccc">
-                            评价
+                        <van-badge :content="commentList.length" color="#ccc">
+                            评论
                         </van-badge> </template>
                 </van-tab>
                 <van-tab title="详情">内容 4</van-tab>
@@ -304,13 +319,15 @@ fetchRecommendList().then(res => {
                     </span>
                 </van-col>
             </van-row>
-            <CatalogItem :list="list" />
-            <p class="more-txt" @click="viewMoreCatalog">查看更多目录<van-icon name="arrow" color="#1989fa" /></p>
+            <CatalogItem :list="list"/>
+            <p class="more-txt" @click="showCatalog">查看更多目录<van-icon name="arrow" color="#1989fa" /></p>
+            <!-- 目录 -->
+            <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData"/>
         </div>
 
         <!-- 评论 -->
         <div class="tab-list comment">
-            <h2>精彩评论 <span class="comment-total">(共8条)</span></h2>
+            <h2>精彩评论 <span class="comment-total">(共{{ commentList.length }}条)</span></h2>
             <van-row justify="space-between">
                 <van-col span="3">
                     <van-image round class="avatar-img" :src="personal" width="30px" />
@@ -325,7 +342,7 @@ fetchRecommendList().then(res => {
                 </van-col>
             </van-row>
             <CommentItem @show-more="showMore" v-for="item in commentList" :item="item" @show-discuss="showDiscuss" />
-            <p class="more-txt" @click="viewMoreComment">查看全部评价<van-icon name="arrow" color="#1989fa" /></p>
+            <p class="more-txt" @click="viewMoreComment">查看全部评论<van-icon name="arrow" color="#1989fa" /></p>
         </div>
 
         <!-- 详情 -->
@@ -422,7 +439,7 @@ fetchRecommendList().then(res => {
 
         :deep(.van-badge--fixed) {
             white-space: nowrap;
-            right: -14px !important;
+            right: -10px !important;
         }
     }
 

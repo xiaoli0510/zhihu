@@ -5,7 +5,7 @@ import BookIcon from './BookIcon.vue'
 import { fetchCatalogList } from '@/api/search.js';
 import { useRouter } from 'vue-router';
 
-const props = defineProps(['isCatalog']);
+const props = defineProps(['isCatalog','data']);
 const isShow = ref(props.isCatalog);
 watch(() => props.isShow, (newVal) => {
   isShow.value = newVal.isCatalog;
@@ -16,11 +16,11 @@ const close = () => {
 }
 
 const res = await fetchCatalogList();
-const { id, title, total, state,cover } = res.data;
+const {total, state } = res.data;
 const list = ref(res.data.list);
 const router = useRouter();
 const enterNovelHomepage = () => {
-  router.push(`/novel/homepage/${id}`)
+  router.push(`/novel/homepage/${props.data.id}`)
 }
 
 const sortType = ref(0);//0升序 1降序
@@ -44,16 +44,16 @@ watch(sortType, (newVal) => {
   <van-popup v-model:show="isShow" round position="bottom" :style="{ height: '95%', padding: '10px' }" closeable
     @close="close" close-icon="close">
     <h2>目录</h2>
-    <van-row justify="space-around" class="brief" @click="enterNovelHomepage">
-      <van-col span="7">
-        <van-image width="100" height="100" radius="5px" :src="cover"/>
+    <van-row justify="space-around" class="brief">
+      <van-col span="7"  @click="enterNovelHomepage">
+        <van-image width="100" height="100" radius="5px" :src="props.data.cover"/>
       </van-col>
       <van-col class="txt" span="17" justify="space-around" align="bottom">
-        <h3>{{ title }}</h3>
+        <h3 @click="enterNovelHomepage">{{ props.data.title }}</h3>
         <van-row justify="space-between">
-          <van-col class="grey-font">查看详情<van-icon name="arrow" /></van-col>
+          <van-col  @click="enterNovelHomepage" class="grey-font">查看详情<van-icon name="arrow" /></van-col>
           <van-col span="9">
-            <BookIcon />
+            <BookIcon :isBookshelf="props.data.isBookshelf"/>
           </van-col>
         </van-row>
       </van-col>

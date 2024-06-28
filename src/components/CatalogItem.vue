@@ -1,20 +1,22 @@
 <script setup>
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
 import { useRouter } from 'vue-router';
 const props = defineProps(['list']);
-const list = ref(props.list);
+const isTitle = inject('isTitle',false);
 const router = useRouter();
 const enterNovelDetail = (id) => {
   router.push(`/novel/detail/${id}`);
 }
 </script>
 <template>
-  <div v-for="item in list" class="catalog-item" @click="enterNovelDetail(item.id)">
+  <div v-for="item in props.list" class="catalog-item" @click="enterNovelDetail(item.id)">
     <van-row>
       <van-col>第{{ item.section }}节 </van-col>
       <van-col offset="1">{{ item.title }} </van-col>
     </van-row>
-    <van-text-ellipsis rows="2" :content="item.sentence" expand-text="展开" collapse-text="收起" />
+    <div v-show="!isTitle">
+      <van-text-ellipsis rows="2" :content="item.sentence" expand-text="展开" collapse-text="收起" />
+    </div>
     <van-row justify="space-around">
       <van-col span="20">
         <span class="info">{{ item.totalTxt }}字</span>
