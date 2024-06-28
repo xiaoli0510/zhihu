@@ -110,6 +110,19 @@ Mock.mock("/api/novel/catalog", "get", {
     },
   ],
 });
+//搜索结果页 小说-推荐
+Mock.mock("/api/novel/recommend", "get", {
+  total: "@integer(0,100)",
+  "classic|2": ["@ctitle(1,3)"],
+  "list|7": [
+    {
+      id: "@increment",
+      cover: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+      title: "@ctitle(1,20)",
+      feature: "@ctitle(2,7)",
+    },
+  ],
+});
 //搜索结果页 浮窗-在看
 Mock.mock("/api/todo", "get", {
   "list|2": [

@@ -176,7 +176,7 @@ Mock.mock("/api/comment/id", "get", {
   status: 200, //请求成功状态码
   body: {
     id: "@increment",
-    "list|10": [
+    "list|1-10": [
       {
         id: "@increment",
         "sort|1": [1, 2], //1热度 2最新
@@ -193,7 +193,7 @@ Mock.mock("/api/comment/id", "get", {
         comment: "@integer(1,100)",
         isAgree:"@boolean",
         agreeCount:"@integer(1,100)",
-        "subList|1-10":[
+        "subList|0-10":[
           {
             id: "@increment",
             "sort|1": [1, 2], //1热度 2最新
@@ -244,7 +244,7 @@ Mock.mock("/api/commentReply/id", "get", {
         agreeCount:"@integer(1,100)",
       },
     ],
-    "subList|1-10":[
+    "subList|0-10":[
       {
         id: "@increment",
         "sort|1": [1, 2], //1热度 2最新
