@@ -2,14 +2,14 @@
 import { provide, ref, watch } from 'vue';
 import { fetchNovelDetail } from "@/api/search.js";
 import BackIcon from '@/components/BackIcon.vue'
-import BookIcon from '@/components/BookIcon.vue'
+import BookIcon from '@/components/Bookshelf/BookIcon.vue'
 import ShareIcon from '../../components/ShareIcon.vue'
 import UpvoteIcon from '@/components/UpvoteIcon.vue'
 import CommentIcon from '@/components/CommentIcon.vue'
 import dot from '@/assets/imgs/dot.png';
 import CommentPopup from '@/components/CommentPopup.vue'
 import CommentReply from '../../components/CommentReply.vue'
-import AddBookMessage from '@/components/AddBookMessage.vue'
+import AddBookMessage from '@/components/Bookshelf/AddBookMessage.vue'
 import { useRouter } from 'vue-router';
 import BookShare from '../../components/BookShare.vue'
 import ReadSet from '../../components/ReadSet.vue'
@@ -17,6 +17,7 @@ import MoreShare from '@/components/MoreShare.vue'
 import debounce from 'lodash/debounce';
 import Catalog from '@/components/Catalog.vue'
 import { showToast } from 'vant';
+import Book from '../../components/Bookshelf/Book.vue'
 const props = defineProps(['id']);
 const id = ref(props.id);
 const isCatalog = ref(false);
@@ -105,14 +106,18 @@ const hideCatalog = () => {
 }
 // 加入书架提示
 const isAddBookMessage = ref(false);
+provide('isBookshelf',true);
+const book = ref();
 const toggleBookshelf = () => {
-    catalogData.value.isBookshelf = !catalogData.value.isBookshelf;
-    if (catalogData.value.isBookshelf) {
-        isAddBookMessage.value = true
-    } else {
-        isAddBookMessage.value = false;
-        showToast('已移出书架');
-    }
+    console.log(1);
+    // book.value.showMsg();
+     catalogData.value.isBookshelf = !catalogData.value.isBookshelf;
+    // if (catalogData.value.isBookshelf) {
+    //     isAddBookMessage.value = true
+    // } else {
+    //     isAddBookMessage.value = false;
+    //     showToast('已移出书架');
+    // }
 }
 provide('toggleBookshelf',toggleBookshelf)
 
@@ -186,9 +191,10 @@ const enterProfile = (id)=>{
         <van-row align="center" justify="space-between" class="header-fixed">
             <van-col span="4">
                 <BackIcon />
-            </van-col>
-            <van-col span="9">
-                <BookIcon @toggleBookshelf="toggleBookshelf" :isBookshelf="catalogData.isBookshelf"/>
+                </van-col>
+                <van-col span="9">
+                    <!-- <BookIcon :isBookshelf="catalogData.isBookshelf"/> -->
+                    <Book ref="book"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
                 <ShareIcon @showShare="showShare" />
             </van-col>
@@ -256,11 +262,11 @@ const enterProfile = (id)=>{
     <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
 
     <!-- 加入书架成功提示 -->
-    <van-toast v-model:show="isAddBookMessage" style="padding: 10px" word-break="'break-word'">
+    <!-- <van-toast v-model:show="isAddBookMessage" style="padding: 10px" word-break="'break-word'">
         <template #message>
             <AddBookMessage />
         </template>
-    </van-toast>
+    </van-toast> -->
     <!-- 分享 -->
     <BookShare :item="list[0]" :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
         @showMoreShare="showMoreShare" />

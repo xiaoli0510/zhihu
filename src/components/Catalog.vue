@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import CatalogItem from './CatalogItem.vue'
-import BookIcon from './BookIcon.vue'
+import BookIcon from '@/components/Bookshelf/BookIcon.vue'
 import { fetchCatalogList } from '@/api/search.js';
 import { useRouter } from 'vue-router';
 

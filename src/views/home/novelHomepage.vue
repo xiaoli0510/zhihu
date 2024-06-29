@@ -1,13 +1,15 @@
 <script setup>
 import { provide, ref, watch } from 'vue';
 import CatalogItem from '@/components/CatalogItem.vue'
-import BookIcon from '@/components/BookIcon.vue'
+import BackIcon from '@/components/BackIcon.vue'
+import BookIcon from '@/components/Bookshelf/BookIcon.vue'
 import { fetchCatalogList, fetchNovelDetail, fetchRecommendList } from '@/api/search.js';
 import { fetchCommentList } from '@/api/index.js';
 import { useRouter } from 'vue-router';
 import Score from '../../components/Score.vue'
 import MarkScore from '../../components/MarkScore.vue'
 import FollowIcon from '@/components/FollowIcon.vue'
+import AddBookMessage from '@/components/Bookshelf/AddBookMessage.vue'
 import { showToast } from 'vant';
 import CommentItem from '@/components/CommentItem.vue'
 import personal from '@/assets/imgs/personal.jpg';
@@ -30,6 +32,8 @@ const obj = ref(res.data);
 console.log(detailRes.data.list[0])
 console.log('obj', obj.value)
 Object.assign(obj.value, detailRes.data.list[0]);
+provide('id', obj.value.id);
+
 console.log('obj', obj.value)
 
 const list = ref(res.data.list);
@@ -118,7 +122,7 @@ const toggleFollow = () => {
 //评论
 const commentList = ref([]);
 fetchCommentList({ id: obj.id }).then(res => {
-    commentList.value = res.data.body.list.splice(0, 5);
+    commentList.value = res.data.body.list;
 }).catch((err) => {
     console.log(err)
 });
@@ -190,7 +194,13 @@ fetchRecommendList().then(res => {
 // 加入书架提示
 const isAddBookMessage = ref(false);
 const toggleBookshelf = () => {
-    showToast('完善中');
+    catalogData.value.isBookshelf = !catalogData.value.isBookshelf;
+    if (catalogData.value.isBookshelf) {
+        isAddBookMessage.value = true
+    } else {
+        isAddBookMessage.value = false;
+        showToast('已移出书架');
+    }
 }
 provide('toggleBookshelf',toggleBookshelf)
 
@@ -213,7 +223,7 @@ provide('toggleBookshelf',toggleBookshelf)
                 </van-row>
             </van-col>
             <van-col span="8">
-                <BookIcon :isBookshelf="obj.isBookshelf"/>
+                <BookIcon :isBookshelf="catalogData.isBookshelf"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
                 <ShareIcon @showShare="showShare" />
             </van-col>
@@ -319,10 +329,10 @@ provide('toggleBookshelf',toggleBookshelf)
                     </span>
                 </van-col>
             </van-row>
-            <CatalogItem :list="list"/>
+            <CatalogItem :list="list" />
             <p class="more-txt" @click="showCatalog">查看更多目录<van-icon name="arrow" color="#1989fa" /></p>
             <!-- 目录 -->
-            <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData"/>
+            <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData" />
         </div>
 
         <!-- 评论 -->
@@ -341,7 +351,9 @@ provide('toggleBookshelf',toggleBookshelf)
                     </van-row>
                 </van-col>
             </van-row>
-            <CommentItem @show-more="showMore" v-for="item in commentList" :item="item" @show-discuss="showDiscuss" />
+            <template v-for="(item, index) in commentList">
+                <CommentItem @show-more="showMore" :item="item" @show-discuss="showDiscuss" v-if="index <= 4" />
+            </template>
             <p class="more-txt" @click="viewMoreComment">查看全部评论<van-icon name="arrow" color="#1989fa" /></p>
         </div>
 
@@ -396,6 +408,14 @@ provide('toggleBookshelf',toggleBookshelf)
     </div>
     <MarkScore :isMarkScore="isMarkScore" :data="{ id: obj.id, title: obj.title, isVip: obj.isVip }"
         @close="hideMarkScore" />
+
+        
+    <!-- 加入书架成功提示 -->
+    <van-toast v-model:show="isAddBookMessage" style="padding: 10px" word-break="'break-word'">
+        <template #message>
+            <AddBookMessage />
+        </template>
+    </van-toast>
 </template>
 <style scoped lang='scss'>
 .novel-home {

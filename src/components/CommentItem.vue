@@ -30,6 +30,9 @@ const editComment = (item)=>{
 
 //评论回复
 const showReply = inject('showReply');
+const handleShowReply= ()=>{
+    showReply?.();
+}
 </script>
 <template>
     <van-row justify="space-between" class="comment-list">
@@ -61,7 +64,7 @@ const showReply = inject('showReply');
                 <template v-for="(item1,index1) in item.subList">
                    <CommentItem @show-more="showMore" v-if="index1<=1" :item="item1" :isMoreIcon="false" />
                 </template>
-                <van-button class="view-more-btn" round  plain size="small" type="default" @click="showReply(item.id)">查看全部{{item.subList.length}}条回复<van-icon name="arrow" /></van-button>
+                <van-button class="view-more-btn" round  plain size="small" type="default" @click="handleShowReply(item.id)">查看全部{{item.subList.length}}条回复<van-icon name="arrow" /></van-button>
             </div>
         </van-col>
     </van-row>
