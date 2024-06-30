@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
-import CatalogItem from './CatalogItem.vue'
-import BookIcon from '@/components/Bookshelf/BookIcon.vue'
+import CatalogItem from './CatalogItem.vue' 
+import Book from '@/components/Bookshelf/Book.vue'
 import { fetchCatalogList } from '@/api/search.js';
 import { useRouter } from 'vue-router';
 
@@ -53,7 +53,7 @@ watch(sortType, (newVal) => {
         <van-row justify="space-between">
           <van-col  @click="enterNovelHomepage" class="grey-font">查看详情<van-icon name="arrow" /></van-col>
           <van-col span="9">
-            <BookIcon :isBookshelf="props.data.isBookshelf"/>
+            <Book :isHas="props.data.isHas"/>
           </van-col>
         </van-row>
       </van-col>

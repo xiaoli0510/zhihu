@@ -2,22 +2,19 @@
 import { provide, ref, watch } from 'vue';
 import { fetchNovelDetail } from "@/api/search.js";
 import BackIcon from '@/components/BackIcon.vue'
-import BookIcon from '@/components/Bookshelf/BookIcon.vue'
 import ShareIcon from '../../components/ShareIcon.vue'
 import UpvoteIcon from '@/components/UpvoteIcon.vue'
 import CommentIcon from '@/components/CommentIcon.vue'
 import dot from '@/assets/imgs/dot.png';
 import CommentPopup from '@/components/CommentPopup.vue'
-import CommentReply from '../../components/CommentReply.vue'
-import AddBookMessage from '@/components/Bookshelf/AddBookMessage.vue'
+import CommentReply from '../../components/CommentReply.vue' 
 import { useRouter } from 'vue-router';
 import BookShare from '../../components/BookShare.vue'
 import ReadSet from '../../components/ReadSet.vue'
 import MoreShare from '@/components/MoreShare.vue'
 import debounce from 'lodash/debounce';
-import Catalog from '@/components/Catalog.vue'
-import { showToast } from 'vant';
-import Book from '../../components/Bookshelf/Book.vue'
+import Catalog from '@/components/Catalog.vue' 
+import Book from '@/components/Bookshelf/Book.vue'
 const props = defineProps(['id']);
 const id = ref(props.id);
 const isCatalog = ref(false);
@@ -29,7 +26,7 @@ const initData = (id) => {
         .then(res => {
             isScrollBottom.value = false;
             list.value = res.data.list;
-            catalogData.value = {id:list.value[0].id,cover:list.value[0].cover,title:list.value[0].title,isBookshelf:list.value[0].isBookshelf};
+            catalogData.value = {id:list.value[0].id,cover:list.value[0].cover,title:list.value[0].title,isHas:list.value[0].isHas};
         }).catch(err => {
             console.log(err);
         });
@@ -104,20 +101,10 @@ const showCatalog = () => {
 const hideCatalog = () => {
     isCatalog.value = false;
 }
-// 加入书架提示
-const isAddBookMessage = ref(false);
-provide('isBookshelf',true);
-const book = ref();
+
+// 切换加入书架
 const toggleBookshelf = () => {
-    console.log(1);
-    // book.value.showMsg();
-     catalogData.value.isBookshelf = !catalogData.value.isBookshelf;
-    // if (catalogData.value.isBookshelf) {
-    //     isAddBookMessage.value = true
-    // } else {
-    //     isAddBookMessage.value = false;
-    //     showToast('已移出书架');
-    // }
+     catalogData.value.isHas = !catalogData.value.isHas;
 }
 provide('toggleBookshelf',toggleBookshelf)
 
@@ -193,8 +180,7 @@ const enterProfile = (id)=>{
                 <BackIcon />
                 </van-col>
                 <van-col span="9">
-                    <!-- <BookIcon :isBookshelf="catalogData.isBookshelf"/> -->
-                    <Book ref="book"/>
+                    <Book :isHas="catalogData.isHas"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
                 <ShareIcon @showShare="showShare" />
             </van-col>
@@ -260,13 +246,7 @@ const enterProfile = (id)=>{
 
     <!-- 评论回复 -->
     <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
-
-    <!-- 加入书架成功提示 -->
-    <!-- <van-toast v-model:show="isAddBookMessage" style="padding: 10px" word-break="'break-word'">
-        <template #message>
-            <AddBookMessage />
-        </template>
-    </van-toast> -->
+    
     <!-- 分享 -->
     <BookShare :item="list[0]" :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
         @showMoreShare="showMoreShare" />

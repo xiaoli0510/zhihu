@@ -2,7 +2,7 @@
 import { provide, ref, watch } from 'vue';
 import CatalogItem from '@/components/CatalogItem.vue'
 import BackIcon from '@/components/BackIcon.vue'
-import BookIcon from '@/components/Bookshelf/BookIcon.vue'
+import Book from '../../components/Bookshelf/Book.vue'
 import { fetchCatalogList, fetchNovelDetail, fetchRecommendList } from '@/api/search.js';
 import { fetchCommentList } from '@/api/index.js';
 import { useRouter } from 'vue-router';
@@ -26,7 +26,7 @@ const scroll = throttle((e) => {
 const catalogData = ref({});
 const res = await fetchCatalogList();
 const detailRes = await fetchNovelDetail();
-catalogData.value = {id:detailRes.data.list[0].id,cover:detailRes.data.list[0].cover,title:detailRes.data.list[0].title,isBookshelf:detailRes.data.list[0].isBookshelf};
+catalogData.value = {id:detailRes.data.list[0].id,cover:detailRes.data.list[0].cover,title:detailRes.data.list[0].title,isHas:detailRes.data.list[0].isHas};
 
 const obj = ref(res.data);
 console.log(detailRes.data.list[0])
@@ -191,16 +191,9 @@ fetchRecommendList().then(res => {
     recommendList.value = res.data.list;
 })
 
-// 加入书架提示
-const isAddBookMessage = ref(false);
+// 切换加入书架
 const toggleBookshelf = () => {
-    catalogData.value.isBookshelf = !catalogData.value.isBookshelf;
-    if (catalogData.value.isBookshelf) {
-        isAddBookMessage.value = true
-    } else {
-        isAddBookMessage.value = false;
-        showToast('已移出书架');
-    }
+     catalogData.value.isHas = !catalogData.value.isHas;
 }
 provide('toggleBookshelf',toggleBookshelf)
 
@@ -223,7 +216,7 @@ provide('toggleBookshelf',toggleBookshelf)
                 </van-row>
             </van-col>
             <van-col span="8">
-                <BookIcon :isBookshelf="catalogData.isBookshelf"/>
+                <Book :isHas="catalogData.isHas"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
                 <ShareIcon @showShare="showShare" />
             </van-col>
@@ -408,14 +401,6 @@ provide('toggleBookshelf',toggleBookshelf)
     </div>
     <MarkScore :isMarkScore="isMarkScore" :data="{ id: obj.id, title: obj.title, isVip: obj.isVip }"
         @close="hideMarkScore" />
-
-        
-    <!-- 加入书架成功提示 -->
-    <van-toast v-model:show="isAddBookMessage" style="padding: 10px" word-break="'break-word'">
-        <template #message>
-            <AddBookMessage />
-        </template>
-    </van-toast>
 </template>
 <style scoped lang='scss'>
 .novel-home {

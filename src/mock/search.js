@@ -92,7 +92,7 @@ Mock.mock("/api/search/novel/detail", "get", {
       view:"@integer(0,10)",
       'isVip':"@boolean",
       'isFollow':"@boolean",
-      'isBookshelf':"@boolean",
+      'isHas':"@boolean",
     },
   ],
 });
