@@ -9,12 +9,13 @@ import { useRouter } from 'vue-router';
 import Score from '../../components/Score.vue'
 import MarkScore from '../../components/MarkScore.vue'
 import FollowIcon from '@/components/FollowIcon.vue'
-import AddBookMessage from '@/components/Bookshelf/AddBookMessage.vue'
 import { showToast } from 'vant';
 import CommentItem from '@/components/CommentItem.vue'
 import personal from '@/assets/imgs/personal.jpg';
 import NovelRecommend from './components/search/NovelRecommend.vue'
 import throttle from 'lodash/throttle';
+import CommentPopup from '@/components/CommentPopup.vue'
+import CommentReply from '../../components/CommentReply.vue'
 
 const isTop = ref(true);
 const isTab = ref(false);
@@ -23,23 +24,33 @@ const scroll = throttle((e) => {
     e.target.scrollTop > 90 ? isTab.value = true : isTab.value = false;
 }, 300)
 
+const obj = ref({});
+const recommendList = ref([]);
 const catalogData = ref({});
-const res = await fetchCatalogList();
-const detailRes = await fetchNovelDetail();
-catalogData.value = {id:detailRes.data.list[0].id,cover:detailRes.data.list[0].cover,title:detailRes.data.list[0].title,isHas:detailRes.data.list[0].isHas};
+const list = ref([]);
+const isClick = ref(false);//是否有点击加入书架按钮
 
-const obj = ref(res.data);
-console.log(detailRes.data.list[0])
-console.log('obj', obj.value)
-Object.assign(obj.value, detailRes.data.list[0]);
+const initData = async ()=>{
+    isClick.value = false;
+    const res = await fetchCatalogList();
+    obj.value = res.data;
+    list.value = res.data.list;
+    const detailRes = await fetchNovelDetail();
+    catalogData.value = { id: detailRes.data.list[0].id, cover: detailRes.data.list[0].cover, title: detailRes.data.list[0].title, isHas: detailRes.data.list[0].isHas };
+    Object.assign(obj.value, detailRes.data.list[0]);
+    const recommendData = await fetchRecommendList();
+    recommendList.value = recommendData.data.list;
+}
+initData();
+
 provide('id', obj.value.id);
 
 console.log('obj', obj.value)
 
-const list = ref(res.data.list);
+
 const router = useRouter();
-const enterNovelHomepage = () => {
-    router.push(`/novel/homepage/${obj.id}`)
+const enterNovelHome = () => {
+    router.push(`/novel/home/${obj.id}`)
 }
 
 const sortType = ref(0);//0升序 1降序
@@ -60,10 +71,11 @@ watch(sortType, (newVal) => {
 
 const props = defineProps(['id']);
 const isCatalog = ref(false);
-watch(()=>props.id, (newVal) => {
-    isCatalog.value=false;
-},{
-    immediate:true
+watch(() => props.id, () => {
+    isCatalog.value = false;
+    initData();
+}, {
+    immediate: true
 });
 //目录
 const showCatalog = () => {
@@ -92,7 +104,7 @@ const hideMarkScore = () => {
 }
 
 // tab
-const active = ref(0);
+const active = ref('1');
 
 //进入专属会员福利
 const enterVipWelfare = () => {
@@ -133,13 +145,6 @@ const showMore = (item) => {
     isMoreComment.value = true;
     moreObj.value = item;
 }
-//关闭更多评论
-const hideMore = () => {
-    isMore.value = false;
-}
-const viewMoreComment = () => {
-    showToast('完善中');
-}
 
 //讨论
 const isDiscuss = ref(false);
@@ -169,6 +174,23 @@ const submitDiscuss = () => {
     isDiscuss.value = false;
 }
 
+//显示评论弹框
+const isCommentPopup = ref(false);
+const commentId = ref(0);
+const showCommentPopup = () => {
+    isCommentPopup.value = true;
+    commentId.value = obj.value.id;
+}
+//关闭评论弹框
+const hideCommentPopup = () => {
+    isCommentPopup.value = false;
+}
+//写评论
+const addComment = () => {
+    showCommentPopup();
+    showMarkScore();
+}
+
 //显示回复弹框
 const isReply = ref(false);
 const replyId = ref(0);
@@ -183,21 +205,15 @@ const hideReply = () => {
 }
 
 const enterRoster = () => {
-    showToast('完善中');
+    router.push('/novel/roster');
 }
-
-const recommendList = ref([]);
-fetchRecommendList().then(res => {
-    recommendList.value = res.data.list;
-})
 
 // 切换加入书架
 const toggleBookshelf = () => {
-     catalogData.value.isHas = !catalogData.value.isHas;
+    catalogData.value.isHas = !catalogData.value.isHas;
+    isClick.value = true;
 }
-provide('toggleBookshelf',toggleBookshelf)
-
-
+provide('toggleBookshelf', toggleBookshelf);
 </script>
 <template>
     <div class="novel-home" @scroll="scroll">
@@ -216,14 +232,14 @@ provide('toggleBookshelf',toggleBookshelf)
                 </van-row>
             </van-col>
             <van-col span="8">
-                <Book :isHas="catalogData.isHas"/>
+                <Book :isHas="catalogData.isHas" :isClick="isClick"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
                 <ShareIcon @showShare="showShare" />
             </van-col>
         </van-row>
 
         <div class="brief tab-list">
-            <van-row justify="space-around" @click="enterNovelHomepage">
+            <van-row justify="space-around" @click="enterNovelHome">
                 <van-col span="7">
                     <van-image width="100" height="100" radius="9px" :src="obj.cover" class="img-cover" />
                 </van-col>
@@ -240,7 +256,7 @@ provide('toggleBookshelf',toggleBookshelf)
             </van-row>
             <van-row class="comment-box">
                 <van-col class="score">
-                    <Score :score="obj.score" />
+                    <Score :score="obj.score" v-if="obj.score"/>
                 </van-col>
                 <van-col class="grey-font" offset="1">{{ obj.comment }}人已评.</van-col>
                 <van-col class="comment-go" offset="1" @click="showMarkScore">我要评论<van-icon name="play" color="#f5500f"
@@ -248,133 +264,144 @@ provide('toggleBookshelf',toggleBookshelf)
             </van-row>
         </div>
 
-        <div class="tab-wrap" :class="{ 'fixed': isTab }">
-            <van-tabs v-model:active="active">
-                <van-tab title="简介">内容 1</van-tab>
-                <van-tab>
+        <!-- <div class="tab-wrap" :class="{ 'fixed': isTab }"> -->
+        <div class="tab-wrap">
+            <van-tabs v-model:active="active" scrollspy sticky offset-top="44px">
+                <van-tab title="简介" name="1">
+                    <!-- 简介 -->
+                    <div class="profile tab-list">
+                        <h2>简介</h2>
+                        <van-text-ellipsis rows="2" :content="obj.sentence" expand-text="详情" collapse-text="收起" />
+                        <span class="tag" v-for="item in obj.feature">{{ item }}<van-icon name="arrow" /></span>
+                    </div>
+
+                    <!-- 分享助力 -->
+                    <div class="tab-list share" @click="enterVipWelfare">
+                        <van-row justify="space-between">
+                            <van-col span="19">
+                                <van-icon name="point-gift" size="20px" />
+                                好友助力，<span class="discount-price">1元</span>开通盐选会员
+                            </van-col>
+                            <van-col span="5">
+                                <van-icon name="wechat" size="20px" />
+                                分享
+                                <van-icon name="arrow" />
+                            </van-col>
+
+                        </van-row>
+                    </div>
+
+                    <!-- 作者 -->
+                    <div class="author tab-list">
+                        <h2>作者</h2>
+                        <van-row align="center" justify="space-between">
+                            <van-col span="3" @click="enterProfile(id)"><van-image round width="1rem" height="1rem"
+                                    :src="obj.avatar" /></van-col>
+                            <van-col span="13" @click="enterProfile(id)">
+                                <van-row>
+                                    <van-col span="24">
+                                        {{ obj.name }}</van-col>
+                                </van-row>
+                            </van-col>
+                            <van-col offset="1" span="5">
+                                <FollowIcon :isFollow="obj.isFollow" @toggleFollow="toggleFollow" />
+                            </van-col>
+                            <van-col span="24">代表作
+                                <span v-for="item in obj.classic">《{{ item }}》</span>
+                            </van-col>
+                        </van-row>
+                    </div>
+                </van-tab>
+                <van-tab name="2 ">
                     <template #title>
                         <van-badge content="试读" color="#1989fa">
                             目录
-                        </van-badge> </template>
+                        </van-badge>
+                    </template>
+                    <template #default>
+                        <!-- 目录 -->
+                        <div class="catalog tab-list">
+                            <h2>目录</h2>
+                            <van-row justify="space-between" class="total-sort">
+                                <van-col class="grey-font">{{ obj.statu === 1 ? '已' : '未' }}完结·共{{ obj.total
+                                    }}节·</van-col>
+                                <van-col class="grey-font">
+                                    <span @click="toggleTitleDetail">仅看标题</span>
+                                    <span @click="toggleSort" class="sort-wrap">
+                                        <van-icon name="exchange" />
+                                        {{ sortType === 0 ? '正序' : '倒序 '
+                                        }}
+                                    </span>
+                                </van-col>
+                            </van-row>
+                            <CatalogItem :list="list" />
+                            <p class="more-txt" @click="showCatalog">查看更多目录<van-icon name="arrow" color="#1989fa" /></p>
+                            <!-- 目录 -->
+                            <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData" />
+                        </div>
+                    </template>
                 </van-tab>
-                <van-tab>
+                <van-tab name="3">
                     <template #title>
                         <van-badge :content="commentList.length" color="#ccc">
                             评论
                         </van-badge> </template>
+                    <template #default>
+                        <!-- 评论 -->
+                        <div class="tab-list comment">
+                            <h2>精彩评论 <span class="comment-total">(共{{ commentList.length }}条)</span></h2>
+                            <van-row justify="space-between">
+                                <van-col span="3">
+                                    <van-image round class="avatar-img" :src="personal" width="30px" />
+                                </van-col>
+                                <van-col span="21" class="edit-comment">
+                                    <van-row justify="space-between" align="center" @click="addComment">
+                                        <van-col>写评论</van-col>
+                                        <van-col>
+                                            <van-icon name="smile" color="#1989fa" size="20px" />
+                                        </van-col>
+                                    </van-row>
+                                </van-col>
+                            </van-row>
+                            <template v-for="(item, index) in commentList">
+                                <CommentItem @show-more="showMore" :item="item" @show-discuss="showDiscuss"
+                                    v-if="index <= 4" />
+                            </template>
+                            <p class="more-txt" @click="showCommentPopup">查看全部评论<van-icon name="arrow"
+                                    color="#1989fa" /></p>
+                        </div>
+                    </template>
                 </van-tab>
-                <van-tab title="详情">内容 4</van-tab>
-                <van-tab title="推荐">内容 4</van-tab>
+                <van-tab title="详情" name="4">
+                    <!-- 详情 -->
+                    <div class="tab-list detail">
+                        <h2>详情</h2>
+                        <van-text-ellipsis rows="5" :content="obj.sentence" expand-text="展开" collapse-text="收起" />
+                        <p class="tip">本专栏为知乎首届长篇征文大赛获奖作品
+                            <br />
+                            完整获取名单，请戳<span class="roster" @click="enterRoster">这里</span>！
+                        </p>
+                    </div>
+
+                    <!-- 购买须知 -->
+                    <div class="tab-list buy--notice">
+                        <h2>购买须知</h2>
+                        <ul>
+                            <li>本盐选专栏由知乎出品；</li>
+                            <li>订阅成功后，即可在知乎APP永久阅读盐选专栏所有内容；</li>
+                            <li>知乎盐选会员，可在会员有效期内免费阅读；</li>
+                            <li>盐选专栏为虚拟内容服务，购买前请谨慎阅读，一经购买成功，将不接受退款，还请理解。</li>
+                        </ul>
+                    </div>
+                </van-tab>
+                <van-tab title="推荐" name="5">
+                    <!-- 更多推荐 -->
+                    <div class="tab-list buy--notice">
+                        <h2>更多推荐</h2>
+                        <NovelRecommend v-for="item in recommendList" :item="item" />
+                    </div>
+                </van-tab>
             </van-tabs>
-        </div>
-        <!-- 简介 -->
-        <div class="profile tab-list">
-            <h2>简介</h2>
-            <van-text-ellipsis rows="2" :content="obj.sentence" expand-text="详情" collapse-text="收起" />
-            <span class="tag" v-for="item in obj.feature">{{ item }}<van-icon name="arrow" /></span>
-        </div>
-        <!-- 分享助力 -->
-        <div class="tab-list share" @click="enterVipWelfare">
-            <van-row justify="space-between">
-                <van-col span="19">
-                    <van-icon name="point-gift" size="20px" />
-                    好友助力，<span class="discount-price">1元</span>开通盐选会员
-                </van-col>
-                <van-col span="5">
-                    <van-icon name="wechat" size="20px" />
-                    分享
-                    <van-icon name="arrow" />
-                </van-col>
-
-            </van-row>
-        </div>
-        <!-- 作者 -->
-        <div class="author tab-list">
-            <h2>作者</h2>
-            <van-row align="center" justify="space-between">
-                <van-col span="3" @click="enterProfile(id)"><van-image round width="1rem" height="1rem"
-                        :src="obj.avatar" /></van-col>
-                <van-col span="13" @click="enterProfile(id)">
-                    <van-row>
-                        <van-col span="24">
-                            {{ obj.name }}</van-col>
-                    </van-row>
-                </van-col>
-                <van-col offset="1" span="5">
-                    <FollowIcon :isFollow="obj.isFollow" @toggleFollow="toggleFollow" />
-                </van-col>
-                <van-col span="24">代表作
-                    <span v-for="item in obj.classic">《{{ item }}》</span>
-                </van-col>
-            </van-row>
-        </div>
-        <!-- 目录 -->
-        <div class="catalog tab-list">
-            <h2>目录</h2>
-            <van-row justify="space-between" class="total-sort">
-                <van-col class="grey-font">{{ obj.statu === 1 ? '已' : '未' }}完结·共{{ obj.total }}节·</van-col>
-                <van-col class="grey-font">
-                    <span @click="toggleTitleDetail">仅看标题</span>
-                    <span @click="toggleSort" class="sort-wrap">
-                        <van-icon name="exchange" />
-                        {{ sortType === 0 ? '正序' : '倒序 '
-                        }}
-                    </span>
-                </van-col>
-            </van-row>
-            <CatalogItem :list="list" />
-            <p class="more-txt" @click="showCatalog">查看更多目录<van-icon name="arrow" color="#1989fa" /></p>
-            <!-- 目录 -->
-            <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData" />
-        </div>
-
-        <!-- 评论 -->
-        <div class="tab-list comment">
-            <h2>精彩评论 <span class="comment-total">(共{{ commentList.length }}条)</span></h2>
-            <van-row justify="space-between">
-                <van-col span="3">
-                    <van-image round class="avatar-img" :src="personal" width="30px" />
-                </van-col>
-                <van-col span="21" class="edit-comment">
-                    <van-row justify="space-between" align="center">
-                        <van-col>写评论</van-col>
-                        <van-col>
-                            <van-icon name="smile" color="#1989fa" size="20px" />
-                        </van-col>
-                    </van-row>
-                </van-col>
-            </van-row>
-            <template v-for="(item, index) in commentList">
-                <CommentItem @show-more="showMore" :item="item" @show-discuss="showDiscuss" v-if="index <= 4" />
-            </template>
-            <p class="more-txt" @click="viewMoreComment">查看全部评论<van-icon name="arrow" color="#1989fa" /></p>
-        </div>
-
-        <!-- 详情 -->
-        <div class="tab-list detail">
-            <h2>详情</h2>
-            <van-text-ellipsis rows="5" :content="obj.sentence" expand-text="展开" collapse-text="收起" />
-            <p class="tip">本专栏为知乎首届长篇征文大赛获奖作品
-                <br />
-                完整获取名单，请戳<span class="roster" @click="enterRoster">这里</span>！
-            </p>
-        </div>
-
-        <!-- 购买须知 -->
-        <div class="tab-list buy--notice">
-            <h2>购买须知</h2>
-            <ul>
-                <li>本盐选专栏由知乎出品；</li>
-                <li>订阅成功后，即可在知乎APP永久阅读盐选专栏所有内容；</li>
-                <li>知乎盐选会员，可在会员有效期内免费阅读；</li>
-                <li>盐选专栏为虚拟内容服务，购买前请谨慎阅读，一经购买成功，将不接受退款，还请理解。</li>
-            </ul>
-        </div>
-
-        <!-- 更多推荐 -->
-        <div class="tab-list buy--notice">
-            <h2>更多推荐</h2>
-            <NovelRecommend v-for="item in recommendList" :item="item" />
         </div>
 
         <div class="vip-tip grey-font">
@@ -401,13 +428,18 @@ provide('toggleBookshelf',toggleBookshelf)
     </div>
     <MarkScore :isMarkScore="isMarkScore" :data="{ id: obj.id, title: obj.title, isVip: obj.isVip }"
         @close="hideMarkScore" />
+
+    <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId"
+        v-if="isCommentPopup" />
+
+    <!-- 评论回复 -->
+    <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
 </template>
 <style scoped lang='scss'>
 .novel-home {
     background: #f1f1f1;
     height: 100%;
     overflow: auto;
-    border: 1px solid red;
 
     .header-fixed {
         height: 40px;
@@ -474,7 +506,6 @@ provide('toggleBookshelf',toggleBookshelf)
             margin: 54px auto 10px auto;
             border-radius: 5px;
             padding: 7px 9px;
-            border: 1px solid red;
             height: 120px;
 
             .img-cover {
@@ -578,7 +609,7 @@ provide('toggleBookshelf',toggleBookshelf)
     }
 
     .vip-tip {
-        padding: 50px 0;
+        padding: 50px 0 100px 0;
         text-align: center;
 
         .vip-txt {

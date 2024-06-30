@@ -1,18 +1,22 @@
 <script setup>
+import { useRouter } from 'vue-router';
 const props = defineProps(['item']);
-const item = props.item;
+const router = useRouter();
+const enterNovelHome  = (id)=>{
+    router.push(`/novel/home/${id}`)
+}
 </script>
 <template>
-    <van-row class="recommend-item">
+    <van-row class="recommend-item" @click="enterNovelHome(props.item.id)">
         <van-col>
             <div class="cover">
-                <van-image width="100" height="100" :src="item.cover" radius="9px" fit="cover" />
+                <van-image width="100" height="100" :src="props.item.cover" radius="9px" fit="cover" />
                 <p class="tag">盐选专栏</p>
             </div>
         </van-col>
         <van-col span="16" offset="1" class="recommend-txt">
-            <h2>{{ item.title }}</h2>
-            <p class="feature">{{ item.feature }}</p>
+            <h2>{{ props.item.title }}</h2>
+            <p class="feature">{{ props.item.feature }}</p>
         </van-col>
     </van-row>
 </template>

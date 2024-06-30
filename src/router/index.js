@@ -15,7 +15,8 @@ import VipWelfare from "../views/center/vipWelfare.vue";//专属会员福利
 import BulletComment from "../views/home/bulletComment.vue";//弹评
 import Private from "../views/home/private.vue";//私信
 import Contact from "../views/home/contact.vue";//联系小管家
-import NovelHomepage from "../views/home/novelHomepage.vue";//小说主页
+import NovelHome from "../views/home/novelHome.vue";//小说主页
+import Roster from "../views/home/roster.vue";//获奖名单页
 import Test from "../views/home/test.vue";//测试页
 
 
@@ -123,11 +124,18 @@ const router = createRouter({
       component: Test,
     },
     {
-      path: "/novel/homepage/:id",
+      path: "/novel/home/:id",
       props:true,
       name: "novelHomepage",
-      component: NovelHomepage,
+      component: NovelHome,
     },
+    {
+      path: "/novel/roster",
+      props:true,
+      name: "roster",
+      component: Roster,
+    },
+    
   ],
 });
 

@@ -21,7 +21,10 @@ const isCatalog = ref(false);
 const catalogData = ref({});
 provide('id', props.id);
 const list = ref([]);
+const isClick = ref(false);//是否有点击加入书架按钮
+
 const initData = (id) => {
+    isClick.value=false;
     fetchNovelDetail({ id })
         .then(res => {
             isScrollBottom.value = false;
@@ -43,7 +46,7 @@ watch(()=>props.id, (newVal) => {
 const loading = ref(false);
 const onRefresh = () => {
     setTimeout(() => {
-        initData(id++);
+        initData();
         loading.value = false;
     }, 1000);
 };
@@ -104,7 +107,8 @@ const hideCatalog = () => {
 
 // 切换加入书架
 const toggleBookshelf = () => {
-     catalogData.value.isHas = !catalogData.value.isHas;
+    catalogData.value.isHas = !catalogData.value.isHas;
+    isClick.value = true;
 }
 provide('toggleBookshelf',toggleBookshelf)
 
@@ -180,7 +184,7 @@ const enterProfile = (id)=>{
                 <BackIcon />
                 </van-col>
                 <van-col span="9">
-                    <Book :isHas="catalogData.isHas"/>
+                <Book :isHas="catalogData.isHas" :isClick="isClick"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
                 <ShareIcon @showShare="showShare" />
             </van-col>

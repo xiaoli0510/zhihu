@@ -2,13 +2,18 @@
 import BookIcon from './BookIcon.vue'
 import AddBookMessage from './AddBookMessage.vue'
 import { ref, watch } from 'vue'
-const props = defineProps(['isHas']);
+const props = defineProps(['isHas','isClick']);
 const isMsg = ref(false);
-watch(() => props.isHas, (newVal, oldVal) => {
+watch(props, (newVal, oldVal) => {
+    //首次渲染时不提示
     if (oldVal === undefined) {
         return;
     }
-    if (newVal) {
+    //修改url的id时，未点击按钮时不提示
+    if(!newVal.isClick){
+        return;
+    }
+    if (newVal.isHas) {
         isMsg.value = true;
     } else {
         isMsg.value = false;

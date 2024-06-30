@@ -34,7 +34,7 @@ const submit = () => {
 }
 </script>
 <template>
-    <van-popup v-model:show="isShow" :close-on-click-overlay="false" round closeable close-icon="close" position="bottom" @click-close-icon="close"
+    <van-popup z-index="3000" v-model:show="isShow" :close-on-click-overlay="false" round closeable close-icon="close" position="bottom" @click-close-icon="close"
         :style="{ height: '97%', padding: '10px' }">
         <p class="comment-power">付费阅读内容仅会员可评论</p>
         <van-uploader v-model="fileList" :max-count="1"><span></span></van-uploader>

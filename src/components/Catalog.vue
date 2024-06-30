@@ -20,7 +20,7 @@ const {total, state } = res.data;
 const list = ref(res.data.list);
 const router = useRouter();
 const enterNovelHomepage = () => {
-  router.push(`/novel/homepage/${props.data.id}`)
+  router.push(`/novel/home/${props.data.id}`)
 }
 
 const sortType = ref(0);//0升序 1降序
