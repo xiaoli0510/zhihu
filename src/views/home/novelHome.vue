@@ -248,6 +248,11 @@ const showMoreShare = () => {
 const hideMoreShare = () => {
     isMoreShare.value = false;
 }
+
+//试读
+const enterNovelDetail = ()=>{
+    router.push(`/novel/detail/${props.id}`);
+}
 </script>
 <template>
     <div class="novel-home" @scroll="scroll">
@@ -438,7 +443,7 @@ const hideMoreShare = () => {
 
         <div class="footer-fixed">
             <van-row align="center" justify="space-between">
-                <van-col>
+                <van-col @click="enterNovelDetail">
                     <van-icon name="newspaper-o" size="30px" />
                     <div class="sub-txt">试读</div>
                 </van-col>

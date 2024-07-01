@@ -2,20 +2,21 @@
 import { provide, ref, watch } from 'vue';
 import { fetchNovelDetail } from "@/api/search.js";
 import BackIcon from '@/components/BackIcon.vue'
-import ShareIcon from '../../components/ShareIcon.vue'
+// import ShareIcon from '../../components/ShareIcon.vue'
 import UpvoteIcon from '@/components/UpvoteIcon.vue'
 import CommentIcon from '@/components/CommentIcon.vue'
 import dot from '@/assets/imgs/dot.png';
 import CommentPopup from '@/components/CommentPopup.vue'
 import CommentReply from '../../components/CommentReply.vue' 
 import { useRouter } from 'vue-router';
-import BookShare from '../../components/BookShare.vue'
-import ReadSet from '../../components/ReadSet.vue'
-import MoreShare from '@/components/MoreShare.vue'
+// import BookShare from '../../components/BookShare.vue'
+// import ReadSet from '../../components/ReadSet.vue'
+// import MoreShare from '@/components/MoreShare.vue'
 import debounce from 'lodash/debounce';
 import Catalog from '@/components/Catalog.vue' 
 import Book from '@/components/Bookshelf/Book.vue'
 import TopBookNav from '../../components/TopBookNav.vue'
+import Share from '../../components/BookShare/Share.vue'
 
 const props = defineProps(['id']);
 const id = ref(props.id);
@@ -121,9 +122,6 @@ const isShare = ref(false);
 const showShare = () => {
     isShare.value = true;
 }
-const hideShare = () => {
-    isShare.value = false;
-}
 
 //阅读设置的默认选项
 const readsetObj = ref({
@@ -131,25 +129,12 @@ const readsetObj = ref({
     light: 70,
     isShowOtherNote: true
 })
-const isReadset = ref(false);
-//显示阅读设置弹框
-const showReadset = () => {
-    isReadset.value = true;
-    hideShare();
-}
-//关闭阅读设置弹框
-const hideReadset = () => {
-    isReadset.value = false;
-}
 const onChangeReadset = (type, val) => {
     readsetObj.value[type] = val;
 }
-//打开更多分享
-const isMoreShare = ref(false);
-const showMoreShare = () => {
-    isMoreShare.value = true;
-    hideShare();
-}
+provide('onChangeReadset',onChangeReadset);
+provide('readsetObj',readsetObj.value);
+
 // 关闭更多分享
 const hideMoreShare = () => {
     isMoreShare.value = false;
@@ -193,7 +178,7 @@ const enterProfile = (id)=>{
             <van-col span="9">
                 <Book :isHas="catalogData.isHas" :isClick="isClick" />
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
-                <ShareIcon @showShare="showShare" />
+                <Share/>
             </van-col>
         </van-row>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" pulling-text="下拉查看^" loosing-text="松开查看">
@@ -220,7 +205,8 @@ const enterProfile = (id)=>{
                                 <UpvoteIcon :item="item" />
                                 <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
                                 <van-icon name="list-switch" size="24px" @click="showCatalog" />
-                                <van-icon :name="dot" size="20px" color="#ddd" @click="showShare" />
+                                <Share :data="{name:dot,size:'20px'}"/>
+                                <!-- <van-icon :name="dot" size="20px" color="#ddd" @click="showShare" /> -->
                             </van-row>
                         </div>
                     </div>
@@ -258,14 +244,6 @@ const enterProfile = (id)=>{
     <!-- 评论回复 -->
     <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
 
-    <!-- 分享 -->
-    <BookShare :item="list[0]" :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
-        @showMoreShare="showMoreShare" />
-    <!-- 更多分享 -->
-    <MoreShare v-if="isMoreShare" :isMoreShare="isMoreShare" @hideMoreShare="hideMoreShare" />
-    <!-- 阅读设置 -->
-    <ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
-        @hideMoreShare="hideMoreShare" />
     <!-- 目录 -->
     <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData" />
 </template>

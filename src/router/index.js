@@ -128,6 +128,9 @@ const router = createRouter({
       props:true,
       name: "novelHomepage",
       component: NovelHome,
+      meta:{
+        keepAlive:true,//需要缓存
+      }
     },
     {
       path: "/novel/roster",

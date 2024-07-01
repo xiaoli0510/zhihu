@@ -1,37 +1,34 @@
 <script setup>
-import { ref, watch } from 'vue';
-const props = defineProps(['readsetObj','isReadset']);
+import { inject, ref, watch } from 'vue';
+const props = defineProps([ 'isReadset']);
+const readsetObj = inject('readsetObj');
+console.log(readsetObj,readsetObj.fontSize)
 
 const show = ref(props.isReadset);
 watch(()=>props.isReadset, newVal => {
     newVal && (show.value = newVal);
 },{
-    deep:true
+    immediate:true
 });
-const fontSize = ref(props.readsetObj.fontSize);
-const light = ref(props.readsetObj.light);
-const isShowOtherNote = ref(props.readsetObj.isShowOtherNote);
+const fontSize = ref(readsetObj.fontSize);
+const light = ref(readsetObj.light);
+const isShowOtherNote = ref(readsetObj.isShowOtherNote);
 
-const emit = defineEmits(['onChangeReadset','hideReadset']);
+const emit = defineEmits(['hideReadset']);
+const onChangeReadsetFn = inject('onChangeReadset');
 //关闭
 const close = () => {
-    // show.value = false;
     emit('hideReadset');
 }
 
-const onChangeReadset = (value,type)=>{
-    console.log(value,type)
- emit('onChangeReadset',type,value);
-}
-
 const onFontSizeChange =value=>{
-    emit('onChangeReadset','fontSize',value);
+    onChangeReadsetFn('fontSize',value);
 }
 const onLightChange = (value) => {
-    emit('onChangeReadset','light',value);
+    onChangeReadsetFn('light',value);
 }
 const onIsShowChange = (value)=>{
-    emit('onChangeReadset','isShowOtherNote',value);
+    onChangeReadsetFn('isShowOtherNote',value);
 }
 
 </script>
