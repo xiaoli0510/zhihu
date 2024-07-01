@@ -1,10 +1,16 @@
 <script setup>
 import { inject, ref } from 'vue';
 import LikeIcon from './LikeIcon.vue'
-const props = defineProps({'item':Object,'isMoreIcon':{
-    type:Boolean,
-    default:true
-}});
+const props = defineProps({
+    'item': Object, 'isMoreIcon': {
+        type: Boolean,
+        default: true
+    },
+    'isAllReplay': {
+        type: Boolean,
+        default: true
+    }
+});
 const item = ref(props.item);
 
 // 显示更多
@@ -64,7 +70,7 @@ const handleShowReply= ()=>{
                 <template v-for="(item1,index1) in item.subList">
                    <CommentItem @show-more="showMore" v-if="index1<=1" :item="item1" :isMoreIcon="false" />
                 </template>
-                <van-button class="view-more-btn" round  plain size="small" type="default" @click="handleShowReply(item.id)">查看全部{{item.subList.length}}条回复<van-icon name="arrow" /></van-button>
+                <van-button v-if="props.isAllReplay" class="view-more-btn" round  plain size="small" type="default" @click="handleShowReply(item.id)">查看全部{{item.subList.length}}条回复<van-icon name="arrow" /></van-button>
             </div>
         </van-col>
     </van-row>

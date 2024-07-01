@@ -16,6 +16,10 @@ import NovelRecommend from './components/search/NovelRecommend.vue'
 import throttle from 'lodash/throttle';
 import CommentPopup from '@/components/CommentPopup.vue'
 import CommentReply from '../../components/CommentReply.vue'
+import TopBookNav from '../../components/TopBookNav.vue'
+import BookShare from '../../components/BookShare.vue'
+import ReadSet from '../../components/ReadSet.vue'
+import MoreShare from '@/components/MoreShare.vue'
 
 const isTop = ref(true);
 const isTab = ref(false);
@@ -214,6 +218,36 @@ const toggleBookshelf = () => {
     isClick.value = true;
 }
 provide('toggleBookshelf', toggleBookshelf);
+
+//阅读设置的默认选项
+const readsetObj = ref({
+    fontSize: 17,
+    light: 70,
+    isShowOtherNote: true
+})
+const isReadset = ref(false);
+//显示阅读设置弹框
+const showReadset = () => {
+    isReadset.value = true;
+    hideShare();
+}
+//关闭阅读设置弹框
+const hideReadset = () => {
+    isReadset.value = false;
+}
+const onChangeReadset = (type, val) => {
+    readsetObj.value[type] = val;
+}
+//打开更多分享
+const isMoreShare = ref(false);
+const showMoreShare = () => {
+    isMoreShare.value = true;
+    hideShare();
+}
+// 关闭更多分享
+const hideMoreShare = () => {
+    isMoreShare.value = false;
+}
 </script>
 <template>
     <div class="novel-home" @scroll="scroll">
@@ -222,14 +256,7 @@ provide('toggleBookshelf', toggleBookshelf);
                 <BackIcon />
             </van-col>
             <van-col span="14" v-show="!isTop">
-                <van-row>
-                    <van-col>
-                        <van-image width="17" height="20" radius="4px" :src="obj.cover" />
-                    </van-col>
-                    <van-col>
-                        <span class="title">{{ obj.title }}</span>
-                    </van-col>
-                </van-row>
+                <TopBookNav :data="{cover:obj.cover,title:obj.title,id:props.id}"/>
             </van-col>
             <van-col span="8">
                 <Book :isHas="catalogData.isHas" :isClick="isClick"/>
@@ -266,7 +293,7 @@ provide('toggleBookshelf', toggleBookshelf);
 
         <!-- <div class="tab-wrap" :class="{ 'fixed': isTab }"> -->
         <div class="tab-wrap">
-            <van-tabs v-model:active="active" scrollspy sticky offset-top="44px">
+            <van-tabs v-model:active="active" scrollspy sticky offset-top="40px">
                 <van-tab title="简介" name="1">
                     <!-- 简介 -->
                     <div class="profile tab-list">
@@ -364,7 +391,7 @@ provide('toggleBookshelf', toggleBookshelf);
                                 </van-col>
                             </van-row>
                             <template v-for="(item, index) in commentList">
-                                <CommentItem @show-more="showMore" :item="item" @show-discuss="showDiscuss"
+                                <CommentItem @show-more="showMore" :item="item" @show-discuss="showDiscuss" :isAllReplay="false" :isMoreIcon="false"
                                     v-if="index <= 4" />
                             </template>
                             <p class="more-txt" @click="showCommentPopup">查看全部评论<van-icon name="arrow"
@@ -434,6 +461,16 @@ provide('toggleBookshelf', toggleBookshelf);
 
     <!-- 评论回复 -->
     <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
+
+        <!-- 分享 -->
+        <BookShare :item="list[0]" :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
+        @showMoreShare="showMoreShare" />
+    <!-- 更多分享 -->
+    <MoreShare v-if="isMoreShare" :isMoreShare="isMoreShare" @hideMoreShare="hideMoreShare" />
+    <!-- 阅读设置 -->
+    <ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
+        @hideMoreShare="hideMoreShare" />
+
 </template>
 <style scoped lang='scss'>
 .novel-home {

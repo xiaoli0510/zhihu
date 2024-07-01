@@ -22,6 +22,7 @@ const toggleBook = () => {
     vertical-align: text-bottom;
     color: rgb(25, 137, 250);
     margin-left: 4px;
+    font-size:13px;
 
     &.has {
       color: #b6b2b2;

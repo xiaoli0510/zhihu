@@ -15,6 +15,8 @@ import MoreShare from '@/components/MoreShare.vue'
 import debounce from 'lodash/debounce';
 import Catalog from '@/components/Catalog.vue' 
 import Book from '@/components/Bookshelf/Book.vue'
+import TopBookNav from '../../components/TopBookNav.vue'
+
 const props = defineProps(['id']);
 const id = ref(props.id);
 const isCatalog = ref(false);
@@ -52,8 +54,10 @@ const onRefresh = () => {
 };
 
 const isScrollBottom = ref(false);
+const isTop = ref(true);
 //上拉加载
 const novelScroll = (e) => {
+    e.target.scrollTop > 0 ? isTop.value = false : isTop.value = true;
     const clientHeight = e.target.clientHeight;
     const scrollHeight = e.target.scrollHeight;
     const scrollTop = e.target.scrollTop;
@@ -180,11 +184,14 @@ const enterProfile = (id)=>{
     <div class="novel-detail" @scroll="novelScroll" ref="novel" @touchstart="onTouchStart" @touchend="onTouchEnd"
         @touchmove="onTouchMove">
         <van-row align="center" justify="space-between" class="header-fixed">
-            <van-col span="4">
+            <van-col span="1">
                 <BackIcon />
-                </van-col>
-                <van-col span="9">
-                <Book :isHas="catalogData.isHas" :isClick="isClick"/>
+            </van-col>
+            <van-col span="14" v-show="!isTop">
+                <TopBookNav :data="{ cover: catalogData.cover, title: catalogData.title,id:catalogData.id }" />
+            </van-col>
+            <van-col span="9">
+                <Book :isHas="catalogData.isHas" :isClick="isClick" />
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
                 <ShareIcon @showShare="showShare" />
             </van-col>
@@ -250,7 +257,7 @@ const enterProfile = (id)=>{
 
     <!-- 评论回复 -->
     <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
-    
+
     <!-- 分享 -->
     <BookShare :item="list[0]" :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
         @showMoreShare="showMoreShare" />
@@ -260,7 +267,7 @@ const enterProfile = (id)=>{
     <ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
         @hideMoreShare="hideMoreShare" />
     <!-- 目录 -->
-    <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData"/>
+    <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData" />
 </template>
 <style scoped lang='scss'>
 .novel-detail {
