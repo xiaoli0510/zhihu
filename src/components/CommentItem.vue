@@ -99,6 +99,7 @@ const handleShowReply= ()=>{
 
         .reply {
             margin-right: 7px;
+            border:1px solid red;
         }
     }
 

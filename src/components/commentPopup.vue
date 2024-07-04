@@ -66,6 +66,7 @@ const hideMore = () => {
 const isDiscuss = ref(false);
 // 显示讨论
 const showDiscuss = (item) => {
+    console.log('isDiscuss')
     item = item || {};
     isDiscuss.value = true;
 }

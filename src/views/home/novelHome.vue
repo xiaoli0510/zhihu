@@ -140,6 +140,8 @@ const showMore = (item) => {
 const isDiscuss = ref(false);
 // 显示讨论
 const showDiscuss = (item) => {
+    console.log('1111')
+    showCommentPopup();
     item = item || {};
     isDiscuss.value = true;
 }
