@@ -1,18 +1,16 @@
 <script setup>
-import { provide, ref, watch } from 'vue';
+import {  onMounted, provide, ref, watch } from 'vue';
 import { fetchNovelDetail } from "@/api/search.js";
 import BackIcon from '@/components/BackIcon.vue'
 import UpvoteIcon from '@/components/UpvoteIcon.vue'
-import CommentIcon from '@/components/CommentIcon.vue'
 import dot from '@/assets/imgs/dot.png';
-import CommentPopup from '@/components/CommentPopup.vue'
-import CommentReply from '../../components/CommentReply.vue' 
 import { useRouter } from 'vue-router';
 import debounce from 'lodash/debounce';
 import Catalog from '@/components/Catalog.vue' 
 import Book from '@/components/Bookshelf/Book.vue'
 import TopBookNav from '../../components/TopBookNav.vue'
 import BookShare from '@/components/BookShare/Index.vue'
+import CommentReply from '@/components/CommentReply/Index.vue'
 
 const props = defineProps(['id']);
 const id = ref(props.id);
@@ -70,8 +68,16 @@ const onScroll = debounce((e) => {
 //显示评论弹框
 const isCommentPopup = ref(false);
 const commentId = ref(0);
+const commentReply = ref();
+console.log('commentReply',commentReply)
+const getCommentReply = (e)=>{
+    console.log('11111',e,e.innerText)
+}
+onMounted(()=>{
+    console.log('novel',novel,novel.value)
+    console.log(commentReply,commentReply.value)
+})
 const showCommentPopup = (id) => {
-    isCommentPopup.value = true;
     commentId.value = id;
 }
 //关闭评论弹框
@@ -137,12 +143,12 @@ const onTouchMove = (e) => {
 }
 const novel = ref();
 const onTouchEnd = (e) => {
-    if (currentY - startY <= -50 && isScrollBottom.value) {
-        novel.value.scrollTo(0, 0);
-        // 获取下一章数据
-        isScrollBottom.value = false;
-        initData(id++);
-    }
+    // if (currentY - startY <= -50 && isScrollBottom.value) {
+    //     novel.value.scrollTo(0, 0);
+    //     // 获取下一章数据
+    //     isScrollBottom.value = false;
+    //     initData(id++);
+    // }
 }
 
 //进入profile
@@ -152,7 +158,7 @@ const enterProfile = (id)=>{
 
 </script>
 <template>
-    <div class="novel-detail" @scroll="novelScroll" ref="novel" @touchstart="onTouchStart" @touchend="onTouchEnd"
+    <div class="novel-detail" ref="novel" @scroll="novelScroll" @touchstart="onTouchStart" @touchend="onTouchEnd"
         @touchmove="onTouchMove">
         <van-row align="center" justify="space-between" class="header-fixed">
             <van-col span="1">
@@ -164,13 +170,14 @@ const enterProfile = (id)=>{
             <van-col span="9">
                 <Book :isHas="catalogData.isHas" :isClick="isClick" />
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
-                <BookShare :data="list[0]" v-if="list[0]"/>
+                <BookShare :data="list[0]" v-if="list[0]" />
             </van-col>
         </van-row>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" pulling-text="下拉查看^" loosing-text="松开查看">
             <div class="novel-content">
                 <div class="novel-item" v-for="(item, index) in list" :key="index">
-                    <div class="inner" v-if="index === 0">
+                    <!-- <div class="inner"> -->
+                    <div class="inner">
                         <h1>{{ item.title }}</h1>
                         <van-row justify="start" class="author" @click="enterProfile(item.id)">
                             <van-col>
@@ -187,11 +194,15 @@ const enterProfile = (id)=>{
                             item.sentence }}</div>
                         <div class="comment-bottom" :class="{ 'pos-r': isScrollBottom }">
                             <van-row justify="space-between" algin="center">
-                                <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span>
+                                <CommentReply :item="item" :id="commentId" :ref="getCommentReply">
+                                    <span>12122</span>
+                                    <!-- <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧1~</span> -->
+                                    <!-- <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span> -->
+                                </CommentReply>
                                 <UpvoteIcon :item="item" />
-                                <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
+                                <CommentReply :item="item" :id="commentId"/>
                                 <van-icon name="list-switch" size="24px" @click="showCatalog" />
-                                <BookShare :data="{name:dot,size:'20px'}"/>
+                                <BookShare :data="{name:dot,size:'20px'}" />
                             </van-row>
                         </div>
                     </div>
@@ -215,18 +226,13 @@ const enterProfile = (id)=>{
                         </van-row>
                     </div>
                 </div>
-            </div> 
+            </div>
         </van-pull-refresh>
         <!-- 下一章 -->
         <div class="novel-next" @click="initData(id++)">
             <van-icon name="arrow-down" />
         </div>
     </div>
-    <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId"
-        v-if="isCommentPopup" />
-
-    <!-- 评论回复 -->
-    <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
 
     <!-- 目录 -->
     <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData" />

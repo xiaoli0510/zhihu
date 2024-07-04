@@ -179,7 +179,7 @@ Mock.mock("/api/comment/id", "get", {
     "list|1-10": [
       {
         id: "@increment",
-        "sort|1": [1, 2], //1热度 2最新
+        "sort|1": [0, 1, 2], //0默认 1热度 2最新
         avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
         name: "@cname",
         badge: {
@@ -196,7 +196,7 @@ Mock.mock("/api/comment/id", "get", {
         "subList|0-10":[
           {
             id: "@increment",
-            "sort|1": [1, 2], //1热度 2最新
+            "sort|1": [0, 1, 2], //0默认 1热度 2最新
             avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
             name: "@cname",
             badge: {

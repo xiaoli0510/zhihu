@@ -170,6 +170,7 @@ const submitDiscuss = () => {
 const isCommentPopup = ref(false);
 const commentId = ref(0);
 const showCommentPopup = () => {
+    console.log('showCommentPopup')
     isCommentPopup.value = true;
     commentId.value = obj.value.id;
 }
