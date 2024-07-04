@@ -2,21 +2,17 @@
 import { provide, ref, watch } from 'vue';
 import { fetchNovelDetail } from "@/api/search.js";
 import BackIcon from '@/components/BackIcon.vue'
-// import ShareIcon from '../../components/ShareIcon.vue'
 import UpvoteIcon from '@/components/UpvoteIcon.vue'
 import CommentIcon from '@/components/CommentIcon.vue'
 import dot from '@/assets/imgs/dot.png';
 import CommentPopup from '@/components/CommentPopup.vue'
 import CommentReply from '../../components/CommentReply.vue' 
 import { useRouter } from 'vue-router';
-// import BookShare from '../../components/BookShare.vue'
-// import ReadSet from '../../components/ReadSet.vue'
-// import MoreShare from '@/components/MoreShare.vue'
 import debounce from 'lodash/debounce';
 import Catalog from '@/components/Catalog.vue' 
 import Book from '@/components/Bookshelf/Book.vue'
 import TopBookNav from '../../components/TopBookNav.vue'
-import Share from '../../components/BookShare/Share.vue'
+import BookShare from '@/components/BookShare/Index.vue'
 
 const props = defineProps(['id']);
 const id = ref(props.id);
@@ -117,12 +113,6 @@ const toggleBookshelf = () => {
 }
 provide('toggleBookshelf',toggleBookshelf)
 
-//分享
-const isShare = ref(false);
-const showShare = () => {
-    isShare.value = true;
-}
-
 //阅读设置的默认选项
 const readsetObj = ref({
     fontSize: 17,
@@ -134,11 +124,7 @@ const onChangeReadset = (type, val) => {
 }
 provide('onChangeReadset',onChangeReadset);
 provide('readsetObj',readsetObj.value);
-
-// 关闭更多分享
-const hideMoreShare = () => {
-    isMoreShare.value = false;
-}
+provide('isShareDetail',true);
 
 //上拉
 let startY = 0;
@@ -178,7 +164,7 @@ const enterProfile = (id)=>{
             <van-col span="9">
                 <Book :isHas="catalogData.isHas" :isClick="isClick" />
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
-                <Share/>
+                <BookShare/>
             </van-col>
         </van-row>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" pulling-text="下拉查看^" loosing-text="松开查看">
@@ -205,8 +191,7 @@ const enterProfile = (id)=>{
                                 <UpvoteIcon :item="item" />
                                 <CommentIcon :item="item" @showCommentPopup="showCommentPopup(item.id)" />
                                 <van-icon name="list-switch" size="24px" @click="showCatalog" />
-                                <Share :data="{name:dot,size:'20px'}"/>
-                                <!-- <van-icon :name="dot" size="20px" color="#ddd" @click="showShare" /> -->
+                                <BookShare :data="{name:dot,size:'20px'}"/>
                             </van-row>
                         </div>
                     </div>

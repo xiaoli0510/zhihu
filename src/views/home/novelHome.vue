@@ -7,7 +7,7 @@ import { fetchCatalogList, fetchNovelDetail, fetchRecommendList } from '@/api/se
 import { fetchCommentList } from '@/api/index.js';
 import { useRouter } from 'vue-router';
 import Score from '../../components/Score.vue'
-import MarkScore from '../../components/MarkScore.vue'
+import MarkScore from '../../components/BookShare/MarkScore.vue'
 import FollowIcon from '@/components/FollowIcon.vue'
 import { showToast } from 'vant';
 import CommentItem from '@/components/CommentItem.vue'
@@ -17,9 +17,7 @@ import throttle from 'lodash/throttle';
 import CommentPopup from '@/components/CommentPopup.vue'
 import CommentReply from '../../components/CommentReply.vue'
 import TopBookNav from '../../components/TopBookNav.vue'
-import BookShare from '../../components/BookShare.vue'
-import ReadSet from '../../components/ReadSet.vue'
-import MoreShare from '@/components/MoreShare.vue'
+import BookShare from '@/components/BookShare/Index.vue'
 
 const isTop = ref(true);
 const isTab = ref(false);
@@ -46,11 +44,8 @@ const initData = async ()=>{
     recommendList.value = recommendData.data.list;
 }
 initData();
-
 provide('id', obj.value.id);
-
 console.log('obj', obj.value)
-
 
 const router = useRouter();
 const enterNovelHome = () => {
@@ -87,15 +82,6 @@ const showCatalog = () => {
 }
 const hideCatalog = () => {
     isCatalog.value = false;
-}
-
-//分享
-const isShare = ref(false);
-const showShare = () => {
-    isShare.value = true;
-}
-const hideShare = () => {
-    isShare.value = false;
 }
 
 //我要评论
@@ -219,36 +205,6 @@ const toggleBookshelf = () => {
 }
 provide('toggleBookshelf', toggleBookshelf);
 
-//阅读设置的默认选项
-const readsetObj = ref({
-    fontSize: 17,
-    light: 70,
-    isShowOtherNote: true
-})
-const isReadset = ref(false);
-//显示阅读设置弹框
-const showReadset = () => {
-    isReadset.value = true;
-    hideShare();
-}
-//关闭阅读设置弹框
-const hideReadset = () => {
-    isReadset.value = false;
-}
-const onChangeReadset = (type, val) => {
-    readsetObj.value[type] = val;
-}
-//打开更多分享
-const isMoreShare = ref(false);
-const showMoreShare = () => {
-    isMoreShare.value = true;
-    hideShare();
-}
-// 关闭更多分享
-const hideMoreShare = () => {
-    isMoreShare.value = false;
-}
-
 //试读
 const enterNovelDetail = ()=>{
     router.push(`/novel/detail/${props.id}`);
@@ -266,7 +222,7 @@ const enterNovelDetail = ()=>{
             <van-col span="8">
                 <Book :isHas="catalogData.isHas" :isClick="isClick"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
-                <ShareIcon @showShare="showShare" />
+                <BookShare/>
             </van-col>
         </van-row>
 
@@ -300,7 +256,7 @@ const enterNovelDetail = ()=>{
         <div class="tab-wrap">
             <van-tabs v-model:active="active" scrollspy sticky offset-top="40px">
                 <van-tab title="简介" name="1">
-                    <!-- 简介 -->
+                    <!-- 简介 --> 
                     <div class="profile tab-list">
                         <h2>简介</h2>
                         <van-text-ellipsis rows="2" :content="obj.sentence" expand-text="详情" collapse-text="收起" />
@@ -466,15 +422,6 @@ const enterNovelDetail = ()=>{
 
     <!-- 评论回复 -->
     <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
-
-        <!-- 分享 -->
-        <BookShare :item="list[0]" :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadset="showReadset"
-        @showMoreShare="showMoreShare" />
-    <!-- 更多分享 -->
-    <MoreShare v-if="isMoreShare" :isMoreShare="isMoreShare" @hideMoreShare="hideMoreShare" />
-    <!-- 阅读设置 -->
-    <ReadSet @close="hideReadset" :readsetObj="readsetObj" @onChangeReadset="onChangeReadset" :isReadset="isReadset"
-        @hideMoreShare="hideMoreShare" />
 
 </template>
 <style scoped lang='scss'>

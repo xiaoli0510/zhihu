@@ -1,8 +1,11 @@
 <script setup>
 import { inject, ref, watch } from 'vue';
 const props = defineProps([ 'isReadset']);
-const readsetObj = inject('readsetObj');
-console.log(readsetObj,readsetObj.fontSize)
+const readsetObj = inject('readsetObj',{
+    fontSize: 17,
+    light: 70,
+    isShowOtherNote: true
+});
 
 const show = ref(props.isReadset);
 watch(()=>props.isReadset, newVal => {
@@ -15,7 +18,9 @@ const light = ref(readsetObj.light);
 const isShowOtherNote = ref(readsetObj.isShowOtherNote);
 
 const emit = defineEmits(['hideReadset']);
-const onChangeReadsetFn = inject('onChangeReadset');
+const onChangeReadsetFn = inject('onChangeReadset',function(){
+    
+});
 //关闭
 const close = () => {
     emit('hideReadset');

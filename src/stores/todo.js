@@ -11,7 +11,7 @@ export const useTodoStore = defineStore("floatWatch", {
       this.watchList = watchList;
       this.total = watchList.length;
     },
-    //判断是否在在看列表中
+    //判断是否在todo在看列表中
     isInList (id) {
       const length = this.watchList.length;
       for (let i = 0; i < length; i++) {

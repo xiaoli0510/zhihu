@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, inject } from 'vue';
 import Clipboard from 'clipboard';
 import { useRouter } from 'vue-router';
 import { useTodoStore } from '@/stores/todo.js';
@@ -8,34 +8,52 @@ const props = defineProps(['isShare', 'url', 'item']);
 const showShare = ref(props.isShare);
 watch(() => props.isShare, (newVal) => {
     showShare.value = newVal;
-},{
-    immediate:true
+}, {
+    immediate: true
 });
 const item = props.item;
 const isInList = todo.isInList(item.id);
 const emit = defineEmits(['hideShare', 'showReadSet', 'showMoreShare']);
+//是否是小说详情页,详情页跟其他页的分享不一样
+const isShareDetail = inject('isShareDetail', false);
 
-const options = ref([[
-    { name: '微信好友', icon: 'wechat', className: 'wechat' },
-    { name: 'QQ', icon: 'qq', className: 'qq' },
-    { name: '复制链接', icon: 'link', className: 'copy' },
-    { name: '朋友圈', icon: 'wechat-moments', className: 'wechatMoments' },
-    { name: '分享到想法', icon: 'cluster', className: 'add' },
-    { name: '生成长图', icon: 'photo', className: 'photo' },
-    { name: '知乎私信', icon: 'share', className: 'private' },
-    { name: 'QQ空间', icon: 'star', className: 'qqzone' },
-    { name: '更多', icon: 'weapp-nav', className: 'more' },
-],
-[
-    { name: '反对', icon: 'info-o', className: 'oppose' },
-    { name: '弹评', icon: 'guide-o', className: 'comment' },
-    { name: '加入浮窗', icon: 'completed-o', className: 'floatWindow' },
-    { name: '阅读设置', icon: 'setting-o', className: 'readSet' },
-    { name: '联系小管家', icon: 'notes-o', className: 'contact' },
-],]);
-isInList ? options.value[1][2].name = '移出浮窗' : '';
-
-
+const options = ref([]);
+if (!isShareDetail) {
+    options.value = [[
+        { name: '微信好友', icon: 'wechat', className: 'wechat' },
+        { name: 'QQ', icon: 'qq', className: 'qq' },
+        { name: '复制链接', icon: 'link', className: 'copy' },
+        { name: '朋友圈', icon: 'wechat-moments', className: 'wechatMoments' },
+        { name: '分享到想法', icon: 'cluster', className: 'add' },
+        { name: '生成长图', icon: 'photo', className: 'photo' },
+        { name: '知乎私信', icon: 'share', className: 'private' },
+        { name: 'QQ空间', icon: 'star', className: 'qqzone' },
+        { name: '更多', icon: 'weapp-nav', className: 'more' },
+    ],
+    [
+        { name: '联系小管家', icon: 'notes-o', className: 'contact' },
+    ]]
+} else {
+    options.value = [[
+        { name: '微信好友', icon: 'wechat', className: 'wechat' },
+        { name: 'QQ', icon: 'qq', className: 'qq' },
+        { name: '复制链接', icon: 'link', className: 'copy' },
+        { name: '朋友圈', icon: 'wechat-moments', className: 'wechatMoments' },
+        { name: '分享到想法', icon: 'cluster', className: 'add' },
+        { name: '生成长图', icon: 'photo', className: 'photo' },
+        { name: '知乎私信', icon: 'share', className: 'private' },
+        { name: 'QQ空间', icon: 'star', className: 'qqzone' },
+        { name: '更多', icon: 'weapp-nav', className: 'more' },
+    ],
+    [
+        { name: '反对', icon: 'info-o', className: 'oppose' },
+        { name: '弹评', icon: 'guide-o', className: 'comment' },
+        { name: '加入浮窗', icon: 'completed-o', className: 'floatWindow' },
+        { name: '阅读设置', icon: 'setting-o', className: 'readSet' },
+        { name: '联系小管家', icon: 'notes-o', className: 'contact' },
+    ],];
+    isInList ? options.value[1][2].name = '移出浮窗' : '';
+}
 const router = useRouter();
 const onSelect = (option) => {
     const className = option.className;
@@ -84,6 +102,7 @@ const onSelect = (option) => {
         case 'floatWindow':
             if (option.name === '加入浮窗') {
                 todo.add(item);
+                emit('hideShare');
                 options.value[1][2].name = '移出浮窗';
                 router.go(-1);
             } else {

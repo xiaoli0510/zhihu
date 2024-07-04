@@ -3,7 +3,6 @@ import share from '@/assets/imgs/share.png';
 const props = defineProps(['data']);
 const emit = defineEmits(['showShare']);
 const showShare = () => {
-  console.log('show')
   emit('showShare');
 };
 </script>
