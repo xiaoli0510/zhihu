@@ -8,7 +8,7 @@ const showShare = () => {
 </script>
 <template>
   <span class="icon-share-item" @click="showShare">
-    <van-icon :name="props?.data?.name||share" :size="props?.data?.size||'20px'"/>
+    <van-icon :name="props?.data?.iconName||share" :size="props?.data?.iconSize||'20px'"/>
   </span>
 </template>
 <style scoped lang="scss">

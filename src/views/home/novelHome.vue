@@ -222,7 +222,7 @@ const enterNovelDetail = ()=>{
             <van-col span="8">
                 <Book :isHas="catalogData.isHas" :isClick="isClick"/>
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
-                <BookShare/>
+                <BookShare :data="obj" v-if="obj"/>
             </van-col>
         </van-row>
 

@@ -6,7 +6,7 @@ import ShareIcon from './ShareIcon.vue'
 import ReadSet from './ReadSet.vue'
 import MoreShare from '@/components/BookShare/MoreShare.vue'
 const props = defineProps(['data']);
-//分享
+//分享面板
 const isShare = ref(false);
 const showShare = () => {
     isShare.value = true;
@@ -36,15 +36,9 @@ const hideMoreShare = () => {
     isMoreShare.value = false;
 }
 
-const item =ref({
-    id:12
-});
-
-const url = ref('112');
-
 </script>
 <template>
-    <Panel :item="item" :isShare="isShare" :url="url" @hideShare="hideShare" v-if="isShare" @showReadSet="showReadSet"
+    <Panel :data="props.data" :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadSet="showReadSet"
         @showMoreShare="showMoreShare" />
     <ShareIcon @showShare="showShare" :data="props.data" />
     <!-- 更多分享 -->

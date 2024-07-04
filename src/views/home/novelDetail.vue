@@ -164,7 +164,7 @@ const enterProfile = (id)=>{
             <van-col span="9">
                 <Book :isHas="catalogData.isHas" :isClick="isClick" />
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
-                <BookShare/>
+                <BookShare :data="list[0]" v-if="list[0]"/>
             </van-col>
         </van-row>
         <van-pull-refresh v-model="loading" @refresh="onRefresh" pulling-text="下拉查看^" loosing-text="松开查看">
@@ -215,8 +215,7 @@ const enterProfile = (id)=>{
                         </van-row>
                     </div>
                 </div>
-            </div>
-
+            </div> 
         </van-pull-refresh>
         <!-- 下一章 -->
         <div class="novel-next" @click="initData(id++)">

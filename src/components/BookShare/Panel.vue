@@ -4,15 +4,14 @@ import Clipboard from 'clipboard';
 import { useRouter } from 'vue-router';
 import { useTodoStore } from '@/stores/todo.js';
 const todo = useTodoStore();
-const props = defineProps(['isShare', 'url', 'item']);
+const props = defineProps(['isShare', 'data']);
 const showShare = ref(props.isShare);
 watch(() => props.isShare, (newVal) => {
     showShare.value = newVal;
 }, {
     immediate: true
 });
-const item = props.item;
-const isInList = todo.isInList(item.id);
+const isInList = todo.isInList(props.data.id);
 const emit = defineEmits(['hideShare', 'showReadSet', 'showMoreShare']);
 //是否是小说详情页,详情页跟其他页的分享不一样
 const isShareDetail = inject('isShareDetail', false);
@@ -101,12 +100,12 @@ const onSelect = (option) => {
             break;
         case 'floatWindow':
             if (option.name === '加入浮窗') {
-                todo.add(item);
+                todo.add(props.data);
                 emit('hideShare');
                 options.value[1][2].name = '移出浮窗';
                 router.go(-1);
             } else {
-                todo.delete(item.id);
+                todo.delete(props.data.id);
                 options.value[1][2].name = '加入浮窗';
                 showToast('已移出浮窗');
             }
