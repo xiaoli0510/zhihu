@@ -71,7 +71,7 @@ const commentId = ref(0);
 const commentReply = ref();
 console.log('commentReply',commentReply)
 const getCommentReply = (e)=>{
-    console.log('11111',e,e.innerText)
+    console.log('11111',e)
 }
 onMounted(()=>{
     console.log('novel',novel,novel.value)
@@ -176,8 +176,7 @@ const enterProfile = (id)=>{
         <van-pull-refresh v-model="loading" @refresh="onRefresh" pulling-text="下拉查看^" loosing-text="松开查看">
             <div class="novel-content">
                 <div class="novel-item" v-for="(item, index) in list" :key="index">
-                    <!-- <div class="inner"> -->
-                    <div class="inner">
+                    <div class="inner" v-if="index===0">
                         <h1>{{ item.title }}</h1>
                         <van-row justify="start" class="author" @click="enterProfile(item.id)">
                             <van-col>
