@@ -7,7 +7,7 @@ import { fetchCatalogList, fetchNovelDetail, fetchRecommendList } from '@/api/se
 import { fetchCommentList } from '@/api/index.js';
 import { useRouter } from 'vue-router';
 import Score from '../../components/Score.vue'
-import MarkScore from '../../components/BookShare/MarkScore.vue'
+import MarkScore from '../../components/MarkScore.vue'
 import FollowIcon from '@/components/FollowIcon.vue'
 import { showToast } from 'vant';
 import CommentItem from '@/components/CommentItem.vue'
