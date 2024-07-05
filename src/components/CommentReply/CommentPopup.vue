@@ -65,17 +65,7 @@ const submitDiscuss = () => {
     showToast('发布成功！');
 }
 
-//toggle 点赞
-const toggleAgree = (item) => {
-    console.log(112,item)
-    if (item.isAgree) {
-        item.agreeCount--;
-    } else {
-        item.agreeCount++;
-    }
-    item.isAgree = !item.isAgree;
-}
-provide('toggleAgree',toggleAgree);
+
 </script>
 <template>
     <van-popup v-model:show="isCommentPopupRef" @click-overlay="onClickOverlay" @click-close-icon="onClickCloseIcon"

@@ -10,14 +10,16 @@ import Score from '../../components/Score.vue'
 import MarkScore from '../../components/MarkScore.vue'
 import FollowIcon from '@/components/FollowIcon.vue'
 import { showToast } from 'vant';
-import CommentItem from '@/components/CommentItem.vue'
+import CommentItem from '@/components/CommentReply/CommentItem.vue'
 import personal from '@/assets/imgs/personal.jpg';
 import NovelRecommend from './components/search/NovelRecommend.vue'
 import throttle from 'lodash/throttle';
 import CommentPopup from '@/components/CommentPopup.vue'
-import CommentReply from '../../components/CommentReply.vue'
+// import CommentReply from '../../components/CommentReply.vue'
 import TopBookNav from '../../components/TopBookNav.vue'
 import BookShare from '@/components/BookShare/Index.vue'
+import CommentReply from '@/components/CommentReply/Index.vue'
+
 
 const isTop = ref(true);
 const isTab = ref(false);
@@ -220,12 +222,12 @@ const enterNovelDetail = ()=>{
                 <BackIcon />
             </van-col>
             <van-col span="14" v-show="!isTop">
-                <TopBookNav :data="{cover:obj.cover,title:obj.title,id:props.id}"/>
+                <TopBookNav :data="{cover:obj.cover,title:obj.title,id:props.id}" />
             </van-col>
             <van-col span="8">
-                <Book :isHas="catalogData.isHas" :isClick="isClick"/>
+                <Book :isHas="catalogData.isHas" :isClick="isClick" />
                 <van-icon name="cash-back-record" color="red" size="20px" class="money" @click="enterVipWelfare" />
-                <BookShare :data="obj" v-if="obj"/>
+                <BookShare :data="obj" v-if="obj" />
             </van-col>
         </van-row>
 
@@ -247,7 +249,7 @@ const enterNovelDetail = ()=>{
             </van-row>
             <van-row class="comment-box">
                 <van-col class="score">
-                    <Score :score="obj.score" v-if="obj.score"/>
+                    <Score :score="obj.score" v-if="obj.score" />
                 </van-col>
                 <van-col class="grey-font" offset="1">{{ obj.comment }}人已评.</van-col>
                 <van-col class="comment-go" offset="1" @click="showMarkScore">我要评论<van-icon name="play" color="#f5500f"
@@ -259,7 +261,7 @@ const enterNovelDetail = ()=>{
         <div class="tab-wrap">
             <van-tabs v-model:active="active" scrollspy sticky offset-top="40px">
                 <van-tab title="简介" name="1">
-                    <!-- 简介 --> 
+                    <!-- 简介 -->
                     <div class="profile tab-list">
                         <h2>简介</h2>
                         <van-text-ellipsis rows="2" :content="obj.sentence" expand-text="详情" collapse-text="收起" />
@@ -354,10 +356,19 @@ const enterNovelDetail = ()=>{
                                     </van-row>
                                 </van-col>
                             </van-row>
-                            <template v-for="(item, index) in commentList">
-                                <CommentItem @show-more="showMore" :item="item" @show-discuss="showDiscuss" :isAllReplay="false" :isMoreIcon="false"
-                                    v-if="index <= 4" />
-                            </template>
+                            <!-- <template v-for="(item, index) in commentList"> -->
+                            <CommentReply v-for="(item, index) in commentList" :item="item" :id="replyId"
+                                :isItem="true">
+                                <template #icon>1</template>
+                            </CommentReply>
+
+
+                            <!-- <CommentItem v-for="item in commentList" :item="item" -->
+
+
+                            <!-- <CommentItem @show-more="showMore" :item="item" @show-discuss="showDiscuss" :isAllReplay="false" :isMoreIcon="false"
+                                    v-if="index <= 4" /> -->
+                            <!-- </template> -->
                             <p class="more-txt" @click="showCommentPopup">查看全部评论<van-icon name="arrow"
                                     color="#1989fa" /></p>
                         </div>
@@ -424,7 +435,8 @@ const enterNovelDetail = ()=>{
         v-if="isCommentPopup" />
 
     <!-- 评论回复 -->
-    <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" />
+    <!-- <CommentReply :item="obj" :id="replyId"/> -->
+    <!-- <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" /> -->
 
 </template>
 <style scoped lang='scss'>

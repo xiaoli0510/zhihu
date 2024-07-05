@@ -3,7 +3,7 @@ import { inject } from 'vue';
 const props = defineProps(['item','size']);
 const toggleAgreeFn = inject('toggleAgree');
 const toggleAgree = () => {
-  toggleAgreeFn(props.item);
+  toggleAgreeFn?.(props.item);
 };
 </script>
 <template>

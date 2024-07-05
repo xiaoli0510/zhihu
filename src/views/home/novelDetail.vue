@@ -1,5 +1,5 @@
 <script setup>
-import {  onMounted, provide, ref, watch,toRef } from 'vue';
+import { provide, ref, watch } from 'vue';
 import { fetchNovelDetail } from "@/api/search.js";
 import BackIcon from '@/components/BackIcon.vue'
 import UpvoteIcon from '@/components/UpvoteIcon.vue'
@@ -168,12 +168,12 @@ const showCommentPopup = ()=>{
                         <div class="comment-bottom" :class="{ 'pos-r': isScrollBottom }">
                             <van-row justify="space-between" algin="center">
                                 <CommentReply :item="item"  :id="commentId" >
-                                    <template #header="{id,togglePopup}">
+                                    <template #icon="{togglePopup}">
                                         <span class="comment-btn" @click="togglePopup">发条评论吧1~</span>
                                     </template>
                                 </CommentReply>
                                 <UpvoteIcon :item="item" />
-                                <CommentReply :item="item" :id="commentId"/>
+                                <CommentReply :item="item" :id="commentId" :isItem="false"/>
                                 <van-icon name="list-switch" size="24px" @click="showCatalog" />
                                 <BookShare :data="{name:dot,size:'20px'}" />
                             </van-row>
