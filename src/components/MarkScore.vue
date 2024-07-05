@@ -29,6 +29,7 @@ const submit = () => {
         showToast({
             message: '付费阅读内容仅会员可评论',
             position: 'bottom',
+            zIndex:3001,
         })
     }
 }

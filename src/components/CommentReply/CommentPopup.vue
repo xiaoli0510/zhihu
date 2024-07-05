@@ -19,7 +19,6 @@ fetchCommentList({ id }).then(res => {
     total.value = res.data.body.list.length;
     list.value = res.data.body.list;
     filterList.value = res.data.body.list;
-   
 }).catch((err) => {
     console.log(err)
 });
@@ -86,8 +85,7 @@ const submitDiscuss = () => {
                         </van-row>
                     </van-col>
                 </van-row>
-                <CommentItem v-for="item in filterList" :item="item"
-        />
+                <CommentItem v-for="item in filterList" :item="item"/>
             </div>
             <div class="discuss-footer">
                 <van-row align="center">

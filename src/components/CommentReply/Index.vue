@@ -6,9 +6,10 @@ import Discuss from './Discuss.vue'
 import Reply from './Reply.vue'
 import { provide, ref } from 'vue'
 import CommentItem from './CommentItem.vue'
-const props = defineProps(['item','id','isItem']);
+const props = defineProps(['item','id','hideIcon']);
 // 显示关闭讨论
 const isDiscuss = ref(false);
+
 const discussParams = ref({
     fileList: [],
     txt: '',
@@ -32,6 +33,7 @@ provide('submitDiscuss',submitDiscuss)
 const isReply = ref(false);
 const replyId = ref(0);
 const toggleReply = (id) => {
+    console.log('toggleReply')
     isReply.value = !isReply.value;
     replyId.value = id?id:0;
 }
@@ -54,7 +56,6 @@ provide('toggleMore',toggleMore);
 
 //toggle 点赞
 const toggleAgree = (item) => {
-    console.log(112,item)
     if (item.isAgree) {
         item.agreeCount--;
     } else {
@@ -64,19 +65,24 @@ const toggleAgree = (item) => {
 }
 provide('toggleAgree',toggleAgree);
 
+defineExpose({
+    toggleDiscuss,
+    toggleMore,
+    toggleReply,
+    toggleAgree,
+    togglePopup,
+})
+
 </script>
 <template>
-    <header>
-        <slot :togglePopup="togglePopup" id="123" name="icon">
+    <header v-if="!props.hideIcon">
+        <slot :togglePopup="togglePopup" name="icon">
             <CommentIcon :item="props.item" @togglePopup="togglePopup" />
         </slot>
     </header>
     <CommentPopup :isCommentPopup="isCommentPopup" @togglePopup="togglePopup" v-if="isCommentPopup" />
     <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore" />
-    <!-- 讨论 -->
     <Discuss @submit-discuss="submitDiscuss" v-if="isDiscuss" :data={isDiscuss,obj:discussParams} />
     <Reply :isReply="isReply" :id="props.id" v-if="isReply" />
-    <CommentItem :item="props.item" v-if="props.isItem"
-    />
 </template>
 <style scoped lang='scss'></style>

@@ -75,11 +75,8 @@ const enterVipWelfare = () => {
 }
 
 //目录
-const showCatalog = () => {
-    isCatalog.value = true;
-}
-const hideCatalog = () => {
-    isCatalog.value = false;
+const toggleCatalog = () => {
+    isCatalog.value = !isCatalog.value;
 }
 
 // 切换加入书架
@@ -169,12 +166,12 @@ const showCommentPopup = ()=>{
                             <van-row justify="space-between" algin="center">
                                 <CommentReply :item="item"  :id="commentId" >
                                     <template #icon="{togglePopup}">
-                                        <span class="comment-btn" @click="togglePopup">发条评论吧1~</span>
+                                        <span class="comment-btn" @click="togglePopup">发条评论吧~</span>
                                     </template>
                                 </CommentReply>
                                 <UpvoteIcon :item="item" />
-                                <CommentReply :item="item" :id="commentId" :isItem="false"/>
-                                <van-icon name="list-switch" size="24px" @click="showCatalog" />
+                                <CommentReply :item="item" :id="commentId"/>
+                                <van-icon name="list-switch" size="24px" @click="toggleCatalog" />
                                 <BookShare :data="{name:dot,size:'20px'}" />
                             </van-row>
                         </div>
@@ -208,7 +205,7 @@ const showCommentPopup = ()=>{
     </div>
 
     <!-- 目录 -->
-    <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData" />
+    <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="toggleCatalog" :data="catalogData" />
 </template>
 <style scoped lang='scss'>
 .novel-detail {

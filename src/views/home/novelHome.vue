@@ -1,5 +1,5 @@
 <script setup>
-import { provide, ref, watch } from 'vue';
+import {provide, ref, watch } from 'vue';
 import CatalogItem from '@/components/CatalogItem.vue'
 import BackIcon from '@/components/BackIcon.vue'
 import Book from '../../components/Bookshelf/Book.vue'
@@ -9,17 +9,13 @@ import { useRouter } from 'vue-router';
 import Score from '../../components/Score.vue'
 import MarkScore from '../../components/MarkScore.vue'
 import FollowIcon from '@/components/FollowIcon.vue'
-import { showToast } from 'vant';
 import CommentItem from '@/components/CommentReply/CommentItem.vue'
 import personal from '@/assets/imgs/personal.jpg';
 import NovelRecommend from './components/search/NovelRecommend.vue'
 import throttle from 'lodash/throttle';
-import CommentPopup from '@/components/CommentPopup.vue'
-// import CommentReply from '../../components/CommentReply.vue'
 import TopBookNav from '../../components/TopBookNav.vue'
 import BookShare from '@/components/BookShare/Index.vue'
 import CommentReply from '@/components/CommentReply/Index.vue'
-
 
 const isTop = ref(true);
 const isTab = ref(false);
@@ -58,8 +54,10 @@ const sortType = ref(0);//0升序 1降序
 const toggleSort = () => {
     sortType.value = sortType.value === 0 ? 1 : 0;
 }
-watch(sortType, (newVal) => {
-    if (newVal === 1) {
+const props = defineProps(['id']);
+const isCatalog = ref(false);
+watch([sortType,() => props.id], ([sortTypeVal,idVal]) => {
+    if (sortTypeVal === 1) {
         list.value.sort((a, b) => {
             return b.id - a.id;
         })
@@ -68,31 +66,22 @@ watch(sortType, (newVal) => {
             return a.id - b.id;
         })
     }
-})
-
-const props = defineProps(['id']);
-const isCatalog = ref(false);
-watch(() => props.id, () => {
-    isCatalog.value = false;
-    initData();
+    if (idVal) {
+        isCatalog.value = false;
+        initData();
+    }
 }, {
     immediate: true
 });
 //目录
-const showCatalog = () => {
-    isCatalog.value = true;
-}
-const hideCatalog = () => {
-    isCatalog.value = false;
+const toggleCatalog = () => {
+    isCatalog.value = !isCatalog.value;
 }
 
 //我要评论
 const isMarkScore = ref(false);
-const showMarkScore = () => {
-    isMarkScore.value = true;
-}
-const hideMarkScore = () => {
-    isMarkScore.value = false;
+const toggleScore = () => {
+    isMarkScore.value = !isMarkScore.value;
 }
 
 // tab
@@ -130,73 +119,12 @@ fetchCommentList({ id: obj.id }).then(res => {
 }).catch((err) => {
     console.log(err)
 });
-// 显示更多评论
-const isMoreComment = ref(false);
-const moreObj = ref(null);
-const showMore = (item) => {
-    isMoreComment.value = true;
-    moreObj.value = item;
-}
 
-//讨论
-const isDiscuss = ref(false);
-// 显示讨论
-const showDiscuss = (item) => {
-    console.log('1111')
-    showCommentPopup();
-    item = item || {};
-    isDiscuss.value = true;
-}
-const discussParams = ref({
-    fileList: [],
-    discussValue: '',
-    isSyncIdea: false
-});
-// 隐藏讨论
-const hideDiscuss = (obj) => {
-    discussParams.value = obj;
-    isDiscuss.value = false;
-}
-// 发布讨论
-const submitDiscuss = () => {
-    discussParams.value = {
-        fileList: [],
-        discussValue: '',
-        isSyncIdea: false
-    };
-    showToast('发布成功！');
-    isDiscuss.value = false;
-}
-
-//显示评论弹框
-const isCommentPopup = ref(false);
-const commentId = ref(0);
-const showCommentPopup = () => {
-    console.log('showCommentPopup')
-    isCommentPopup.value = true;
-    commentId.value = obj.value.id;
-}
-//关闭评论弹框
-const hideCommentPopup = () => {
-    isCommentPopup.value = false;
-}
 //写评论
 const addComment = () => {
-    showCommentPopup();
-    showMarkScore();
-}
-
-//显示回复弹框
-const isReply = ref(false);
-const replyId = ref(0);
-const showReply = (id) => {
-    isReply.value = true;
-    replyId.value = id;
-}
-provide('showReply', showReply);
-//关闭回复弹框
-const hideReply = () => {
-    isReply.value = false;
+    console.log(commentReply,commentReply.value)
+    commentReply.value.togglePopup?.();
+    toggleScore();
 }
 
 const enterRoster = () => {
@@ -214,6 +142,24 @@ provide('toggleBookshelf', toggleBookshelf);
 const enterNovelDetail = ()=>{
     router.push(`/novel/detail/${props.id}`);
 }
+
+const commentReply = ref();
+const toggleDiscuss = (item) => {
+    commentReply.value.toggleDiscuss?.(item);
+}
+provide('toggleDiscuss',toggleDiscuss); 
+const toggleMore = (item) => {
+    commentReply.value.toggleMore?.(item);
+}
+provide('toggleMore',toggleMore); 
+const toggleReply = (id) => {
+    commentReply.value.toggleReply?.(id);
+}
+provide('toggleReply',toggleReply); 
+const toggleAgree = (item) => {
+    commentReply.value.toggleAgree?.(item);
+}
+provide('toggleAgree',toggleAgree); 
 </script>
 <template>
     <div class="novel-home" @scroll="scroll">
@@ -252,7 +198,7 @@ const enterNovelDetail = ()=>{
                     <Score :score="obj.score" v-if="obj.score" />
                 </van-col>
                 <van-col class="grey-font" offset="1">{{ obj.comment }}人已评.</van-col>
-                <van-col class="comment-go" offset="1" @click="showMarkScore">我要评论<van-icon name="play" color="#f5500f"
+                <van-col class="comment-go" offset="1" @click="toggleScore">我要评论<van-icon name="play" color="#f5500f"
                         size="10px" /></van-col>
             </van-row>
         </div>
@@ -328,9 +274,9 @@ const enterNovelDetail = ()=>{
                                 </van-col>
                             </van-row>
                             <CatalogItem :list="list" />
-                            <p class="more-txt" @click="showCatalog">查看更多目录<van-icon name="arrow" color="#1989fa" /></p>
+                            <p class="more-txt" @click="toggleCatalog">查看更多目录<van-icon name="arrow" color="#1989fa" /></p>
                             <!-- 目录 -->
-                            <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="hideCatalog" :data="catalogData" />
+                            <Catalog v-if="isCatalog" :isCatalog="isCatalog" @close="toggleCatalog" :data="catalogData" />
                         </div>
                     </template>
                 </van-tab>
@@ -356,21 +302,13 @@ const enterNovelDetail = ()=>{
                                     </van-row>
                                 </van-col>
                             </van-row>
-                            <!-- <template v-for="(item, index) in commentList"> -->
-                            <CommentReply v-for="(item, index) in commentList" :item="item" :id="replyId"
-                                :isItem="true">
-                                <template #icon>1</template>
+                            <CommentItem v-for="item in commentList" :item="item" />
+                            <CommentReply :item="obj" :id="obj.id">
+                                <template #icon="{ togglePopup }">
+                                    <p class="more-txt" @click="togglePopup">查看全部评论<van-icon name="arrow"
+                                            color="#1989fa" /></p>
+                                </template>
                             </CommentReply>
-
-
-                            <!-- <CommentItem v-for="item in commentList" :item="item" -->
-
-
-                            <!-- <CommentItem @show-more="showMore" :item="item" @show-discuss="showDiscuss" :isAllReplay="false" :isMoreIcon="false"
-                                    v-if="index <= 4" /> -->
-                            <!-- </template> -->
-                            <p class="more-txt" @click="showCommentPopup">查看全部评论<van-icon name="arrow"
-                                    color="#1989fa" /></p>
                         </div>
                     </template>
                 </van-tab>
@@ -429,14 +367,8 @@ const enterNovelDetail = ()=>{
         </div>
     </div>
     <MarkScore :isMarkScore="isMarkScore" :data="{ id: obj.id, title: obj.title, isVip: obj.isVip }"
-        @close="hideMarkScore" />
-
-    <CommentPopup @hideCommentPopup="hideCommentPopup" :isCommentPopup="isCommentPopup" :id="commentId"
-        v-if="isCommentPopup" />
-
-    <!-- 评论回复 -->
-    <!-- <CommentReply :item="obj" :id="replyId"/> -->
-    <!-- <CommentReply @hideReply="hideReply" :id="replyId" v-if="isReply" /> -->
+        @close="toggleScore" />
+    <CommentReply :item="obj" :id="obj.id" :hideIcon="true" ref="commentReply" />
 
 </template>
 <style scoped lang='scss'>

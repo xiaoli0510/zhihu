@@ -1,8 +1,7 @@
 <script setup>
 import { fetchCommentReply } from '@/api/index.js';
 import { inject, ref, watch } from 'vue';
-import CommentItem from '@/components/CommentItem.vue';
-import CommentMore from '@/components/CommentMore.vue';
+import CommentItem from './CommentItem.vue'
 const props = defineProps({ 'id': Number,'isReply':Boolean});
 const isReply = ref(props.isReply);
 watch(()=>props.isReply,(newVal)=>{
@@ -15,7 +14,7 @@ const total = ref(0);
 fetchCommentReply({ id: props.id }).then(res => {
     total.value = res.data.body.subList.length;
     list.value = res.data.body.list;
-    subList.value = res.data.body.subList;newVal.value = true;
+    subList.value = res.data.body.subList;
 }).catch((err) => {
     console.log(err)
 });
@@ -23,14 +22,6 @@ fetchCommentReply({ id: props.id }).then(res => {
 // 显示更多
 const isMore = ref(false);
 const moreObj = ref(null);
-const showMore = (item) => {
-    isMore.value = true;
-    moreObj.value = item;
-}
-//关闭更多
-const hideMore = () => {
-    isMore.value = false;
-}
 
 const onClickCloseIcon = ()=>{
     toggleReply();
@@ -41,19 +32,18 @@ const onClickCloseIcon = ()=>{
         v-model:show="isReply" round position="bottom" :style="{ height: '94%' }">
         <div class="comment-inner">
             <div class="main-comment">
-                <h3>评论回复</h3>
-                <CommentItem @show-more="showMore" :item="list[0]" />
+                <h3>评论回复</h3>   
+                <CommentItem :item="list[0]"/>
             </div>
             <div class="comment-content">
                 <van-row justify="space-between">
                     <van-col span="5">回复 {{ total }}</van-col>
                 </van-row>
-                <CommentItem @show-more="showMore" v-for="item in subList" :item="item" />
+                <CommentItem v-for="item in subList" :item="item" />
             </div>
         </div>
         <div class="no-data" align="center">没有更多内容</div>
     </van-popup>
-    <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore" @hide-more="hideMore" />
 </template>
 <style scoped lang='scss'>
 .comment-inner {
