@@ -1,15 +1,13 @@
 <script setup>
 import { ref } from "vue";
 import BackIcon from '@/components/BackIcon.vue'
-import CommentPopup from '@/components/CommentPopup.vue'
-const value2 = ref("");
 import TopicItem from "@/views/home/components/idea/topicItem.vue";
 import { fetchTopicList } from "@/api/index.js";
 
-let list = ref([]);
-let res = await fetchTopicList();
+const value = ref("");
+const list = ref([]);
+const res = await fetchTopicList();
 list.value = res.data.list;
-
 </script>
 <template>
   <Suspense>
@@ -22,7 +20,7 @@ list.value = res.data.list;
           </van-col>
           <van-col span="23">
             <van-cell-group inset>
-              <van-field class="search" v-model="value2" clearable left-icon="search" placeholder="搜索知乎内容" />
+              <van-field class="search" v-model="value" clearable left-icon="search" placeholder="搜索知乎内容" />
             </van-cell-group></van-col>
         </van-row>
         <div class="item" v-for="(item, index) in list" :key="index">
@@ -31,7 +29,6 @@ list.value = res.data.list;
       </div>
     </template>
   </Suspense>
-<CommentPopup />
 
 </template>
 <style scoped lang="scss">

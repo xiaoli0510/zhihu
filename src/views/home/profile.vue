@@ -108,7 +108,6 @@ const selectLabel = (index) => {
                   <van-icon name="ellipsis" color="#fff" class="ellipsis" size="20px" />
                </template>
             </van-popover>
-
          </van-col>
       </van-row>
       <div class="ip"><van-icon name="location-o" color="#fff" />IP属地{{ obj.id }}</div>

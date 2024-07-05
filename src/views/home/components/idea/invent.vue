@@ -1,9 +1,9 @@
-<script setup lang='ts'>
+<script setup>
 import { useRouter } from 'vue-router';
 import personal from "@/assets/imgs/personal.jpg";
 import UpvoteIcon from "@/components/UpvoteIcon.vue";
 import CollectIcon from "@/components/CollectIcon.vue";
-import CommentIcon from "@/components/CommentIcon.vue";
+import CommentReply from '@/components/CommentReply/Index.vue'
 import MoreIcon from '@/components/MoreIcon.vue';
 const { item } = defineProps(["item"]);
 const router = useRouter();
@@ -27,8 +27,8 @@ const enterDetail = (item) => {
 }
 </script>
 <template>
-    <div class="item" @click="enterDetail(item)">
-        <div class="top">
+    <div class="item">
+        <div class="top"  @click="enterDetail(item)">
             <van-image round width="1.5rem" height="1.5rem" :src="personal" />
             <div class="right">
                 <div>{{ item.name }} <van-icon name="gem" /></div>
@@ -39,7 +39,7 @@ const enterDetail = (item) => {
                 </div>
             </div>
         </div>
-        <div class="middle">
+        <div class="middle" @click="enterDetail(item)">
             <h3>{{ item.title }}</h3>
             <p class="sentence">{{ item.sentence }}</p>
             <div class="img-wrap">
@@ -50,8 +50,8 @@ const enterDetail = (item) => {
             <van-row>
                 <van-col span="20">
                     <UpvoteIcon :item="item" />
-                    <CollectIcon :item="item"/>
-                    <CommentIcon :item="item" />
+                    <CollectIcon :item="item" />
+                    <CommentReply :item="item" :id="item.id" />
                 </van-col>
                 <van-col span="2" offset="2">
                     <MoreIcon :item="item" />

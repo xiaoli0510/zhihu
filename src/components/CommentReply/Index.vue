@@ -75,11 +75,9 @@ defineExpose({
 
 </script>
 <template>
-    <header v-if="!props.hideIcon">
-        <slot :togglePopup="togglePopup" name="icon">
-            <CommentIcon :item="props.item" @togglePopup="togglePopup" />
-        </slot>
-    </header>
+    <slot :togglePopup="togglePopup" name="icon" v-if="!props.hideIcon">
+        <CommentIcon :item="props.item" @togglePopup="togglePopup" />
+    </slot>
     <CommentPopup :isCommentPopup="isCommentPopup" @togglePopup="togglePopup" v-if="isCommentPopup" />
     <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore" />
     <Discuss @submit-discuss="submitDiscuss" v-if="isDiscuss" :data={isDiscuss,obj:discussParams} />

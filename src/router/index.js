@@ -19,7 +19,6 @@ import NovelHome from "../views/home/novelHome.vue";//小说主页
 import Roster from "../views/home/roster.vue";//获奖名单页
 import Test from "../views/home/test.vue";//测试页
 
-
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
