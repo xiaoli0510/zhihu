@@ -1,8 +1,7 @@
 <script setup>
 import comment from "@/assets/imgs/comment.png";
 const props = defineProps(["item"]);
-let item = props.item;
-
+const item = props.item;
 const emit = defineEmits(['togglePopup']);
 const showComment = (item) => {
   emit('togglePopup',item.id);
@@ -14,7 +13,6 @@ const showComment = (item) => {
     <van-icon :name="comment"  v-show="item.comment==0" size=".6rem" @click="showComment(item)" />
     <span v-show="item.comment==0" class="txt">评论</span>
   </span>
- 
 </template>
 <style scoped lang="scss">
 .comment-item {

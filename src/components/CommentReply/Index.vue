@@ -5,11 +5,9 @@ import CommentMore from './CommentMore.vue'
 import Discuss from './Discuss.vue'
 import Reply from './Reply.vue'
 import { provide, ref } from 'vue'
-import CommentItem from './CommentItem.vue'
 const props = defineProps(['item','id','hideIcon']);
 // 显示关闭讨论
 const isDiscuss = ref(false);
-
 const discussParams = ref({
     fileList: [],
     txt: '',
