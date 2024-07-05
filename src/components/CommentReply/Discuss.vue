@@ -4,20 +4,20 @@ import Vue3EmojiPicker from 'vue3-emoji-picker'
 import 'vue3-emoji-picker/css'
 
 const props = defineProps(['data']);
-const discussTxt = ref(props.data.discussParams.discussValue);
+const txt = ref(props.data.obj.txt);
 const isShow = ref(props.data.isDiscuss);
-watch(([()=>props.data.isDiscuss,()=>props.data.discussParams]),([isDiscuss,discussParams])=>{
+watch(([()=>props.data.isDiscuss,()=>props.data.obj]),([isDiscuss,obj])=>{
     isDiscuss?isShow.value = isDiscuss:'';
-    discussParams?discussTxt.value=discussParams.discussValue:'';
-    discussParams?fileList.value=discussParams.fileList:'';
-    discussParams?isSyncIdea.value=discussParams.isSyncIdea:'';
+    txt.value=obj?.txt;
+    fileList.value=obj?.fileList;
+    isSyncIdea.value=obj?.isSyncIdea;
 },{
     deep:true
 })
 const toggleDiscuss = inject('toggleDiscuss'); 
 const onClickOverlay = ()=>{
     const params = {
-        discussValue:discussTxt.value,
+        txt:txt.value,
         isSyncIdea:isSyncIdea.value,
         fileList
     }
@@ -31,7 +31,7 @@ const toggleSpread = ()=>{
     discussTextarea?.value?.focus();
 }
 
-const isSyncIdea = ref(props.data.discussParams.isSyncIdea);
+const isSyncIdea = ref(props.data.obj.isSyncIdea);
 const disabledGroups = ref["animals_nature",
   "food_drink",
   "activities",
@@ -41,15 +41,20 @@ const disabledGroups = ref["animals_nature",
   "flags"];
 
 const onChangeText = (text)=>{
-  discussTxt.value = text
+  txt.value = text
 }
 const submitDiscussFn = inject('submitDiscuss');
 
 const submitDiscuss = ()=>{
-    submitDiscussFn();
+    const params = {
+        txt:txt.value,
+        isSyncIdea:isSyncIdea.value,
+        fileList
+    }
+    submitDiscussFn(params);
 }
 
-const fileList = ref(props.data.discussParams.fileList);
+const fileList = ref(props.data.obj.fileList);
 </script>
 <template>
     <!-- 圆角弹窗（底部） -->
@@ -87,7 +92,7 @@ const fileList = ref(props.data.discussParams.fileList);
                     </van-checkbox>
                 </van-col>
                 <van-col span="3" offset="1">
-                    <van-button plain type="primary" :disabled="(discussTxt!==''&&discussTxt)||fileList.length>0?false:true" size="small" @click="submitDiscuss">发布</van-button>
+                    <van-button plain type="primary" :disabled="(txt!==''&&txt)||fileList.length>0?false:true" size="small" @click="submitDiscuss">发布</van-button>
                 </van-col>
             </van-row>
         </div>

@@ -1,5 +1,5 @@
 <script setup>
-import {  onMounted, provide, ref, watch } from 'vue';
+import {  onMounted, provide, ref, watch,toRef } from 'vue';
 import { fetchNovelDetail } from "@/api/search.js";
 import BackIcon from '@/components/BackIcon.vue'
 import UpvoteIcon from '@/components/UpvoteIcon.vue'
@@ -65,38 +65,8 @@ const onScroll = debounce((e) => {
     onScroll(e);
 }, 100);
 
-//显示评论弹框
-const isCommentPopup = ref(false);
+//评论弹框id
 const commentId = ref(0);
-const commentReply = ref();
-console.log('commentReply',commentReply)
-const getCommentReply = (e)=>{
-    console.log('11111',e)
-}
-onMounted(()=>{
-    console.log('novel',novel,novel.value)
-    console.log(commentReply,commentReply.value)
-})
-const showCommentPopup = (id) => {
-    commentId.value = id;
-}
-//关闭评论弹框
-const hideCommentPopup = () => {
-    isCommentPopup.value = false;
-}
-
-//显示回复弹框
-const isReply = ref(false);
-const replyId = ref(0);
-const showReply = (id) => {
-    isReply.value = true;
-    replyId.value = id;
-}
-provide('showReply', showReply);
-//关闭回复弹框
-const hideReply = () => {
-    isReply.value = false;
-}
 
 //进入专属会员福利
 const router = useRouter();
@@ -156,6 +126,10 @@ const enterProfile = (id)=>{
     router.push(`/profile/${id}`);
 }
 
+const showCommentPopup = ()=>{
+
+}
+
 </script>
 <template>
     <div class="novel-detail" ref="novel" @scroll="novelScroll" @touchstart="onTouchStart" @touchend="onTouchEnd"
@@ -193,10 +167,10 @@ const enterProfile = (id)=>{
                             item.sentence }}</div>
                         <div class="comment-bottom" :class="{ 'pos-r': isScrollBottom }">
                             <van-row justify="space-between" algin="center">
-                                <CommentReply :item="item" :id="commentId" :ref="getCommentReply">
-                                    <span>12122</span>
-                                    <!-- <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧1~</span> -->
-                                    <!-- <span class="comment-btn" @click="showCommentPopup(item.id)">发条评论吧~</span> -->
+                                <CommentReply :item="item"  :id="commentId" >
+                                    <template #header="{id,togglePopup}">
+                                        <span class="comment-btn" @click="togglePopup">发条评论吧1~</span>
+                                    </template>
                                 </CommentReply>
                                 <UpvoteIcon :item="item" />
                                 <CommentReply :item="item" :id="commentId"/>
@@ -328,7 +302,7 @@ const enterProfile = (id)=>{
 
 
     .comment-btn {
-        width: 40%;
+        display: inline-block;
         background: #e6e5e5;
         height: 28px;
         line-height: 28px;

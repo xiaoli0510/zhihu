@@ -1,8 +1,9 @@
 <script setup>
+import { inject } from 'vue';
 const props = defineProps(['item','size']);
-const emit = defineEmits(['toggleAgree']);
-const toggleAgree = (item) => {
-  emit('toggleAgree',props.item);
+const toggleAgreeFn = inject('toggleAgree');
+const toggleAgree = () => {
+  toggleAgreeFn(props.item);
 };
 </script>
 <template>

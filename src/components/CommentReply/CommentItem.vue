@@ -17,16 +17,6 @@ const showMore = (item) => {
     toggleMore(item);
 }
 
-//toggle 点赞
-const toggleAgree = (item) => {
-    if (item.isAgree) {
-        item.agreeCount--;
-    } else {
-        item.agreeCount++;
-    }
-    item.isAgree = !item.isAgree;
-}
-
 //编辑评论
 const toggleDiscuss = inject('toggleDiscuss');
 const editComment = (item)=>{
@@ -62,7 +52,7 @@ const handleShowReply= ()=>{
                 <van-col span="18">{{ item.time }}</van-col>
                 <van-col span="6">
                     <van-icon name="comment-circle-o" class="reply" @click="editComment(item)" size="20px"/>
-                    <LikeIcon :item="item" @toggle-agree="toggleAgree" size="17px"/>
+                    <LikeIcon :item="item" size="17px"/>
                 </van-col>
             </van-row>
             <div v-if="item.subList&&item.subList.length > 0">
@@ -98,7 +88,6 @@ const handleShowReply= ()=>{
 
         .reply {
             margin-right: 7px;
-            border:1px solid red;
         }
     }
 

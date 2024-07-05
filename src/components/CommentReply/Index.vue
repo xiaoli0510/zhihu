@@ -10,7 +10,7 @@ const props = defineProps(['item','id']);
 const isDiscuss = ref(false);
 const discussParams = ref({
     fileList: [],
-    discussValue: '',
+    txt: '',
     isSyncIdea: false
 });
 const toggleDiscuss = (item) => {
@@ -20,12 +20,8 @@ const toggleDiscuss = (item) => {
 provide('toggleDiscuss',toggleDiscuss);
 
 // 发布讨论
-const submitDiscuss = () => {
-    discussParams.value = {
-        fileList: [],
-        discussValue: '',
-        isSyncIdea: false
-    };
+const submitDiscuss = (item) => {
+    discussParams.value = item;
     showToast('发布成功！');
     isDiscuss.value = false;
 }
@@ -43,7 +39,6 @@ provide('toggleReply', toggleReply);
 //显示关闭评论弹框
 const isCommentPopup = ref(false);
 const togglePopup = ()=>{
-    console.log('CommentReply')
     isCommentPopup.value=!isCommentPopup.value;
 }
 
@@ -58,13 +53,15 @@ provide('toggleMore',toggleMore);
 
 </script>
 <template>
-    <slot>
-        <CommentIcon :item="props.item" @togglePopup="togglePopup" />
-    </slot>
-    <CommentPopup :isCommentPopup="isCommentPopup" @ ="togglePopup" v-if="isCommentPopup" />
+    <header>
+        <slot :togglePopup="togglePopup" id="123" name="header">
+            <CommentIcon :item="props.item" @togglePopup="togglePopup" />
+        </slot>
+    </header>
+    <CommentPopup :isCommentPopup="isCommentPopup" @togglePopup="togglePopup" v-if="isCommentPopup" />
     <CommentMore :item="moreObj" v-if="isMore" :isMore="isMore" />
     <!-- 讨论 -->
-    <Discuss @submit-discuss="submitDiscuss" v-if="isDiscuss" :data={isDiscuss,discussParams} />
+    <Discuss @submit-discuss="submitDiscuss" v-if="isDiscuss" :data={isDiscuss,obj:discussParams} />
     <Reply :isReply="isReply" :id="props.id" v-if="isReply" />
 
 </template>

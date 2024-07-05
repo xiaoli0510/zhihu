@@ -1,6 +1,6 @@
 <script setup>
 import { fetchCommentList } from '@/api/index.js';
-import { ref, watch,inject} from 'vue';
+import { ref, watch,inject, provide} from 'vue';
 import CommentItem from './CommentItem.vue';
 const props = defineProps({ 'isCommentPopup': Boolean, 'id': Number });
 const isCommentPopupRef = ref(props.isCommentPopup);
@@ -48,8 +48,6 @@ const changeSort = (type) => {
     sortType.value = type;
 }
 
-//讨论
-const isDiscuss = ref(false);
 // 显示讨论
 const toggleDiscuss = inject('toggleDiscuss');
 const showDiscuss = (item) => {
@@ -66,6 +64,18 @@ const submitDiscuss = () => {
     submitDiscussFn();
     showToast('发布成功！');
 }
+
+//toggle 点赞
+const toggleAgree = (item) => {
+    console.log(112,item)
+    if (item.isAgree) {
+        item.agreeCount--;
+    } else {
+        item.agreeCount++;
+    }
+    item.isAgree = !item.isAgree;
+}
+provide('toggleAgree',toggleAgree);
 </script>
 <template>
     <van-popup v-model:show="isCommentPopupRef" @click-overlay="onClickOverlay" @click-close-icon="onClickCloseIcon"
