@@ -160,6 +160,10 @@ const toggleAgree = (item) => {
     commentReply.value.toggleAgree?.(item);
 }
 provide('toggleAgree',toggleAgree); 
+
+const enterPay = ()=>{
+    router.push(`/pay/${props.id}`);
+}
 </script>
 <template>
     <div class="novel-home" @scroll="scroll">
@@ -355,7 +359,7 @@ provide('toggleAgree',toggleAgree);
                     <van-icon name="newspaper-o" size="30px" />
                     <div class="sub-txt">试读</div>
                 </van-col>
-                <van-col class="go-buy">
+                <van-col class="go-buy" @click="enterPay">
                     <div>¥ 19.90</div>
                     <div class="sub-txt">立即购买</div>
                 </van-col>
