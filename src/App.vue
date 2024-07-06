@@ -30,5 +30,6 @@ provide('reload',reload);
 <style scoped>
 .container{
   height: 100%;
+  overflow: hidden;
 }
 </style>
