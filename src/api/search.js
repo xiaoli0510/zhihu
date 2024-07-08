@@ -39,3 +39,12 @@ export async function fetchCatalogList(params){
 export async function fetchRecommendList(params){
     return await service.get('/api/novel/recommend');
 }
+//订单支付页 
+export async function fetchPay(params){
+    return await service.get('/api/pay');
+}
+//支付协议页
+export async function fetchPayProtocol(){
+    return await service.get('/api/pay/protocol');
+}
+

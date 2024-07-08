@@ -1,20 +1,16 @@
 <script setup>
 import { ref } from 'vue';
 import PayWay from '../../components/PayWay/Index.vue'
+import BackIcon from '@/components/BackIcon.vue'
 import { useRouter } from 'vue-router';
-import { showToast } from 'vant';
+import {fetchPay} from '@/api/search.js';
+const data = ref(null);
 const props = defineProps(['id']);
-console.log(props.id);
-const value1 = ref(0);
-const option1 = [];
-// const option1 = [
-//     { text: '01', value: 0 },
-//     { text: '新款商品', value: 1 },
-//     { text: '活动商品', value: 2 },
-// ];
+const res = await fetchPay({id:props.id});
+data.value = res.data.list;
 const isAnonymous = ref(true);//是否匿名参与
 
-
+//知乎币充值弹框
 const zhihuCurrency = [
     '25', '68', '198', '298', '348', '698'
 ]
@@ -24,9 +20,10 @@ const showRecharge = () => {
     isRecharge.value = true;
 }
 
+//知乎币的支付方式弹框
 const isZhihuType = ref(false);//知乎币的支付方式弹框是否显示
 const zhihuPayWay = ref('1');//知乎币充值方式 1支付宝 3微信
-//显示隐藏知乎币充值弹框
+//显示隐藏知乎币的支付方式弹框
 const togglePopup = (value) => {
     isZhihuType.value = !isZhihuType.value;
     value?zhihuPayWay.value = value:'';
@@ -47,11 +44,20 @@ const selectRechargeNum = (value) => {
     }
 }
 
+//订单支付
 const orderPayWay = ref('1');//订单支付方式 1支付宝 2知乎币 3微信
 const changeOrderPayWay = (value)=>{
     orderPayWay.value = value;
 }
 const surePay = ()=>{
+    const params = {
+        id:props.id,
+        price:data.value.price,
+        couponId:chosenCoupon.value!==-1?data.value.coupons[chosenCoupon.value].id:-1,
+        isAnonymous:isAnonymous.value,
+        way:orderPayWay.value,
+    }
+    console.log(params);
     switch(orderPayWay.value){
         case '1':
             showToast('去支付宝支付');
@@ -64,9 +70,32 @@ const surePay = ()=>{
             break;
     }
 }
+
+//优惠券
+const coupon = {
+    id: 99,
+    "available": 1,//0可用 1不可用
+    condition: '无门槛\n最多优惠12元',
+    reason: '',
+    value: 150,
+    name: '优惠券名称',
+    startAt: 1489104000,
+    endAt: 1514592000,
+    valueDesc: "1",
+    unitDesc: '元',
+}
+const showList = ref(false);
+const chosenCoupon = ref(-1);
+const onChange = (index) => {
+    showList.value = false;
+    chosenCoupon.value = index;
+};
+const onExchange = (code) => {
+    data.value.coupons.push(coupon);
+};
 </script>
 <template>
-    <van-row align="center" justify="flex-start">
+    <van-row align="center" justify="flex-start" class="header-fixed">
         <van-col span="1">
             <BackIcon />
         </van-col>
@@ -76,23 +105,18 @@ const surePay = ()=>{
         <div class="info section">
             <van-row justify="space-between" align="center">
                 <van-col span="17">
-                    <div>111</div>
-                    <div>111¥11</div>
+                    <div>{{data.title}}</div>
+                    <div>¥ {{data.price}}</div>
                 </van-col>
                 <van-col span="7">
                     <van-image width="100" height="100" radius="5px"
-                        src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
+                        :src="data.cover" />
                 </van-col>
             </van-row>
             <van-divider />
             <van-row justify="space-between">
-                <van-col>优惠券</van-col>
-                <van-col span="9" class="gray-font" v-if="option1.length == 0">暂无可使用的优惠券<van-icon
-                        name="arrow" /></van-col>
-                <van-col v-else span="7">
-                    <van-dropdown-menu>
-                        <van-dropdown-item v-model="value1" :options="option1" />
-                    </van-dropdown-menu>
+                <van-col span="24">
+                    <van-coupon-cell  class="coupons-wrap" :coupons="data.coupons" :chosen-coupon="chosenCoupon" @click="showList = true" />
                 </van-col>
             </van-row>
             <van-divider />
@@ -106,22 +130,23 @@ const surePay = ()=>{
                 </van-col>
             </van-row>
         </div>
-        <div>选择支付方式</div>
+        <div class="way-tip">选择支付方式</div>
         <div class="way section">
             <PayWay :checked="orderPayWay" @change="changeOrderPayWay">
                 <template #zhihu>
                     <van-cell clickable>
                         <template #default>
                             <van-row justify="flex-start" align="center">
-                                <van-col><van-icon name="vip-card" size="30px" color="rgb(25, 137, 250)" /></van-col>
+                                <van-col><van-icon name="vip-card" size="30px" color="var(--color-blue-text)" /></van-col>
                                 <van-col offset="1">
                                     <div class="text-l">知乎币</div>
-                                    <div class="text-l tip">剩余0（余额不足，请充值）</div>
+                                    <div class="text-l tip">剩余{{data.zhihuCurreny}} {{data.zhihuCurreny<data.price?'（余额不足，请充值）':''}}</div>
                                 </van-col>
                             </van-row>
                         </template>
                         <template #right-icon>
-                            <van-button type="primary" size="small" @click="showRecharge">充值</van-button>
+                            <van-button v-if="data.zhihuCurreny<data.price" type="primary" size="small" @click="showRecharge">充值</van-button>
+                            <van-radio name="2" v-else @click="changeOrderPayWay('2')"/>
                         </template>
                     </van-cell>
                 </template>
@@ -129,10 +154,10 @@ const surePay = ()=>{
         </div>
     </div>
     <div class="footer">
-        <p class="gray-font">支付即视为您同意 <span class="protocol-txt" @click="enterPayProtocol">支付协议</span></p>
+        <p class="gray-font tip">支付即视为您同意 <span class="protocol-txt" @click="enterPayProtocol">支付协议</span></p>
         <van-row justify="space-between" align="center">
             <van-col class="price">
-                ¥ 19.9
+                ¥ {{ data.price }}
             </van-col>
             <van-col>
                 <van-button type="primary" size="normal" color="#fb5b1b" @click="surePay">确认支付</van-button>
@@ -154,7 +179,7 @@ const surePay = ()=>{
             <van-grid-item v-for="value in zhihuCurrency" :key="value" @click="selectRechargeNum(value)">
                 <template #default>
                     <div class="zhihu-currency">
-                        <van-icon name="gold-coin-o" color="rgb(25, 137, 250)" /> {{ value }}
+                        <van-icon name="gold-coin-o" color="var(--color-blue-text)" /> {{ value }}
                     </div>
                     <div class="gray-font">¥ {{ value }}</div>
                 </template>
@@ -165,23 +190,19 @@ const surePay = ()=>{
                 支付方式
             </van-col>
             <van-col v-if="zhihuPayWay==='1'">
-                <van-icon name="alipay" size="24px" color="rgb(25, 137, 250)" />
+                <van-icon name="alipay" size="24px" color="var(--color-blue-text)"/>
                 支付宝支付
                 <van-icon name="arrow" size="17px" />
             </van-col>
             <van-col v-if="zhihuPayWay==='3'">
-                <van-icon name="wechat-pay" size="30" color="rgb(25, 137, 250)" />
+                <van-icon name="wechat-pay" size="30" color="var(--color-blue-text)" />
                 微信支付
                 <van-icon name="arrow" size="17px" />
             </van-col>
         </van-row>
         <van-divider />
-        <van-checkbox shape="square" v-model="zhihuChecked" class="gray-font">阅读并同意<span class="protocol-txt border-b" @click="enterPayProtocol">《支付协议》</span></van-checkbox>
-
-<!--         
-        <van-checkbox-group v-model="zhihuChecked" shape="square">
-            <van-checkbox name="1" class="gray-font">阅读并同意<span class="protocol-txt border-b" @click="enterPayProtocol">《支付协议》</span></van-checkbox>
-        </van-checkbox-group> -->
+        <van-checkbox shape="square" v-model="zhihuChecked" class="gray-font">阅读并同意<span class="protocol-txt border-b"
+                @click="enterPayProtocol">《支付协议》</span></van-checkbox>
         <p class="gray-font recharge-tip">
             温馨提示：所充值的金额仅限在知乎Android端使用，暂不支持文章赞赏与付费咨询业务
         </p>
@@ -190,34 +211,37 @@ const surePay = ()=>{
     <!-- 充值知乎币的付款方式弹框 -->
     <van-popup v-model:show="isZhihuType" round :style="{ padding: '14px', width: '90%' }">
         <h2>请选择付款方式</h2>
-        <PayWay @change="togglePopup" :checked="zhihuPayWay"/>
+        <PayWay @change="togglePopup" :checked="zhihuPayWay" />
+    </van-popup>
 
+    <!-- 优惠券列表 -->
+    <van-popup v-model:show="showList" round position="bottom" style="height: 90%; padding-top: 4px;">
+        <van-coupon-list :coupons="data.coupons" :chosen-coupon="chosenCoupon" :disabled-coupons="data.coupons.filter(item=>item.available===0)"
+          @change="onChange" @exchange="onExchange" />
     </van-popup>
 </template>
-<style scoped lang='scss'>
-.gray-font {
-    color: #a09f9f;
-    font-size: 12px;
-}
-.text-l {
-        text-align: left;
-    }
+<style scoped lang='scss'> 
 .main {
     background: #ebeaea;
     height: 100%;
     overflow: hidden;
-
- 
-
+    .way-tip{
+        line-height:30px;
+        padding-left:10px;
+        font-size:12px;
+    }
     .section {
         padding-left: 10px;
         background: #fff;
         margin-bottom: 20px;
-        border: 1px solid red;
         padding-bottom: 10px;
 
         &.info {
             padding-top: 20px;
+
+            .coupons-wrap {
+                font-size: 16px;
+            }
         }
 
         &.way {
@@ -239,20 +263,27 @@ const surePay = ()=>{
     width: 100%;
     background: #fff;
     padding: 10px;
+    .tip{
+        margin-bottom:20px;
+    }
 
     .price {
         color: #fb5b1b;
     }
-  
+
 }
-.zhihu-currency,.protocol-txt {
-    color: rgb(25, 137, 250);
-    &.border-b{
-        border-bottom:1px solid rgb(25, 137, 250);
+
+.zhihu-currency,
+.protocol-txt {
+    color: var(--color-blue-text);
+
+    &.border-b {
+        border-bottom: 1px solid var(--color-blue-text);
     }
 }
-.recharge-tip{
+
+.recharge-tip {
     line-height: 20px;
-    margin:20px 0;
+    margin: 20px 0;
 }
 </style>

@@ -135,3 +135,36 @@ Mock.mock("/api/todo", "get", {
     },
   ],
 });
+//订单支付页
+Mock.mock("/api/pay", "get", {
+  "list|1": [
+    {
+      id: "@increment",
+      title: "@ctitle(1,10)",
+      price: "@integer(0,100)",
+      zhihuCurreny: "@integer(0,100)",
+      "coupons|0-4":[{
+        id: "@increment",
+        code: "@ctitle(1,10)",
+        "available|1": [0,1],//0可用 1不可用
+        condition: '无门槛\n最多优惠12元',
+        reason: '',
+        value: "@integer(100,1000)",
+        name: '优惠券名称',
+        startAt: 1489104000,
+        endAt: 1514592000,
+        valueDesc: "@increment(1,10)",
+        unitDesc: '元',
+      }],
+      cover: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+    },
+  ],
+});
+//支付协议页
+Mock.mock("/api/pay/protocol", "get", {
+  "list|1": [
+    {
+      title: "支付协议",
+      sentence: "@cparagraph(100,200)",},
+  ],
+});

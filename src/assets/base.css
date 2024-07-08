@@ -34,6 +34,7 @@
   --color-text: var(--vt-c-text-light-1);
 
   --section-gap: 160px;
+  --color-blue-text:rgb(25, 137, 250);
 }
 
 @media (prefers-color-scheme: dark) {
