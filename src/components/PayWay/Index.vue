@@ -1,8 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 const props = defineProps(['checked']);
 const emit = defineEmits(['change'])
-const checked = ref('1');
+const checked = ref(props.checked);
+watch(()=>props.checked,(val)=>{
+    checked.value = val;
+})
 const changeChecked = (value) => {
     emit('change',value)
 }
@@ -15,7 +18,7 @@ const changeChecked = (value) => {
                     <van-row justify="flex-start" align="center">
                         <van-col><van-icon name="alipay" size="30px" color="rgb(25, 137, 250)" /></van-col>
                         <van-col offset="1">
-                            <div class="text-l pay-type">支付宝<van-tag color="rgb(232 160 26)" text-color="#fff">推荐</van-tag></div>
+                            <div class="text-l pay-type">支付宝<van-tag color="rgb(251, 91, 27)" text-color="#fff">推荐</van-tag></div>
                             <div class="text-l">亿万用户的选择，更快更安全</div>
                         </van-col>
                     </van-row>

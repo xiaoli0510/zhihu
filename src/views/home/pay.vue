@@ -1,6 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import PayWay from '../../components/PayWay/Index.vue'
+import { useRouter } from 'vue-router';
+import { showToast } from 'vant';
+const props = defineProps(['id']);
+console.log(props.id);
 const value1 = ref(0);
 const option1 = [];
 // const option1 = [
@@ -8,20 +12,57 @@ const option1 = [];
 //     { text: '新款商品', value: 1 },
 //     { text: '活动商品', value: 2 },
 // ];
-const checked = ref(false);
+const isAnonymous = ref(true);//是否匿名参与
+
 
 const zhihuCurrency = [
     '25', '68', '198', '298', '348', '698'
 ]
-const isRecharge = ref(false);
-const zhihuChecked = ref([1]);
+const isRecharge = ref(false);//知乎币充值弹框是否显示
+const zhihuChecked = ref(false);//知乎币充值的支付协议是否勾选
 const showRecharge = () => {
     isRecharge.value = true;
 }
 
-const isZhihuType = ref(false);
-const togglePopup = () => {
+const isZhihuType = ref(false);//知乎币的支付方式弹框是否显示
+const zhihuPayWay = ref('1');//知乎币充值方式 1支付宝 3微信
+//显示隐藏知乎币充值弹框
+const togglePopup = (value) => {
     isZhihuType.value = !isZhihuType.value;
+    value?zhihuPayWay.value = value:'';
+}
+
+const router = useRouter();
+const enterPayProtocol = ()=>{
+    router.push('/pay/protocol');
+}
+const enterRechargeProtocol = ()=>{
+    router.push('/recharge/protocol');
+}
+const selectRechargeNum = (value) => {
+    if (zhihuChecked.value) {
+        zhihuPayWay.value === '1' ? showToast('去支付宝支付') : showToast('去微信支付');
+    } else {
+        showToast('请阅读并同意《支付协议》');
+    }
+}
+
+const orderPayWay = ref('1');//订单支付方式 1支付宝 2知乎币 3微信
+const changeOrderPayWay = (value)=>{
+    orderPayWay.value = value;
+}
+const surePay = ()=>{
+    switch(orderPayWay.value){
+        case '1':
+            showToast('去支付宝支付');
+            break;
+        case '2':
+            showToast('去知乎币支付');
+            break;
+        case '3':
+            showToast('去微信支付');
+            break;
+    }
 }
 </script>
 <template>
@@ -61,13 +102,13 @@ const togglePopup = () => {
                     <div class="gray-font">以匿名身份参与互动，参与记录仅自己可见</div>
                 </van-col>
                 <van-col span="4">
-                    <van-switch v-model="checked" />
+                    <van-switch v-model="isAnonymous" />
                 </van-col>
             </van-row>
         </div>
         <div>选择支付方式</div>
         <div class="way section">
-            <PayWay>
+            <PayWay :checked="orderPayWay" @change="changeOrderPayWay">
                 <template #zhihu>
                     <van-cell clickable>
                         <template #default>
@@ -88,13 +129,13 @@ const togglePopup = () => {
         </div>
     </div>
     <div class="footer">
-        <p class="gray-font">支付即视为您同意 <a href="#">支付协议</a></p>
+        <p class="gray-font">支付即视为您同意 <span class="protocol-txt" @click="enterPayProtocol">支付协议</span></p>
         <van-row justify="space-between" align="center">
             <van-col class="price">
                 ¥ 19.9
             </van-col>
             <van-col>
-                <van-button type="primary" size="normal" color="rgb(232 160 26)">确认支付</van-button>
+                <van-button type="primary" size="normal" color="#fb5b1b" @click="surePay">确认支付</van-button>
             </van-col>
         </van-row>
     </div>
@@ -105,12 +146,12 @@ const togglePopup = () => {
             <van-col>
                 <h2>充值须知</h2>
             </van-col>
-            <van-col class="gray-font">
+            <van-col class="gray-font" @click="enterRechargeProtocol">
                 <van-icon name="info-o" />充值知乎币
             </van-col>
         </van-row>
         <van-grid square :column-num="3">
-            <van-grid-item v-for="value in zhihuCurrency" :key="value" icon="photo-o" text="文字">
+            <van-grid-item v-for="value in zhihuCurrency" :key="value" @click="selectRechargeNum(value)">
                 <template #default>
                     <div class="zhihu-currency">
                         <van-icon name="gold-coin-o" color="rgb(25, 137, 250)" /> {{ value }}
@@ -119,20 +160,28 @@ const togglePopup = () => {
                 </template>
             </van-grid-item>
         </van-grid>
-        <van-row justify="space-between" align="center" @click="togglePopup">
+        <van-row justify="space-between" align="center" @click="togglePopup()">
             <van-col>
                 支付方式
             </van-col>
-            <van-col>
+            <van-col v-if="zhihuPayWay==='1'">
                 <van-icon name="alipay" size="24px" color="rgb(25, 137, 250)" />
                 支付宝支付
                 <van-icon name="arrow" size="17px" />
             </van-col>
+            <van-col v-if="zhihuPayWay==='3'">
+                <van-icon name="wechat-pay" size="30" color="rgb(25, 137, 250)" />
+                微信支付
+                <van-icon name="arrow" size="17px" />
+            </van-col>
         </van-row>
         <van-divider />
+        <van-checkbox shape="square" v-model="zhihuChecked" class="gray-font">阅读并同意<span class="protocol-txt border-b" @click="enterPayProtocol">《支付协议》</span></van-checkbox>
+
+<!--         
         <van-checkbox-group v-model="zhihuChecked" shape="square">
-            <van-checkbox name="1" class="gray-font">阅读并同意<a href="#">《支付协议》</a></van-checkbox>
-        </van-checkbox-group>
+            <van-checkbox name="1" class="gray-font">阅读并同意<span class="protocol-txt border-b" @click="enterPayProtocol">《支付协议》</span></van-checkbox>
+        </van-checkbox-group> -->
         <p class="gray-font recharge-tip">
             温馨提示：所充值的金额仅限在知乎Android端使用，暂不支持文章赞赏与付费咨询业务
         </p>
@@ -141,7 +190,7 @@ const togglePopup = () => {
     <!-- 充值知乎币的付款方式弹框 -->
     <van-popup v-model:show="isZhihuType" round :style="{ padding: '14px', width: '90%' }">
         <h2>请选择付款方式</h2>
-        <PayWay @change="togglePopup"/>
+        <PayWay @change="togglePopup" :checked="zhihuPayWay"/>
 
     </van-popup>
 </template>
@@ -176,7 +225,7 @@ const togglePopup = () => {
             margin-left: -24px;
 
             .tip {
-                color: rgb(232 160 26);
+                color: #fb5b1b;
             }
 
         }
@@ -192,12 +241,15 @@ const togglePopup = () => {
     padding: 10px;
 
     .price {
-        color: rgb(232 160 26);
+        color: #fb5b1b;
     }
+  
 }
-
-.zhihu-currency {
+.zhihu-currency,.protocol-txt {
     color: rgb(25, 137, 250);
+    &.border-b{
+        border-bottom:1px solid rgb(25, 137, 250);
+    }
 }
 .recharge-tip{
     line-height: 20px;
