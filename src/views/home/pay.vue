@@ -56,8 +56,7 @@ const surePay = ()=>{
         couponId:chosenCoupon.value!==-1?data.value.coupons[chosenCoupon.value].id:-1,
         isAnonymous:isAnonymous.value,
         way:orderPayWay.value,
-    }
-    console.log(params);
+    };
     switch(orderPayWay.value){
         case '1':
             showToast('去支付宝支付');

@@ -164,7 +164,17 @@ Mock.mock("/api/pay", "get", {
 Mock.mock("/api/pay/protocol", "get", {
   "list|1": [
     {
+      id: "@increment",
       title: "支付协议",
+      sentence: "@cparagraph(100,200)",},
+  ],
+});
+//充值须知页
+Mock.mock("/api/recharge/protocol", "get", {
+  "list|1": [
+    {
+      id: "@increment",
+      title: "充值须知",
       sentence: "@cparagraph(100,200)",},
   ],
 });

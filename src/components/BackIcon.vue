@@ -1,12 +1,23 @@
 <script setup lang='ts'>
 import { useRouter } from 'vue-router';
 const router = useRouter();
-const {color,size} = defineProps(['color','size']);
+const props = defineProps({
+    color:{
+        type:String,
+    },
+    size:{
+        type:String,
+    },
+    iconName:{
+        type:String,
+        default:'arrow-left',
+    }
+})
 const back = () => {
     router.go(-1);
 };
 </script>
 <template>
-    <van-icon name="arrow-left" @click="back" :color="color" :size="size"/>
+    <van-icon :name="props.iconName" @click="back" :color="props.color" :size="props.size"/>
 </template>
 <style scoped lang='scss'></style>

@@ -1,20 +1,21 @@
 <script setup>
-import BackIcon from '@/components/BackIcon.vue'
-import {fetchPayProtocol} from '@/api/search.js';
+import { fetchPayProtocol } from '@/api/search.js';
+import Header from '@/components/Protocol/Header.vue';
 const res = await fetchPayProtocol();
 const data = res.data.list;
-
-  
 </script>
 <template>
-       <van-row align="center" justify="flex-start" class="header-fixed">
-        <van-col span="1">
-            <BackIcon />
-        </van-col>
-        <van-col offset="1">{{data.title}}</van-col>
-    </van-row>
-    <h2 class="text-c">{{data.title}}</h2>
-    <p>{{data.sentence}}</p>
+    <Header :title="data.title"/>
+    <div class="protocol-main">
+        <h2 class="text-c">{{ data.title }}</h2>
+        <p>{{ data.sentence }}</p>
+    </div>
 </template>
 <style scoped lang='scss'>
+.protocol-main {
+    padding: 10px 10px;
+    height: calc(100% - 60px);
+    box-sizing: content-box;
+    overflow: auto;
+}
 </style>

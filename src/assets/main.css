@@ -13,6 +13,7 @@
   }
   .header-fixed {
       height: 40px;
+      padding:0 5px;
   }
   .gray-font {
       color: #a09f9f;
