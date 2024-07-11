@@ -41,7 +41,7 @@ const initData = async ()=>{
     const recommendData = await fetchRecommendList();
     recommendList.value = recommendData.data.list;
 }
-initData();
+await initData();
 provide('id', obj.value.id);
 console.log('obj', obj.value)
 
@@ -122,7 +122,6 @@ fetchCommentList({ id: obj.id }).then(res => {
 
 //写评论
 const addComment = () => {
-    console.log(commentReply,commentReply.value)
     commentReply.value.togglePopup?.();
     toggleScore();
 }
@@ -164,6 +163,10 @@ provide('toggleAgree',toggleAgree);
 const enterPay = ()=>{
     router.push(`/pay/${props.id}`);
 }
+
+const enterYanxuanVip = ()=>{
+    router.push('/yanxuanVip');
+}
 </script>
 <template>
     <div class="novel-home" @scroll="scroll">
@@ -192,7 +195,7 @@ const enterPay = ()=>{
                         <van-col class="grey-font" span="24">{{ obj.view }} 人正在看 | 共 {{ obj.total }}篇</van-col>
                         <van-col span="24">
                             <span class="charge">会员免费</span>
-                            <span class="origin-price grey-font">¥12.2</span>
+                            <span class="origin-price grey-font">¥{{ obj.price }}</span>
                         </van-col>
                     </van-row>
                 </van-col>
@@ -360,10 +363,10 @@ const enterPay = ()=>{
                     <div class="sub-txt">试读</div>
                 </van-col>
                 <van-col class="go-buy" @click="enterPay">
-                    <div>¥ 19.90</div>
+                    <div>¥ {{ obj.price }}</div>
                     <div class="sub-txt">立即购买</div>
                 </van-col>
-                <van-col class="vip-new">
+                <van-col class="vip-new" @click="enterYanxuanVip">
                     <div>新会员首月仅9元</div>
                     <div class="sub-txt">此内容会员免费看</div>
                 </van-col>

@@ -20,6 +20,8 @@ import Roster from "../views/home/roster.vue";//获奖名单页
 import Pay from "../views/home/pay.vue";//付款订单页
 import PayProtocol from "../views/home/payProtocol.vue";//支付协议页
 import RechargeProtocol from "../views/home/rechargeProtocol.vue";//充值须知
+import YanxuanVip from "../views/home/yanxuanVip.vue";//盐选会员
+
 
 import Test from "../views/home/test.vue";//测试页
 
@@ -157,6 +159,12 @@ const router = createRouter({
       name: "rechargeProtocol",
       component:RechargeProtocol,
     },
+    {
+      path: "/yanxuanVip",
+      name: "yanxuanVip",
+      component:YanxuanVip,
+    },
+    
     
   ],
 });
