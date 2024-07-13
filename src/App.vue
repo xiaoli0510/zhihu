@@ -29,7 +29,6 @@ provide('reload',reload);
 </template>
 <style scoped>
 .container{
-  height: 100%;
-  overflow: hidden;
+  height: 100%; 
 }
 </style>

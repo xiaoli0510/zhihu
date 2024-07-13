@@ -27,7 +27,7 @@ const changeChecked = (value) => {
                     <van-radio name="1" />
                 </template>
             </van-cell>
-            <slot name="zhihu">
+            <slot name="otherWay">
             </slot>
             <van-cell clickable @click="changeChecked('3')">
                 <template #default>

@@ -132,7 +132,7 @@ const onExchange = (code) => {
         <div class="way-tip">选择支付方式</div>
         <div class="way section">
             <PayWay :checked="orderPayWay" @change="changeOrderPayWay">
-                <template #zhihu>
+                <template #otherWay>
                     <van-cell clickable>
                         <template #default>
                             <van-row justify="flex-start" align="center">
