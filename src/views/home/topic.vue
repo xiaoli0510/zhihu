@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { provide, ref } from "vue";
 import BackIcon from '@/components/BackIcon.vue'
 import TopicItem from "@/views/home/components/idea/topicItem.vue";
 import { fetchTopicList } from "@/api/index.js";
@@ -8,6 +8,11 @@ const value = ref("");
 const list = ref([]);
 const res = await fetchTopicList();
 list.value = res.data.list;
+
+const toggleFollow = (item)=>{
+  item.isFollow = !item.isFollow;
+}
+provide('toggleFollow',toggleFollow);
 </script>
 <template>
   <Suspense>

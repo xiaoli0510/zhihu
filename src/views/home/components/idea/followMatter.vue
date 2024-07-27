@@ -25,7 +25,7 @@ const { item } = defineProps(["item"]);
                 <van-col span="20">
                     <AnswerIcon />
                     <InviteIcon/>
-                    <FollowIcon/>
+                    <FollowIcon :item="item"/>
                 </van-col>
                 <van-col span="2" offset="2">
                     <MoreIcon :item="item"/>

@@ -1,13 +1,28 @@
 <script setup>
-const props = defineProps(['isFollow']);
-const emit = defineEmits(['toggleFollow']);
+import { inject } from 'vue';
+const props = defineProps(['item']);
+const toggleFollowFn = inject('toggleFollow');
 const toggleFollow = ()=>{
-  emit('toggleFollow');
+  if (props.item.isFollow === true) {
+        showConfirmDialog({
+            message:
+                '确定不再关注吗？',
+            confirmButtonText: '不再关注',
+            showCancelButton: true,
+        }).then(() => {
+          
+        toggleFollowFn(props.item);
+        }).catch(() => {
+        })
+    } else {
+        toggleFollowFn(props.item);
+    }
+
 }
 </script>
 <template>
   <span class="item">
-    <van-button v-if="props.isFollow" size="small" plain round @click="toggleFollow">已关注</van-button>
+    <van-button v-if="props.item.isFollow" size="small" plain round @click="toggleFollow">已关注</van-button>
     <van-button v-else size="small" plain round icon="plus" type="primary" @click="toggleFollow">关注</van-button>
   </span>
 </template>

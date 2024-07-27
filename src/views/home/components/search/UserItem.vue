@@ -1,31 +1,17 @@
-<script setup lang='ts'>
-import { ref } from 'vue';
+<script setup>
+import { provide } from 'vue';
 import { useRouter } from 'vue-router';
 const props = defineProps(['item']);
 const item = props.item;
-
-
-const isFollow = ref(false);
-const toggleFollow = () => {
-    if (isFollow.value === true) {
-        showConfirmDialog({
-            message:
-                '确定不再关注吗？',
-            confirmButtonText: '不再关注',
-            showCancelButton: true,
-        }).then(() => {
-            return isFollow.value = !isFollow.value;
-        }).catch(() => {
-        })
-    } else {
-        isFollow.value = !isFollow.value;
-    }
-}
-
 const router = useRouter();
 const enterProfile = (id) => {
     router.push(`/profile/${id}`)
 }
+
+const toggleFollow = (item)=>{
+  item.isFollow = !item.isFollow;
+}
+provide('toggleFollow',toggleFollow);
 </script>
 <template>
     <van-row class="user-item" justify="space-around"
@@ -40,9 +26,7 @@ const enterProfile = (id) => {
                     <van-text-ellipsis class="sentence" :content="item.sentence" />
                 </van-col>
                 <van-col span="6">
-                    <van-button icon="plus" type="primary" round size="small" @click.stop="toggleFollow"
-                        v-if="!isFollow">关注</van-button>
-                    <van-button color="#ccc" round size="small" @click.stop="toggleFollow" v-else>已关注</van-button>
+                    <FollowIcon :item="item"/>
                 </van-col>
             </van-row>
             <div class="info">{{ item.beFollow }}人关注 {{ item.product }}个创造</div>

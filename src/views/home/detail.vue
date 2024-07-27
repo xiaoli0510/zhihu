@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { provide, ref } from 'vue';
 import InviteIcon from '@/components/InviteIcon.vue'
 import AnswerIcon from '@/components/AnswerIcon.vue'
 import TopicItem from '@/views/home/components/idea/topicItem.vue'
@@ -10,12 +10,17 @@ fetchTopicList()
     .then(res => {
         list.value = res.data.list;
     });
+
+const toggleFollow = (item) => {
+    item.isFollow = !item.isFollow;
+}
+provide('toggleFollow', toggleFollow);
 </script>
 <template>
     <div class="detail-wrap">
         <van-row align="center" justify="space-between">
             <van-col span="4">
-                <BackIcon/>
+                <BackIcon />
             </van-col>
             <van-col span="9">
                 <InviteIcon />

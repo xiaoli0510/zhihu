@@ -107,11 +107,6 @@ const enterProfile = () => {
     })
 }
 
-//关注
-const toggleFollow = () => {
-    obj.value.isFollow = !obj.value.isFollow;
-}
-
 //评论
 const commentList = ref([]);
 fetchCommentList({ id: obj.id }).then(res => {
@@ -250,7 +245,7 @@ const enterYanxuanVip = ()=>{
                                 </van-row>
                             </van-col>
                             <van-col offset="1" span="5">
-                                <FollowIcon :isFollow="obj.isFollow" @toggleFollow="toggleFollow" />
+                                <FollowIcon :item="obj"/>
                             </van-col>
                             <van-col span="24">代表作
                                 <span v-for="item in obj.classic">《{{ item }}》</span>

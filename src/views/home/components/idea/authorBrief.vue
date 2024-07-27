@@ -1,21 +1,22 @@
-<script setup lang='ts'>
+<script setup>
 import { useRouter  } from 'vue-router';
 import shareIcon from "@/assets/imgs/share.png";
+import FollowIcon from '@/components/FollowIcon.vue';
+
 const router = useRouter();
 const { item } = defineProps(['item']);
 const enterProfile = (id) => {
  router.push(`/profile/${id}`)
 }
-
 </script>
 <template>
   <!-- 关注分享 -->
   <div class="author">
-    <van-row align="center" @click="enterProfile(item.id)">
-      <van-col span="3"><van-image round width="1rem" height="1rem" :src="item.avatar" /></van-col>
+    <van-row align="center">
+      <van-col span="3"><van-image  @click="enterProfile(item.id)" round width="1rem" height="1rem" :src="item.avatar" /></van-col>
       <van-col span="13">
         <van-row>
-          <van-col span="24">
+          <van-col span="24" @click="enterProfile(item.id)">
             <van-row>
               <van-col span="7">{{ item.author }}</van-col>
               <van-col span="16" offset="1"><van-icon name="gem" /></van-col> </van-row></van-col>
@@ -23,7 +24,7 @@ const enterProfile = (id) => {
         </van-row>
       </van-col>
       <van-col offset="1" span="5">
-        <van-button size="small" plain round icon="plus" type="primary">关注</van-button>
+        <FollowIcon :item="item"/>
       </van-col>
       <van-col span="2">
         <van-icon :name="shareIcon" size=".7rem" />

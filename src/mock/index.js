@@ -31,6 +31,7 @@ Mock.mock("/api/topic", "get", {
       avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
       title: "@ctitle(1,10)",
       detail: "@cparagraph(1,10)",
+      isFollow:"@boolean",
       author: "@cname",
       "career|+1": [
         "Java",
