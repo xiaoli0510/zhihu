@@ -5,6 +5,7 @@ import CollectIcon from "@/components/CollectIcon.vue";
 import AuthorBrief from "@/views/home/components/idea/AuthorBrief.vue";
 import CommentReply from '@/components/CommentReply/Index.vue'
 import { showImagePreview } from "vant";
+import { ref,provide } from "vue";
 const props = defineProps({
   item: { type: Object, required: true },
   showComment:Function,
@@ -16,6 +17,19 @@ const emit = defineEmits(['showComment']);
 const handlePreviewImg = () => {
   showImagePreview(["https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"]);
 };
+
+//阅读设置的默认选项
+const readsetObj = ref({
+    fontSize: 17,
+    light: 70,
+    isShowOtherNote: true
+})
+const onChangeReadset = (type, val) => {
+    readsetObj.value[type] = val;
+}
+provide('onChangeReadset',onChangeReadset);
+provide('readsetObj',readsetObj.value);
+provide('isShareDetail',true);
 </script>
 <template>
   <!-- 关注分享 -->
@@ -29,7 +43,7 @@ const handlePreviewImg = () => {
       ><h2>{{ item.title }}</h2></van-col
     >
     <van-col span="24" class="txt-wrap">
-      <span class="depict-txt">{{ item.detail }}</span>
+      <span class="depict-txt" :style="{ fontSize: readsetObj.fontSize + 'px' }">{{ item.detail }}</span>
       <span class="label-txt" v-for="word in item.label"># {{ word }}</span>
     </van-col>
     <van-col span="24" class="img-wrap"

@@ -1,7 +1,8 @@
 <script setup>
 import { useRouter  } from 'vue-router';
-import shareIcon from "@/assets/imgs/share.png";
 import FollowIcon from '@/components/FollowIcon.vue';
+import BookShare from '@/components/BookShare/Index.vue'
+import { provide } from 'vue';
 
 const router = useRouter();
 const { item } = defineProps(['item']);
@@ -27,7 +28,7 @@ const enterProfile = (id) => {
         <FollowIcon :item="item"/>
       </van-col>
       <van-col span="2">
-        <van-icon :name="shareIcon" size=".7rem" />
+        <BookShare :data="item" v-if="item"/>
       </van-col>
     </van-row>
   </div>
