@@ -2,7 +2,6 @@
 import { useRouter  } from 'vue-router';
 import FollowIcon from '@/components/FollowIcon.vue';
 import BookShare from '@/components/BookShare/Index.vue'
-import { provide } from 'vue';
 
 const router = useRouter();
 const { item } = defineProps(['item']);

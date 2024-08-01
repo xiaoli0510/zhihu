@@ -17,10 +17,14 @@ const enterSearch = () => {
     name: 'search'
   })
 }
+
+const enterRecent = () => {
+  router.push('/recent');
+}
 </script>
 <template>
   <div class="header">
-    <van-icon :name="recent" class="recent" />
+    <van-icon :name="recent" class="recent" @click="enterRecent"/>
     <van-tabs v-model:active="activeName" class="top-tab">
       <van-tab v-for="item in tabArray" :title="item.title" :name="item.value">
       </van-tab>

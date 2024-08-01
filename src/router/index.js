@@ -21,6 +21,8 @@ import Pay from "../views/home/pay.vue";//付款订单页
 import PayProtocol from "../views/home/payProtocol.vue";//支付协议页
 import RechargeProtocol from "../views/home/rechargeProtocol.vue";//充值须知
 import YanxuanVip from "../views/home/yanxuanVip.vue";//盐选会员
+import Subject from "../views/home/subject.vue";//关键字的讨论 想法 待回答 综合页
+import Recent from "../views/home/recent.vue";//关键字的讨论 想法 待回答 综合页
 
 
 import Test from "../views/home/test.vue";//测试页
@@ -164,6 +166,18 @@ const router = createRouter({
       name: "yanxuanVip",
       component:YanxuanVip,
     },
+    {
+      path: "/subject/:keyWord",
+      name: "subject",
+      component:Subject,
+      props:true,
+    },
+    {
+      path: "/recent",
+      name: "Recent",
+      component:Recent,
+    },
+    
     
     
   ],

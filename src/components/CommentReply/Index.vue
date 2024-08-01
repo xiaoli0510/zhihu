@@ -40,6 +40,7 @@ provide('toggleReply', toggleReply);
 //显示关闭评论弹框
 const isCommentPopup = ref(false);
 const togglePopup = ()=>{
+    console.log(1)
     isCommentPopup.value=!isCommentPopup.value;
 }
 

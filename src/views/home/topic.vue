@@ -29,7 +29,7 @@ provide('toggleFollow',toggleFollow);
             </van-cell-group></van-col>
         </van-row>
         <div class="item" v-for="(item, index) in list" :key="index">
-          <TopicItem :item="item" />
+          <TopicItem :item="item"/>
         </div>
       </div>
     </template>
