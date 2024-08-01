@@ -14,6 +14,8 @@ const toggleAgree = () => {
 </template>
 <style scoped lang="scss">
 .icon-like-item {
+  margin: 0 1%;
+  display:inline-block;
   .txt {
     font-size:12px;
     color:#686767;

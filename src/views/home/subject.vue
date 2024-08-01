@@ -1,13 +1,11 @@
 <script setup>
 import BackIcon from '@/components/BackIcon.vue'
 import FollowIcon from '@/components/FollowIcon.vue'
-import ShareIcon from '@/components/BookShare/ShareIcon.vue'
 import { provide, ref } from 'vue';
 import SubjectDiscuss from './subject/Discuss.vue'
+import BookShare from '@/components/BookShare/Index.vue';
 
 const props = defineProps(['keyWord']);
-console.log(props.keyWord);
-
 const item = ref({
     id: 1,
     name: '张三',
@@ -36,7 +34,7 @@ const tabLabel = ref({
                 </van-col>
                 <van-col span="6">
                     <FollowIcon :item="item" />
-                    <ShareIcon :data="{ iconName: 'ellipsis', iconSize: '25px' }" />
+                    <BookShare :data="{ iconName: 'ellipsis', size: '20px' }" />
                 </van-col>
             </van-row>
             <h3 class="title-word"><van-icon name="chat" color="#1989fa" />{{ props.keyWord }}</h3>
@@ -44,13 +42,14 @@ const tabLabel = ref({
                 1亿浏览.7.1万讨论
             </p>
         </div>
-
-        <van-tabs v-model:active="activeName" shrink class="tab-wrap">
-            <van-tab v-for="(item,index) in tabLabel" :title="item" :name="index">
-                内容 {{ index }}
-                <SubjectDiscuss />
-            </van-tab>
-        </van-tabs>
+        <div class="tab-wrap">
+            <van-tabs v-model:active="activeName" shrink>
+                <van-tab v-for="(item, index) in tabLabel" :title="item" :name="index">
+                    <van-divider />
+                    <SubjectDiscuss />
+                </van-tab>
+            </van-tabs>
+        </div>
     </div>
 </template>
 <style scoped lang='scss'>
@@ -60,12 +59,18 @@ const tabLabel = ref({
     .top {
         width: 95%;
         margin: 0 auto;
-        .title-word{
-            margin:2% 0 1% 0;
+        line-height: 40px;
+
+        .title-word {
+            margin: 2% 0 1% 0;
         }
     }
-    .tab-wrap{
+
+    .tab-wrap {
         border-radius: 10px 10px 0 0;
+        background: #fff;
+        padding-top: 10px;
+        margin-top: 4%;
     }
 }
 </style>

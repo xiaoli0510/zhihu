@@ -88,12 +88,12 @@ Mock.mock("/api/search/novel/detail", "get", {
       upvote: "@integer(0,100)",
       comment: "@integer(0,100)",
       cover: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
-      score:"@integer(0,10)",
-      view:"@integer(0,10)",
-      price:"@integer(0,10)",
-      'isVip':"@boolean",
-      'isFollow':"@boolean",
-      'isHas':"@boolean",
+      score: "@integer(0,10)",
+      view: "@integer(0,10)",
+      price: "@integer(0,10)",
+      isVip: "@boolean",
+      isFollow: "@boolean",
+      isHas: "@boolean",
     },
   ],
 });
@@ -144,19 +144,21 @@ Mock.mock("/api/pay", "get", {
       title: "@ctitle(1,10)",
       price: "@integer(0,100)",
       zhihuCurreny: "@integer(0,100)",
-      "coupons|0-4":[{
-        id: "@increment",
-        code: "@ctitle(1,10)",
-        "available|1": [0,1],//0可用 1不可用
-        condition: '无门槛\n最多优惠12元',
-        reason: '',
-        value: "@integer(100,1000)",
-        name: '优惠券名称',
-        startAt: 1489104000,
-        endAt: 1514592000,
-        valueDesc: "@increment(1,10)",
-        unitDesc: '元',
-      }],
+      "coupons|0-4": [
+        {
+          id: "@increment",
+          code: "@ctitle(1,10)",
+          "available|1": [0, 1], //0可用 1不可用
+          condition: "无门槛\n最多优惠12元",
+          reason: "",
+          value: "@integer(100,1000)",
+          name: "优惠券名称",
+          startAt: 1489104000,
+          endAt: 1514592000,
+          valueDesc: "@increment(1,10)",
+          unitDesc: "元",
+        },
+      ],
       cover: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
     },
   ],
@@ -167,7 +169,8 @@ Mock.mock("/api/pay/protocol", "get", {
     {
       id: "@increment",
       title: "支付协议",
-      sentence: "@cparagraph(100,200)",},
+      sentence: "@cparagraph(100,200)",
+    },
   ],
 });
 //充值须知页
@@ -176,6 +179,45 @@ Mock.mock("/api/recharge/protocol", "get", {
     {
       id: "@increment",
       title: "充值须知",
-      sentence: "@cparagraph(100,200)",},
+      sentence: "@cparagraph(100,200)",
+    },
+  ],
+});
+
+// //subject页 讨论
+// Mock.mock("/api/subject/discuss", "get", {
+//   "list|4-10": [
+//     {
+//       "type|1": [1, 2, 3], //1精华 2最热 2最新"
+//       id: "@increment",
+//       name: "@cname",
+//       avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+//       title: "@ctitle(1,10)",
+//       sentence: "@cparagraph(100,200)",
+//       agreeCount: "@integer(0,100)",
+//       collect: "@integer(0,100)",
+//       comment: "@integer(0,100)",
+//       "cover|2-4": ["https://randomuser.me/api/portraits/men/@integer(0,99).jpg"],
+//       time: "@datetime('yyyy-MM-dd')",
+//     },
+//   ],
+// });
+
+//subject页 讨论
+Mock.mock("/api/subject/discuss", "get", {
+  "list|4-10": [
+    {
+      "type|1": [1, 2, 3], //1精华 2最热 2最新"
+      id: "@increment",
+      name: "@cname",
+      avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+      title: "@ctitle(1,10)",
+      sentence: "@cparagraph(100,200)",
+      agreeCount: "@integer(0,100)",
+      collect: "@integer(0,100)",
+      comment: "@integer(0,100)",
+      "cover|2-4": ["https://randomuser.me/api/portraits/men/@integer(0,99).jpg"],
+      time: "@datetime('yyyy-MM-dd')",
+    },
   ],
 });

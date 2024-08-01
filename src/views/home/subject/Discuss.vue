@@ -1,86 +1,73 @@
 <script setup>
+import { ref, watch } from 'vue';
+import DiscussItem from './DiscussItem.vue'
+import { fetchSubjectDiscuss } from '@/api/search.js'
+
+const list = ref([]);
+fetchSubjectDiscuss().then(res => {
+    list.value = res?.data?.list;
+}).catch(err => {
+    console.log(err)
+})
+
+const sortType = ref(1);
+const changeSort = (sort) => {
+    console.log(sort);
+    sortType.value = sort;
+}
+
+watch(sortType, (newVal) => {
+    list.value.sort(item1 => {
+        if (item1.type === newVal) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+    );
+},{
+    immediate:true
+})
+
 
 </script>
 <template>
-
-    <van-row justify="space-between" class="gray-font sort">
-        <van-col>
-            全部内容
-        </van-col>
-        <van-col class="sort-wrap">
-            <span class="active">精华</span>
-            <span>|</span>
-            <span>最热</span>
-            <span>|</span>
-            <span>最新</span>
-        </van-col>
-    </van-row>
-
     <div class="subject-discuss-list">
-        <div class="subject-discuss-item">
-            <van-row justify="start" align="center">
-                <van-col>
-                    <van-image round width="22px" height="22px"
-                        src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
-                </van-col>
-                <van-col offset="1">
-                    <span class="name">张三</span>
-                </van-col>
-            </van-row>
-            <div class="img-list">
-                <van-image width="5rem" height="2rem" radius="4px" class="img-detail"
-                    src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
-                <van-image width="5rem" height="2rem" radius="4px" class="img-detail"
-                    src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
-                <van-image width="5rem" height="2rem" radius="4px" class="img-detail"
-                    src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
-                <van-image width="5rem" height="2rem" radius="4px" class="img-detail"
-                    src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
-            </div>
-            <h3>zheshizeger</h3>
-            <p class="sentence">22222222</p>
-        </div>
+        <van-row justify="space-between" class="gray-font sort">
+            <van-col>
+                全部内容
+            </van-col>
+            <van-col class="sort-wrap">
+                <span :class="{ active: sortType === 1 }" @click="changeSort(1)">精华</span>
+                <span>|</span>
+                <span :class="{ active: sortType === 2 }" @click="changeSort(2)">最热</span>
+                <span>|</span>
+                <span :class="{ active: sortType === 3 }" @click="changeSort(3)">最新</span>
+            </van-col>
+        </van-row>
+        <DiscussItem v-for="item in list" :key="item.id" :item="item" />
     </div>
 </template>
 <style scoped lang='scss'>
-.sort {
-    width: 97%;
-    margin: 2% 0;
-    .sort-wrap {
-        span {
-            margin: 0 2px;
+.subject-discuss-list {
+    margin: 0 auto;
+    background: #f7f7f7;
 
-            &.active {
-                color: #000;
+    .sort {
+        padding: 0 2%;
+        margin-top: 2%;
+        line-height: 40px;
+        background: #fff;
+
+        .sort-wrap {
+            span {
+                margin: 0 2px;
+
+                &.active {
+                    color: #000;
+                }
             }
         }
-    }
-}
-
-
-.subject-discuss-item {
-    width: 97%;
-    margin: 2% 0;
-    border: 1px solid red;
-
-    .name {
-        font-size: 10px;
-    }
-
-    .img-list {
-        width: 100%;
-        white-space: nowrap;
-        border: 1px soli d #000;
-        overflow: hidden;
-        overflow-x: scroll;
-
-        .img-detail {
-            margin: 0 1%;
-        }
-    }
-
-    .sentence {
-        color: #666666;
     }
 }
 </style>

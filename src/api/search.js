@@ -51,4 +51,8 @@ export async function fetchPayProtocol(){
 export async function fetchRechargeProtocol(){
     return await service.get('/api/recharge/protocol');
 }
+//subject页
+export async function fetchSubjectDiscuss(){
+    return await service.get('/api/subject/discuss');
+}
 
