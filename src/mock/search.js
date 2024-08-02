@@ -203,6 +203,20 @@ Mock.mock("/api/recharge/protocol", "get", {
 //   ],
 // });
 
+//subject页 
+Mock.mock("/api/subject", "get", {
+  "list|1": [
+    {
+      sentence: "@cparagraph(100,200)",
+      browseCount: "@integer(0,100)",
+      discussCount: "@integer(0,100)",
+      brief: "@cparagraph(10,50)",
+      pinyin: "@ctitle(1,10)",
+      english:"@word(1,5)",
+      explain: "@cparagraph(100,200)",
+    },
+  ],
+});
 //subject页 讨论
 Mock.mock("/api/subject/discuss", "get", {
   "list|4-10": [
@@ -212,6 +226,7 @@ Mock.mock("/api/subject/discuss", "get", {
       name: "@cname",
       avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
       title: "@ctitle(1,10)",
+      brief: "@cparagraph(10,50)",
       sentence: "@cparagraph(100,200)",
       agreeCount: "@integer(0,100)",
       collect: "@integer(0,100)",

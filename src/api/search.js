@@ -52,6 +52,10 @@ export async function fetchRechargeProtocol(){
     return await service.get('/api/recharge/protocol');
 }
 //subject页
+export async function fetchSubject(){
+    return await service.get('/api/subject');
+}
+//subject页 讨论
 export async function fetchSubjectDiscuss(){
     return await service.get('/api/subject/discuss');
 }

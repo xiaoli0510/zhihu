@@ -1,8 +1,5 @@
 <script setup>
-import LikeIcon from '@/components/LikeIcon.vue'
-import CollectIcon from '@/components/CollectIcon.vue'
-import CommentReply from '@/components/CommentReply/Index.vue'
-import { ref, provide } from 'vue';
+import {provide } from 'vue';
 
 const props = defineProps(['item']);
 //toggle 点赞
@@ -35,17 +32,11 @@ provide('toggleAgree', toggleAgree);
         <p class="sentence">
             <van-text-ellipsis :content="props.item.sentence" />
         </p>
-        <van-row justify="space-between">
+        <van-row justify="space-between" class="footer">
             <van-col span="17">
-                <span class="action-item">
-                    <LikeIcon :item="props.item" size="23px" />
-                </span>
-                <span class="action-item">
-                    <CollectIcon :item="props.item" />
-                </span>
-                <span class="action-item">
-                    <CommentReply :item="props.item" :id="props.item.id" />
-                </span>
+                {{ props.item.agreeCount }}赞同.
+                {{ props.item.collect }}收藏.
+                {{ props.item.comment }}评价
             </van-col>
             <van-col>{{ props.item.time }}</van-col>
         </van-row>
@@ -81,9 +72,9 @@ provide('toggleAgree', toggleAgree);
         font-size:12px;
         margin:10px 0;
     }
-
-    .action-item {
-        margin: 0 10px;
+    .footer{
+        color:#666666;
+        font-size:12px;
     }
 }
 </style>
