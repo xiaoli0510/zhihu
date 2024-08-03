@@ -184,7 +184,7 @@ Mock.mock("/api/recharge/protocol", "get", {
   ],
 });
 
-//subject页 
+//subject页
 Mock.mock("/api/subject", "get", {
   "list|1": [
     {
@@ -194,7 +194,7 @@ Mock.mock("/api/subject", "get", {
       discussCount: "@integer(0,100)",
       brief: "@cparagraph(10,50)",
       pinyin: "@ctitle(1,10)",
-      english:"@word(1,5)",
+      english: "@word(1,5)",
       explain: "@cparagraph(100,200)",
     },
   ],
@@ -214,7 +214,9 @@ Mock.mock("/api/subject/discuss", "get", {
       agreeCount: "@integer(0,100)",
       collect: "@integer(0,100)",
       comment: "@integer(0,100)",
-      "cover|2-4": ["https://randomuser.me/api/portraits/men/@integer(0,99).jpg"],
+      "cover|2-4": [
+        "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+      ],
       time: "@datetime('yyyy-MM-dd')",
     },
   ],
@@ -231,7 +233,7 @@ Mock.mock("/api/subject/opinion", "get", {
       title: "@ctitle(1,10)",
       brief: "@cparagraph(10,50)",
       agreeCount: "@integer(0,100)",
-      src: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg"
+      src: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
     },
   ],
 });
@@ -247,7 +249,7 @@ Mock.mock("/api/subject/waitAnswer", "get", {
       agreeCount: "@integer(0,100)",
       beFollow: "@integer(1,100)", //被关注
       answer: "@integer(1,100)", //回答
-      src: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg"
+      src: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
     },
   ],
 });
@@ -256,17 +258,26 @@ Mock.mock("/api/subject/waitAnswer", "get", {
 Mock.mock("/api/answer/detail", "get", {
   "list|1": [
     {
-       title: "@ctitle(1,10)",
-       "word|1-4": ["@ctitle(1,3)"],
+      title: "@ctitle(1,10)",
+      "word|1-4": ["@ctitle(1,3)"],
       isFollow: "@boolean",
       sentence: "@cparagraph(100,200)",
+      followCount: "@integer(0,100)",
       browseCount: "@integer(0,100)",
-      discussCount: "@integer(0,100)",
-      brief: "@cparagraph(10,50)",
-      pinyin: "@ctitle(1,10)",
-      english:"@word(1,5)",
-      explain: "@cparagraph(100,200)",
+      commentCount: "@integer(0,100)",
+      "subList|4-10": [
+        {
+          "type|1": [1, 2], //1默认 2最新
+          id: "@increment",
+          name: "@cname",
+          avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+          title: "@ctitle(1,10)",
+          agreeCount: "@integer(0,100)",
+          likeCount: "@integer(0,100)",
+          commentCount: "@integer(0,100)",
+          "badge|1-3": {0:"diamond",1: "gift",2:"gem"}
+        },
+      ],
     },
   ],
 });
-

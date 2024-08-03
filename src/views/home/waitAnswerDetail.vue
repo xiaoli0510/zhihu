@@ -1,37 +1,30 @@
 <script setup>
 import BackIcon from '@/components/BackIcon.vue'
-import FollowIcon from '@/components/FollowIcon.vue'
-import { provide, ref, markRaw, reactive } from 'vue';
-import SubjectDiscuss from './subject/Discuss.vue'
-import Opinion from '@/views/home/subject/Opinion.vue'
-import WaitAnswer from '@/views/home/subject/WaitAnswer.vue'
+import { ref, watch } from 'vue';
+import WaitAnswerItem from './subject/WaitAnswerItem.vue'
 import BookShare from '@/components/BookShare/Index.vue';
 import { fetchAnswerDetail } from '@/api/search.js'
 const data = ref(null);
 const res = await fetchAnswerDetail();
 data.value = res.data.list;
 
-const props = defineProps(['keyWord']);
-const toggleFollow = (item) => {
-    item.isFollow = !item.isFollow;
+const sortType = ref(1);
+const changeSort = (sort) => {
+    sortType.value = sort;
 }
-provide('toggleFollow', toggleFollow);
 
-const currentTab = ref(0);
-const tabs = reactive([{
-    com: markRaw(SubjectDiscuss),
-    text: '默认'
+watch(sortType, (newVal) => {
+    data.value.subList.sort(item1 => {
+        if (item1.type === newVal) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+    );
 }, {
-    com: markRaw(Opinion),
-    text: '最新'
-}]);
-
-const showBrief = ref(false);
-const briefText = ref(null);
-const clickAction = (e) => {
-    briefText.value.toggle(false);
-    showBrief.value = true;
-}
+    immediate: true
+})
 </script>
 <template>
     <div class="subject-wrap">
@@ -51,53 +44,31 @@ const clickAction = (e) => {
             <van-divider />
             <van-row justify="space-between">
                 <van-col class="detail">
-                    {{ data.browseCount }}
+                    {{ data.followCount }}
                     <span class="gray-font">关注.</span>
-                    {{ data.discussCount }}
+                    {{ data.commentCount }}
                     <span class="gray-font">评论.</span>
-                    {{ data.discussCount }}
+                    {{ data.browseCount }}
                     <span class="gray-font">浏览</span>
                 </van-col>
                 <van-col>
-                    <van-tag round type="primary" size="large" color="rgb(221 236 249)" text-color="#1989fa"><van-icon name="add-o" />关注问题</van-tag>
+                    <van-tag round type="primary" size="large" color="rgb(221 236 249)" text-color="#1989fa"><van-icon
+                            name="add-o" />关注问题</van-tag>
                 </van-col>
             </van-row>
         </div>
-        <div class="tab-wrap">
-            <van-tabs v-model:active="currentTab" shrink>
-                <van-tab v-for="(item, index) in tabs" :title="item.text" :name="index">
-                    <van-divider />
-                    <component :is="tabs[currentTab].com" />
-                </van-tab>
-            </van-tabs>
-        </div>
+        <van-row justify="space-between" class="gray-font sort">
+            <van-col class="sort-wrap">
+                <span :class="{ active: sortType === 1 }" @click="changeSort(1)">默认</span>
+                <span>|</span>
+                <span :class="{ active: sortType === 2 }" @click="changeSort(2)">最新</span>
+            </van-col>
+            <van-col>
+                全部内容 {{ data.subList.length }}
+            </van-col>
+        </van-row>
+        <WaitAnswerItem v-for="item in data.subList" :key="item.id" :item="item" />
     </div>
-
-    <!-- 简介弹框 -->
-    <van-popup v-model:show="showBrief" closeable round close-icon="close" position="bottom"
-        :style="{ height: '80%', padding: '2%' }">
-
-        <h3>简介</h3>
-        <van-text-ellipsis rows="4" :content="data.brief" expand-text="展开全部" collapse-text="收起" />
-        <van-divider />
-
-        <h3>更多信息</h3>
-        <van-cell-group>
-            <van-cell title="词目" :value="props.keyWord" />
-            <van-cell title="拼音" :value="data.pinyin" />
-            <van-cell title="英文拼音" :value="data.english" />
-            <van-cell title="基本解释">
-                <van-text-ellipsis rows="4" :content="data.explain" expand-text="展开全部" collapse-text="收起" />
-            </van-cell>
-        </van-cell-group>
-
-        <div class="tip">
-            <van-icon name="discount" color="#ee0a24" />
-            数据由搜狗百科提供
-        </div>
-
-
-    </van-popup>
 </template>
 <style scoped lang='scss'>
 .subject-wrap {
@@ -135,5 +106,22 @@ h3 {
 
 .tip {
     margin-top: 8%;
+}
+
+.sort {
+    padding: 0 2%;
+    margin-top: 2%;
+    line-height: 40px;
+    background: #fff;
+
+    .sort-wrap {
+        span {
+            margin: 0 2px;
+
+            &.active {
+                color: #000;
+            }
+        }
+    }
 }
 </style>
