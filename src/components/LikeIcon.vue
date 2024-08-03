@@ -7,7 +7,7 @@ const toggleAgree = () => {
 };
 </script>
 <template>
-  <span class="icon-like-item" @click="toggleAgree">
+  <span class="icon-like-item" @click.stop="toggleAgree">
     <van-icon name="like-o" :color="props.item.isAgree?'red':'#686767'" :size="props.size"/>
     <span class="txt" :class="{'active':props.item.isAgree}">{{ props.item.agreeCount }}</span>
   </span>

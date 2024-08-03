@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import PayWay from '@/components/PayWay/Index.vue'
+import PayWay from '@/components/PayWay/PayWay.vue'
 import VipType from './components/vip/Type.vue'
 import Meal from './components/vip/Meal.vue'
 import Skill from './components/vip/Skill.vue'

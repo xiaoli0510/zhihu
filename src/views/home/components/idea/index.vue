@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from "vue";
-import { RouterLink } from "vue-router";
+import { ref,provide } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 import triangle from "@/assets/imgs/upvote.png";
 import { fetchIdeaList } from '@/api/index.js';
+import LikeIcon from '@/components/LikeIcon.vue'
 let list = ref([]);
 const initData = async () => {
   const res = await fetchIdeaList();
@@ -29,14 +30,30 @@ const onRefresh = () => {
   loading.value = true;
   onLoad();
 };
+
+//toggle 点赞
+const toggleAgree = (item) => {
+    if (item.isAgree) {
+        item.agreeCount--;
+    } else {
+        item.agreeCount++;
+    }
+    item.isAgree = !item.isAgree;
+}
+provide('toggleAgree', toggleAgree);
+
+const router = useRouter();
+const enterTopic = ()=>{
+  router.push('/topic');
+}
 </script>
 <template>
   <van-pull-refresh v-model="refreshing" @refresh="onRefresh" class="list">
     <van-list v-model:loading="loading" :finished="finished" finished-text="想法已更新" @load="onLoad">
       <van-cell>
         <van-row justify="space-between" class="item-wrap">
-          <van-col span="11" v-for="item in list" class="item">
-            <router-link to="/topic">
+          <van-col span="11" v-for="item in list" class="item" @click="enterTopic">
+            <!-- <router-link to="/topic"> -->
               <van-image width="100%" fit="fill" :src="item.src" />
               <!-- 标题 -->
               <van-row class="detail">
@@ -53,10 +70,7 @@ const onRefresh = () => {
                   </van-row>
                 </van-col>
                 <van-col span="12">
-                  <van-row justify="end" align="center">
-                    <van-col span="3"><van-image fit="contain" width=".5rem" round :src="triangle" /></van-col>
-                    <van-col offset="2" span="8">{{ item.like }}</van-col>
-                  </van-row>
+                    <LikeIcon :item="item" size="17px"/>
                 </van-col>
               </van-row>
               <!-- 标签 -->
@@ -65,7 +79,7 @@ const onRefresh = () => {
                   <van-tag size="large" color="#7c7979" plain># {{ tag }}</van-tag>
                 </van-col>
               </van-row>
-            </router-link>
+            <!-- </router-link> -->
           </van-col>
         </van-row>
       </van-cell>

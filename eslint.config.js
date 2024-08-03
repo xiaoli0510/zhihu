@@ -12,5 +12,10 @@ export default [
         ".config/*",
         "node_modules/*",           
       ],
+      parserOptions: {
+        ecmaVersion: 2015,
+        sourceType: 'module',
+        // 其他配置...
+      },
   }
 ];

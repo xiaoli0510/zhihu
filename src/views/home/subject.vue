@@ -11,12 +11,6 @@ const res = await fetchSubject();
 data.value = res.data.list;
 
 const props = defineProps(['keyWord']);
-const item = ref({
-    id: 1,
-    name: '张三',
-    avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-    isFollow: true,
-})
 const toggleFollow = (item) => {
     item.isFollow = !item.isFollow;
 }
@@ -30,11 +24,11 @@ const tabLabel = ref({
 })
 
 const showBrief = ref(false);
-const clickAction = () => {
+const briefText = ref(null);
+const clickAction = (e) => {
+    briefText.value.toggle(false);
     showBrief.value = true;
 }
-
-
 </script>
 <template>
     <div class="subject-wrap">
@@ -44,7 +38,7 @@ const clickAction = () => {
                     <BackIcon />
                 </van-col>
                 <van-col span="6">
-                    <FollowIcon :item="item" />
+                    <FollowIcon :item="data" />
                     <BookShare :data="{ iconName: 'ellipsis', size: '20px' }" />
                 </van-col>
             </van-row>
@@ -53,7 +47,7 @@ const clickAction = () => {
                 {{ data.browseCount }}亿浏览. {{ data.discussCount }}万讨论
             </p>
             <p class="brief">
-                <van-text-ellipsis rows="1" :content="data.brief" expand-text="更多" collapse-text="收起"
+                <van-text-ellipsis rows="1" :content="data.brief" expand-text="更多" collapse-text="收起" ref="briefText"
                     @clickAction="clickAction" />
             </p>
         </div>

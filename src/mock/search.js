@@ -207,6 +207,7 @@ Mock.mock("/api/recharge/protocol", "get", {
 Mock.mock("/api/subject", "get", {
   "list|1": [
     {
+      isFollow: "@boolean",
       sentence: "@cparagraph(100,200)",
       browseCount: "@integer(0,100)",
       discussCount: "@integer(0,100)",

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import PayWay from '../../components/PayWay/Index.vue'
+import PayWay from '../../components/PayWay/PayWay.vue'
 import BackIcon from '@/components/BackIcon.vue'
 import { useRouter } from 'vue-router';
 import {fetchPay} from '@/api/search.js';
