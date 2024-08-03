@@ -1,8 +1,9 @@
 <script setup>
 import BackIcon from '@/components/BackIcon.vue'
 import FollowIcon from '@/components/FollowIcon.vue'
-import { provide, ref } from 'vue';
+import { provide, ref, markRaw, reactive } from 'vue';
 import SubjectDiscuss from './subject/Discuss.vue'
+import Opinion from '@/views/home/subject/Opinion.vue'
 import BookShare from '@/components/BookShare/Index.vue';
 import { fetchSubject } from '@/api/search.js'
 
@@ -16,12 +17,17 @@ const toggleFollow = (item) => {
 }
 provide('toggleFollow', toggleFollow);
 
-const activeName = ref(0);
-const tabLabel = ref({
-    0: '讨论',
-    1: '想法',
-    2: '待回答',
-})
+const currentTab = ref(0);
+const tabs = reactive([{
+    com: markRaw(SubjectDiscuss),
+    text: '讨论'
+}, {
+    com: markRaw(Opinion),
+    text: '想法'
+}, {
+    com: markRaw(Opinion),
+    text: '待回答'
+}]);
 
 const showBrief = ref(false);
 const briefText = ref(null);
@@ -52,10 +58,10 @@ const clickAction = (e) => {
             </p>
         </div>
         <div class="tab-wrap">
-            <van-tabs v-model:active="activeName" shrink>
-                <van-tab v-for="(item, index) in tabLabel" :title="item" :name="index">
+            <van-tabs v-model:active="currentTab" shrink>
+                <van-tab v-for="(item, index) in tabs" :title="item.text" :name="index">
                     <van-divider />
-                    <SubjectDiscuss />
+                    <component :is="tabs[currentTab].com" />
                 </van-tab>
             </van-tabs>
         </div>
