@@ -1,7 +1,6 @@
 <script setup>
 import { ref,provide } from "vue";
-import { RouterLink, useRouter } from "vue-router";
-import triangle from "@/assets/imgs/upvote.png";
+import {useRouter } from "vue-router";
 import { fetchIdeaList } from '@/api/index.js';
 import LikeIcon from '@/components/LikeIcon.vue'
 let list = ref([]);
@@ -53,7 +52,6 @@ const enterTopic = ()=>{
       <van-cell>
         <van-row justify="space-between" class="item-wrap">
           <van-col span="11" v-for="item in list" class="item" @click="enterTopic">
-            <!-- <router-link to="/topic"> -->
               <van-image width="100%" fit="fill" :src="item.src" />
               <!-- 标题 -->
               <van-row class="detail">
@@ -79,7 +77,6 @@ const enterTopic = ()=>{
                   <van-tag size="large" color="#7c7979" plain># {{ tag }}</van-tag>
                 </van-col>
               </van-row>
-            <!-- </router-link> -->
           </van-col>
         </van-row>
       </van-cell>
