@@ -1,21 +1,14 @@
 <script setup>
-import {provide } from 'vue';
+import { useRouter } from 'vue-router';
 
 const props = defineProps(['item']);
-//toggle 点赞
-const toggleAgree = (item) => {
-    if (item.isAgree) {
-        item.agreeCount--;
-    } else {
-        item.agreeCount++;
-    }
-    item.isAgree = !item.isAgree;
+const router = useRouter();
+const enterTopic = () => {
+    router.push('/topic');
 }
-provide('toggleAgree', toggleAgree);
-
 </script>
 <template>
-    <div class="subject-discuss-item">
+    <div class="subject-discuss-item" @click="enterTopic">
         <van-row justify="start" align="center">
             <van-col align="center">
                 <van-image round width="22px" height="22px" :src="props.item.avatar" />
@@ -69,12 +62,13 @@ provide('toggleAgree', toggleAgree);
 
     .sentence {
         color: #666666;
-        font-size:12px;
-        margin:10px 0;
+        font-size: 12px;
+        margin: 10px 0;
     }
-    .footer{
-        color:#666666;
-        font-size:12px;
+
+    .footer {
+        color: #666666;
+        font-size: 12px;
     }
 }
 </style>

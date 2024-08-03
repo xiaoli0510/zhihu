@@ -63,4 +63,12 @@ export async function fetchSubjectDiscuss(){
 export async function fetchSubjectOpinion(){
     return await service.get('/api/subject/opinion');
 }
+//subject页 待回答
+export async function fetchSubjectWaitAnswer(){
+    return await service.get('/api/subject/waitAnswer');
+}
+//waitAnswerDetail页
+export async function fetchAnswerDetail(){
+    return await service.get('/api/answer/detail');
+}
 

@@ -6,9 +6,9 @@ import SubjectDiscuss from './subject/Discuss.vue'
 import Opinion from '@/views/home/subject/Opinion.vue'
 import WaitAnswer from '@/views/home/subject/WaitAnswer.vue'
 import BookShare from '@/components/BookShare/Index.vue';
-import { fetchSubject } from '@/api/search.js'
+import { fetchAnswerDetail } from '@/api/search.js'
 const data = ref(null);
-const res = await fetchSubject();
+const res = await fetchAnswerDetail();
 data.value = res.data.list;
 
 const props = defineProps(['keyWord']);
@@ -20,13 +20,10 @@ provide('toggleFollow', toggleFollow);
 const currentTab = ref(0);
 const tabs = reactive([{
     com: markRaw(SubjectDiscuss),
-    text: '讨论'
+    text: '默认'
 }, {
     com: markRaw(Opinion),
-    text: '想法'
-}, {
-    com: markRaw(WaitAnswer),
-    text: '待回答'
+    text: '最新'
 }]);
 
 const showBrief = ref(false);
@@ -43,19 +40,28 @@ const clickAction = (e) => {
                 <van-col>
                     <BackIcon />
                 </van-col>
-                <van-col span="6">
-                    <FollowIcon :item="data" />
+                <van-col span="3">
+                    <van-icon name="search" size="20px" />
                     <BookShare :data="{ iconName: 'ellipsis', size: '20px' }" />
                 </van-col>
             </van-row>
-            <h3 class="title-word"><van-icon name="chat" color="#1989fa" />{{ props.keyWord }}</h3>
-            <p class="gray-font detail">
-                {{ data.browseCount }}亿浏览. {{ data.discussCount }}万讨论
-            </p>
-            <p class="brief">
-                <van-text-ellipsis rows="1" :content="data.brief" expand-text="更多" collapse-text="收起" ref="briefText"
-                    @clickAction="clickAction" />
-            </p>
+            <h3 class="title-word">{{ data.title }}?</h3>
+            <van-tag round plain type="primary" size="large" text-color="#666666" v-for="item in data.word"
+                class="tag-word">{{ item }}</van-tag>
+            <van-divider />
+            <van-row justify="space-between">
+                <van-col class="detail">
+                    {{ data.browseCount }}
+                    <span class="gray-font">关注.</span>
+                    {{ data.discussCount }}
+                    <span class="gray-font">评论.</span>
+                    {{ data.discussCount }}
+                    <span class="gray-font">浏览</span>
+                </van-col>
+                <van-col>
+                    <van-tag round type="primary" size="large" color="rgb(221 236 249)" text-color="#1989fa"><van-icon name="add-o" />关注问题</van-tag>
+                </van-col>
+            </van-row>
         </div>
         <div class="tab-wrap">
             <van-tabs v-model:active="currentTab" shrink>
@@ -106,7 +112,11 @@ const clickAction = (e) => {
             margin: 2% 0 1% 0;
         }
 
-        .brief {
+        .tag-word {
+            margin: 0 1%;
+        }
+
+        .detail {
             font-size: 12px;
         }
     }

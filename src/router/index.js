@@ -22,7 +22,8 @@ import PayProtocol from "../views/home/payProtocol.vue";//支付协议页
 import RechargeProtocol from "../views/home/rechargeProtocol.vue";//充值须知
 import YanxuanVip from "../views/home/yanxuanVip.vue";//盐选会员
 import Subject from "../views/home/subject.vue";//关键字的讨论 想法 待回答 综合页
-import Recent from "../views/home/recent.vue";//关键字的讨论 想法 待回答 综合页
+import WaitAnswerDetail from "../views/home/waitAnswerDetail.vue";//待回答详情页
+import Recent from "../views/home/recent.vue";//历史浏览页
 
 
 import Test from "../views/home/test.vue";//测试页
@@ -172,6 +173,12 @@ const router = createRouter({
       component:Subject,
       props:true,
     },
+    {
+      path: "/waitAnswerDetail",
+      name: "waitAnswerDetail",
+      component:WaitAnswerDetail
+    },
+    
     {
       path: "/recent",
       name: "Recent",

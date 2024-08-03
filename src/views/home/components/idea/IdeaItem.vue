@@ -22,7 +22,7 @@ const enterTopic = () => {
 </script>
 <template>
     <div class="item" @click="enterTopic">
-        <van-image width="100%" fit="fill" :src="props.item.src" />
+        <van-image width="100%" fit="fill" :src="props.item.src" radius="10px 10px 0 0"/>
         <!-- 标题 -->
         <van-row class="detail">
             <van-col span="24" class="title">{{ props.item.title }}</van-col>
@@ -52,13 +52,13 @@ const enterTopic = () => {
 <style scoped lang="scss">
 .item {
     background: #fff;
-    border-radius: 0.1rem;
+    border-radius: 10px 10px 0 0;
     padding-bottom: 0.2rem;
     margin-bottom: 3%;
-    border: 1px solid #7c7979;
     box-shadow: #000;
+    border:1px solid #ccc;
     height: max-content;
-    width: 48%;
+    width: 48%; 
 
     .detail {
         font-size: 0.3rem;
