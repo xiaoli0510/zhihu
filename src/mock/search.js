@@ -237,3 +237,18 @@ Mock.mock("/api/subject/discuss", "get", {
     },
   ],
 });
+//subject页 想法
+Mock.mock("/api/subject/opinion", "get", {
+  "list|4-10": [
+    {
+      "type|1": [1, 2, 3], //1最热 2最新"
+      id: "@increment",
+      author: "@cname",
+      avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
+      title: "@ctitle(1,10)",
+      brief: "@cparagraph(10,50)",
+      agreeCount: "@integer(0,100)",
+      src: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg"
+    },
+  ],
+});

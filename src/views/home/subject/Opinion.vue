@@ -1,10 +1,10 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { fetchSubjectDiscuss } from '@/api/search.js'
+import { fetchSubjectOpinion } from '@/api/search.js'
 import IdeaItem from '../components/idea/IdeaItem.vue'
 
 const list = ref([]);
-fetchSubjectDiscuss().then(res => {
+fetchSubjectOpinion().then(res => {
     list.value = res?.data?.list;
 }).catch(err => {
     console.log(err)
@@ -25,8 +25,8 @@ watch(sortType, (newVal) => {
         }
     }
     );
-},{
-    immediate:true
+}, {
+    immediate: true
 })
 
 
@@ -43,7 +43,9 @@ watch(sortType, (newVal) => {
                 <span :class="{ active: sortType === 2 }" @click="changeSort(2)">最新</span>
             </van-col>
         </van-row>
-        <IdeaItem v-for="item in list" :item="item" :key="item.id"/>
+        <van-row justify="space-between" class="item-wrap">
+            <IdeaItem v-for="item in list" :item="item" :key="item.id" />
+        </van-row> 
     </div>
 </template>
 <style scoped lang='scss'>

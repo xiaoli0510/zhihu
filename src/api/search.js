@@ -59,4 +59,8 @@ export async function fetchSubject(){
 export async function fetchSubjectDiscuss(){
     return await service.get('/api/subject/discuss');
 }
+//subject页 想法
+export async function fetchSubjectOpinion(){
+    return await service.get('/api/subject/opinion');
+}
 
