@@ -68,13 +68,15 @@ const enterSubject = (word)=>{
     </van-col>
     <!-- tool -->
     <van-col span="24" class="tool">
-      <van-row class="tool" align="center">
+      <van-row class="tool">
         <van-col span="10" class="tool-left">
-          <van-row align="center" v-if="index===0">
+          <van-row v-if="index===0" align="center">
             <van-col span="5">
-              <van-image round fit="cover" width=".8rem" height=".8rem" :src="item.avatar" /></van-col>
+              <van-image round fit="cover" width="1rem" height="1rem" :src="item.avatar" /></van-col>
             <van-col span="8" offset="1">{{ item.author }}</van-col>
+            <van-col>
             <FollowIcon :item="item"/>
+          </van-col>
             <!-- <van-col span="9" offset="1" class="tool-concern">+ 关注</van-col> -->
           </van-row>
           <CommentReply v-else :item="item" :id="item.id">
@@ -130,9 +132,7 @@ const enterSubject = (word)=>{
   .tool-left {
     background: rgba(0, 0, 0, 0.07);
     border-radius: 0.5rem;
-    height: 0.8rem;
     text-align: center;
-    line-height: .8rem;
     color:#666666;
     .discuss{
       width:100%;

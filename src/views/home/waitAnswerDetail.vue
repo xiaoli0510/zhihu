@@ -4,6 +4,7 @@ import { ref, watch } from 'vue';
 import WaitAnswerItem from './subject/WaitAnswerItem.vue'
 import BookShare from '@/components/BookShare/Index.vue';
 import { fetchAnswerDetail } from '@/api/search.js'
+import SearchIcon from '@/components/SearchIcon.vue'
 const data = ref(null);
 const res = await fetchAnswerDetail();
 data.value = res.data.list;
@@ -34,7 +35,7 @@ watch(sortType, (newVal) => {
                     <BackIcon />
                 </van-col>
                 <van-col span="3">
-                    <van-icon name="search" size="20px" />
+                    <SearchIcon />
                     <BookShare :data="{ iconName: 'ellipsis', size: '20px' }" />
                 </van-col>
             </van-row>

@@ -18,8 +18,8 @@ const enterProfile = (id) => {
         <van-row>
           <van-col span="24" @click="enterProfile(item.id)">
             <van-row>
-              <van-col span="7">{{ item.author }}</van-col>
-              <van-col span="16" offset="1"><van-icon name="gem" /></van-col> </van-row></van-col>
+              <van-col>{{ item.author }}</van-col>
+              <van-col offset="1"><van-icon :name="item?.badge||'gem'" /></van-col> </van-row></van-col>
           <van-col span="24"><van-text-ellipsis :content="item.sign" /></van-col>
         </van-row>
       </van-col>

@@ -43,6 +43,7 @@ Mock.mock("/api/topic", "get", {
         "IOS",
         "安卓",
       ],
+      "badge|1": ["diamond","gift","gem"],
       sign: "@cparagraph(1,10)", //签名
       upvote: "@integer(1,100)",
       collect: "@integer(1,100)",
