@@ -39,7 +39,7 @@ provide('isShareDetail',true);
 
 const router = useRouter();
 const enterSubject = (word)=>{
-  router.push(`/subject/${word}`);
+  router.push(`/subject?w=${word}&t=1`);
 }
 </script>
 <template>

@@ -168,10 +168,9 @@ const router = createRouter({
       component:YanxuanVip,
     },
     {
-      path: "/subject/:keyWord",
+      path: "/subject",
       name: "subject",
-      component:Subject,
-      props:true,
+      component:Subject
     },
     {
       path: "/waitAnswerDetail",

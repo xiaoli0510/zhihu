@@ -7,6 +7,8 @@ import Opinion from '@/views/home/subject/Opinion.vue'
 import WaitAnswer from '@/views/home/subject/WaitAnswer.vue'
 import BookShare from '@/components/BookShare/Index.vue';
 import { fetchSubject } from '@/api/search.js'
+import { useRoute } from 'vue-router';
+const route  = useRoute();
 const data = ref(null);
 const res = await fetchSubject();
 data.value = res.data.list;
@@ -17,7 +19,7 @@ const toggleFollow = (item) => {
 }
 provide('toggleFollow', toggleFollow);
 
-const currentTab = ref(0);
+const currentTab = ref(Number(route.query.t)||0);
 const tabs = reactive([{
     com: markRaw(SubjectDiscuss),
     text: '讨论'
@@ -48,7 +50,7 @@ const clickAction = (e) => {
                     <BookShare :data="{ iconName: 'ellipsis', size: '20px' }" />
                 </van-col>
             </van-row>
-            <h3 class="title-word"><van-icon name="chat" color="#1989fa" />{{ props.keyWord }}</h3>
+            <h3 class="title-word"><van-icon name="chat" color="#1989fa" />{{ route.query.w }}</h3>
             <p class="gray-font detail">
                 {{ data.browseCount }}亿浏览. {{ data.discussCount }}万讨论
             </p>
@@ -77,7 +79,7 @@ const clickAction = (e) => {
 
         <h3>更多信息</h3>
         <van-cell-group>
-            <van-cell title="词目" :value="props.keyWord" />
+            <van-cell title="词目" :value="route.query.w" />
             <van-cell title="拼音" :value="data.pinyin" />
             <van-cell title="英文拼音" :value="data.english" />
             <van-cell title="基本解释">
