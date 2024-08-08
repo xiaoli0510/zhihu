@@ -18,6 +18,10 @@ const back = () => {
 };
 </script>
 <template>
-    <van-icon :name="props.iconName" @click="back" :color="props.color" :size="props.size"/>
+    <span @click="back">
+        <slot name="iconTxt">
+            <van-icon :name="props.iconName" :color="props.color" :size="props.size"/>
+        </slot>
+    </span>
 </template>
 <style scoped lang='scss'></style>

@@ -23,7 +23,9 @@ const toggleFollow = ()=>{
 <template>
   <span class="item">
     <van-button v-if="props.item.isFollow" size="small" plain round @click="toggleFollow">已关注</van-button>
-    <van-button v-else size="small" plain round icon="plus" type="primary" @click="toggleFollow">关注</van-button>
+    <van-button v-else size="small" plain round icon="plus" type="primary" @click="toggleFollow">
+      <slot name="txt">关注</slot>
+    </van-button>
   </span>
 </template>
 <style scoped lang="scss">

@@ -1,13 +1,16 @@
 <script setup>
 import BackIcon from '@/components/BackIcon.vue'
-import { ref, watch } from 'vue';
+import { provide, ref, watch } from 'vue';
 import WaitAnswerItem from './subject/WaitAnswerItem.vue'
 import BookShare from '@/components/BookShare/Index.vue';
 import { fetchAnswerDetail } from '@/api/search.js'
 import SearchIcon from '@/components/SearchIcon.vue'
+import FollowIcon from '@/components/FollowIcon.vue'
+import AnswerFooter from './subject/AnswerFooter.vue'
 const data = ref(null);
 const res = await fetchAnswerDetail();
 data.value = res.data.list;
+provide('questionTitle',data.value.title);
 
 const sortType = ref(1);
 const changeSort = (sort) => {
@@ -26,6 +29,11 @@ watch(sortType, (newVal) => {
 }, {
     immediate: true
 })
+
+const toggleFollow = (item) => {
+    item.isFollow = !item.isFollow;
+}
+provide('toggleFollow', toggleFollow);
 </script>
 <template>
     <div class="subject-wrap">
@@ -53,8 +61,9 @@ watch(sortType, (newVal) => {
                     <span class="gray-font">浏览</span>
                 </van-col>
                 <van-col>
-                    <van-tag round type="primary" size="large" color="rgb(221 236 249)" text-color="#1989fa"><van-icon
-                            name="add-o" />关注问题</van-tag>
+                    <FollowIcon :item="data">
+                        <template v-slot:txt>关注问题</template>
+                    </FollowIcon>
                 </van-col>
             </van-row>
         </div>
@@ -70,10 +79,38 @@ watch(sortType, (newVal) => {
         </van-row>
         <WaitAnswerItem v-for="item in data.subList" :key="item.id" :item="item" />
     </div>
+    <div class="footer">
+        <AnswerFooter :data="data" />
+    </div>
 </template>
 <style scoped lang='scss'>
 .subject-wrap {
     background: #f7f7f7;
+
+    h3 {
+        line-height: 40px;
+    }
+
+    .tip {
+        margin-top: 8%;
+    }
+
+    .sort {
+        padding: 0 2%;
+        margin-top: 2%;
+        line-height: 40px;
+        background: #fff;
+
+        .sort-wrap {
+            span {
+                margin: 0 2px;
+
+                &.active {
+                    color: #000;
+                }
+            }
+        }
+    }
 
     .top {
         width: 95%;
@@ -101,28 +138,18 @@ watch(sortType, (newVal) => {
     }
 }
 
-h3 {
-    line-height: 40px;
-}
 
-.tip {
-    margin-top: 8%;
-}
-
-.sort {
-    padding: 0 2%;
-    margin-top: 2%;
-    line-height: 40px;
+.footer {
+    position: fixed;
+    bottom: 0.8rem;
+    width: 94%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border-radius: 0.53333rem;
     background: #fff;
-
-    .sort-wrap {
-        span {
-            margin: 0 2px;
-
-            &.active {
-                color: #000;
-            }
-        }
-    }
+    padding: 0.13333rem;
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 0 0 5px #afa9a9;
 }
 </style>

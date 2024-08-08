@@ -275,7 +275,8 @@ Mock.mock("/api/answer/detail", "get", {
           agreeCount: "@integer(0,100)",
           likeCount: "@integer(0,100)",
           commentCount: "@integer(0,100)",
-          "badge|1-3": {0:"diamond",1: "gift",2:"gem"}
+          "badge|1-3": {0:"diamond",1: "gift",2:"gem"},
+          time: "@datetime('yyyy-MM-dd')",
         },
       ],
     },
