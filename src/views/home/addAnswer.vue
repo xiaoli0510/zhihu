@@ -1,9 +1,53 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import BackIcon from '@/components/BackIcon.vue'
-
+import { ref } from 'vue';
+import { throttle } from 'lodash';
+import { useHistoryStore } from '@/stores/history.js';
+import TxtTool from '@/components/AddAnswer/TxtTool.vue'
+import AddTool from '@/components/AddAnswer/AddTool.vue'
+import SetTool from '@/components/AddAnswer/SetTool.vue'
 const route = useRoute();
-console.log(route.query.t)
+const tip = ref('');
+const txtValue = ref('');
+const historyStore = useHistoryStore();
+const updateTxt = throttle(function () {
+    console.log(2)
+    tip.value = '草稿保存中';
+    tip.value = '草稿已报存';
+    historyStore.add(txtValue.value);
+    setTimeout(function () {
+        tip.value = txtValue.value.length;
+    }, 200);
+}, 1000);
+const undoTxt = () => {
+    historyStore.undo();
+    txtValue.value = historyStore.peek();
+}
+const redoTxt = () => {
+    historyStore.redo();
+    txtValue.value = historyStore.peek();
+}
+
+const fileList = ref([]);
+
+const afterRead = (file) => {
+    fileList.value.push({
+        url: file.objectUrl,
+        isImage: true
+    })
+};
+
+const tool = ref('');
+const toggleTool = (value) => {
+    tool.value = value;
+}
+
+const linkArr = ref([]);
+const addLink = (obj) => {
+    linkArr.value.push(obj);
+}
+
 </script>
 <template>
     <van-row justify="space-around" style="padding:4px;" align="center">
@@ -26,29 +70,72 @@ console.log(route.query.t)
     </van-row>
     <h3 class="title">{{ route.query.t }}?</h3>
     <van-divider />
+
+    <van-cell-group inset>
+        <van-field v-model="txtValue" rows="1" @update:model-value="updateTxt" autosize type="textarea"
+            placeholder="输入图文回答内容" />
+        <van-uploader v-model="fileList" multiple :max-count="2" disabled :show-upload="false">
+        </van-uploader>
+        <a :href="item.address" v-for="(item,index) in linkArr" :key="index">
+            {{ item.text }}
+        </a>
+    </van-cell-group>
     <div class="footer">
-        
+        <van-row justify="end">
+            <van-col>{{ tip }}</van-col>
+        </van-row>
+        <van-divider />
+        <van-row justify="space-around">
+            <van-col @click="toggleTool('txt')">A</van-col>
+            <van-col>
+                <van-uploader :after-read="afterRead">
+                    <van-icon name="photo-o" />
+                </van-uploader>
+            </van-col>
+            <van-col><van-icon name="add-o" @click="toggleTool('add')" /></van-col>
+            <van-col><van-icon name="revoke" @click="undoTxt" :color="historyStore.canUndo ? '#000' : '#ccc'" /></van-col>
+            <van-col><van-icon name="replay" @click="redoTxt" :color="historyStore.canRedo ? '#000' : '#ccc'" /></van-col>
+            <van-col><van-icon name="setting-o" @click="toggleTool('set')" /></van-col>
+        </van-row>
+        <van-divider />
+        <TxtTool v-if="tool === 'txt'" />
+        <AddTool v-if="tool === 'add'" @addLink="addLink" />
+        <SetTool v-if="tool === 'set'"/>
     </div>
 </template>
 <style scoped lang='scss'>
-.type-wrap{
-    background:#efecec;
+.type-wrap {
+    background: #efecec;
     border-radius: 4px;
-    padding:3px;
-    .tab-type{
-        color:#000;
-        padding:0 5px;
-        display:inline-block;
-        &.active{
+    padding: 3px;
+
+    .tab-type {
+        color: #000;
+        padding: 0 5px;
+        display: inline-block;
+
+        &.active {
             border-radius: 2px;
-            background:#fff;
+            background: #fff;
         }
     }
 }
+
 .btn-submit {
     color: var(--van-primary-color);
 }
-.title{
-    padding:0 4px;
+
+.title {
+    padding: 0 4px;
+    line-height: 50px;
 }
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 12px;
+}
+
+
 </style>
