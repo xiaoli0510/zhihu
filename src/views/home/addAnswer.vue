@@ -7,6 +7,7 @@ import { useHistoryStore } from '@/stores/history.js';
 import TxtTool from '@/components/AddAnswer/TxtTool.vue'
 import AddTool from '@/components/AddAnswer/AddTool.vue'
 import SetTool from '@/components/AddAnswer/SetTool.vue'
+import LinkItem from '@/components/AddAnswer/AddLink/LinkItem.vue'
 const route = useRoute();
 const tip = ref('');
 const txtValue = ref('');
@@ -48,6 +49,11 @@ const addLink = (obj) => {
     linkArr.value.push(obj);
 }
 
+const videoList = ref([]);
+const addVideo = (obj)=>{
+    videoList.value.push(obj);
+}
+
 </script>
 <template>
     <van-row justify="space-around" style="padding:4px;" align="center">
@@ -76,9 +82,9 @@ const addLink = (obj) => {
             placeholder="输入图文回答内容" />
         <van-uploader v-model="fileList" multiple :max-count="2" disabled :show-upload="false">
         </van-uploader>
-        <a :href="item.address" v-for="(item,index) in linkArr" :key="index">
-            {{ item.text }}
-        </a>
+        <van-uploader v-model="videoList" multiple :max-count="2" disabled :show-upload="false">
+        </van-uploader>
+        <LinkItem />
     </van-cell-group>
     <div class="footer">
         <van-row justify="end">
@@ -99,7 +105,7 @@ const addLink = (obj) => {
         </van-row>
         <van-divider />
         <TxtTool v-if="tool === 'txt'" />
-        <AddTool v-if="tool === 'add'" @addLink="addLink" />
+        <AddTool v-if="tool === 'add'" @addLink="addLink" @addVideo="addVideo"/>
         <SetTool v-if="tool === 'set'"/>
     </div>
 </template>
