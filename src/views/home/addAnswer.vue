@@ -60,6 +60,8 @@ const showLink = ref(false);
 const link = ref({
     address:1,
     text:2,
+    isLink:true,
+    isCard:false,
 });
 const toggleLinkPopup = (item) => {
     if(item) link.value = item;

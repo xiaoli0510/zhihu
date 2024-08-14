@@ -1,15 +1,18 @@
 <script setup>
 import { inject, ref, watch } from 'vue';
 const toggleLinkPopup = inject('toggleLinkPopup');
-const props = defineProps(['item']);
+const props = defineProps({
+    item: {
+        type: Object
+    }
+});
 const actions = [
     { id: 0, icon: 'edit' },
     { id: 1, icon: 'link-o' },
     { id: 2, text: '切换为卡片', },
 ];
 const showPopover = ref(false);
-const isCard = ref(false);
-watch(() => isCard.value, (newVal) => {
+watch(() => props.item.isCard.value, (newVal) => {
     if (newVal) {
         actions[2].text = '切换为链接';
     } else {
@@ -22,7 +25,6 @@ const closePopup = () => {
     emits('close');
 }
 
-const isLink = ref(true);
 const onSelect = (action) => {
     console.log(action);
     const id = action.id;
@@ -31,16 +33,16 @@ const onSelect = (action) => {
             toggleLinkPopup(props.item);
             break;
         case 1:
-            isLink.value = !isLink.value;
+            toggleLinkPopup(props.item, { isLink: false });
             break;
         case 2:
-            isCard.value = !isCard.value;
+            toggleLinkPopup(props.item, { isCard: props.item.isCard.value?false:true });
             break;
     }
 }
 
 const togglePopover = (value) => {
-    isCard.value = value;
+    //props.item.isCard.value = value;
     showPopover.value = !showPopover.value;
 }
 </script>
@@ -49,14 +51,15 @@ const togglePopover = (value) => {
         actions-direction="horizontal">
     </van-popover>
     <template v-if="props.item && props.item.address">
-        <span v-if="!isLink">
+        <span v-if="!props.item.isLink">
             {{ props.item.text }}
         </span>
         <template v-else>
-            <span @click="togglePopover(false)" v-if="!isCard">
+            <span @click="togglePopover(false)" v-if="!props.item.isCard">
                 {{ props.item.text }}
             </span>
-            <div class="link-card" v-if="isCard" :class="{ 'active': isCard }" @click="togglePopover(true)">
+            <div class="link-card" v-if="props.item.isCard" :class="{ 'active': props.item.isCard }"
+                @click="togglePopover(true)">
                 <div>{{ props.item.text }}</div>
                 <div class="gray-font"><van-icon name="link-o" color="#ddd" size="17px" />{{ props.item.address }}</div>
                 <van-icon name="close" class="icon-close" @click.stop="closePopup" />
