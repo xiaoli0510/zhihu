@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import AddLinkPopup from './AddLink/AddLinkPopup.vue'
+import { inject, ref } from 'vue';
+const toggleLinkPopup = inject('toggleLinkPopup')
+
 
 
 const emits = defineEmits(['addLink', 'addVideo']);
@@ -18,12 +19,7 @@ const afterRead = (file) => {
     })
 };
 
-//添加超链接弹框
-const showLink = ref(false);
-const toggleLinkPopup = (link) => {
-    console.log(link);
-    showLink.value = !showLink.value;
-}
+
 </script>
 <template>
     <van-grid :gutter="10">
@@ -32,7 +28,6 @@ const toggleLinkPopup = (link) => {
             <template #icon>
                 <van-icon name="link-o" size="30px" @click="toggleLinkPopup" />
 
-                <AddLinkPopup v-if="showLink" :show="showLink" @toggle="toggleLinkPopup"/>
                 <!-- <van-icon name="link-o" size="30px"/> -->
             </template>
         </van-grid-item>

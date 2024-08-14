@@ -1,13 +1,15 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import BackIcon from '@/components/BackIcon.vue'
-import { ref } from 'vue';
+import { provide, ref } from 'vue';
 import { throttle } from 'lodash';
 import { useHistoryStore } from '@/stores/history.js';
 import TxtTool from '@/components/AddAnswer/TxtTool.vue'
 import AddTool from '@/components/AddAnswer/AddTool.vue'
 import SetTool from '@/components/AddAnswer/SetTool.vue'
 import LinkItem from '@/components/AddAnswer/AddLink/LinkItem.vue'
+import AddLinkPopup from '@/components/AddAnswer/AddLink/AddLinkPopup.vue'
+
 const route = useRoute();
 const tip = ref('');
 const txtValue = ref('');
@@ -31,7 +33,6 @@ const redoTxt = () => {
 }
 
 const fileList = ref([]);
-
 const afterRead = (file) => {
     fileList.value.push({
         url: file.objectUrl,
@@ -50,8 +51,23 @@ const addLink = (obj) => {
 }
 
 const videoList = ref([]);
-const addVideo = (obj)=>{
+const addVideo = (obj) => {
     videoList.value.push(obj);
+}
+
+//添加链接弹框
+const showLink = ref(false);
+const link = ref({
+    address:1,
+    text:2,
+});
+const toggleLinkPopup = (item) => {
+    if(item) link.value = item;
+    showLink.value = !showLink.value;
+}
+provide('toggleLinkPopup', toggleLinkPopup);
+const closeLink = ()=>{
+    link.value = {};
 }
 
 </script>
@@ -84,7 +100,7 @@ const addVideo = (obj)=>{
         </van-uploader>
         <van-uploader v-model="videoList" multiple :max-count="2" disabled :show-upload="false">
         </van-uploader>
-        <LinkItem />
+        <LinkItem :item="link" @close="closeLink"/>
     </van-cell-group>
     <div class="footer">
         <van-row justify="end">
@@ -99,15 +115,18 @@ const addVideo = (obj)=>{
                 </van-uploader>
             </van-col>
             <van-col><van-icon name="add-o" @click="toggleTool('add')" /></van-col>
-            <van-col><van-icon name="revoke" @click="undoTxt" :color="historyStore.canUndo ? '#000' : '#ccc'" /></van-col>
-            <van-col><van-icon name="replay" @click="redoTxt" :color="historyStore.canRedo ? '#000' : '#ccc'" /></van-col>
+            <van-col><van-icon name="revoke" @click="undoTxt"
+                    :color="historyStore.canUndo ? '#000' : '#ccc'" /></van-col>
+            <van-col><van-icon name="replay" @click="redoTxt"
+                    :color="historyStore.canRedo ? '#000' : '#ccc'" /></van-col>
             <van-col><van-icon name="setting-o" @click="toggleTool('set')" /></van-col>
-        </van-row>
+        </van-row>:
         <van-divider />
         <TxtTool v-if="tool === 'txt'" />
-        <AddTool v-if="tool === 'add'" @addLink="addLink" @addVideo="addVideo"/>
-        <SetTool v-if="tool === 'set'"/>
+        <AddTool v-if="tool === 'add'" @addLink="addLink" @addVideo="addVideo" />
+        <SetTool v-if="tool === 'set'" />
     </div>
+    <AddLinkPopup  :show="showLink" :item="link"/>
 </template>
 <style scoped lang='scss'>
 .type-wrap {
@@ -142,6 +161,4 @@ const addVideo = (obj)=>{
     width: 100%;
     padding: 12px;
 }
-
-
 </style>
