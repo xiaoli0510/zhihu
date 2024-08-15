@@ -1,6 +1,7 @@
 <script setup>
 import { inject, ref, watch } from 'vue';
 const toggleLinkPopup = inject('toggleLinkPopup');
+const emits = defineEmits(['close', 'changeLink']);
 const props = defineProps({
     item: {
         type: Object
@@ -12,15 +13,17 @@ const actions = [
     { id: 2, text: '切换为卡片', },
 ];
 const showPopover = ref(false);
-watch(() => props.item.isCard.value, (newVal) => {
+watch(() => props.item.isCard, (newVal) => {
+    console.log('改变了isCard', newVal)
     if (newVal) {
         actions[2].text = '切换为链接';
     } else {
         actions[2].text = '切换为卡片';
     }
+}, {
+    deep: true
 });
-const emits = defineEmits(['close']);
-const closePopup = () => {
+const closeLink = () => {
     showPopover.value = false;
     emits('close');
 }
@@ -33,16 +36,17 @@ const onSelect = (action) => {
             toggleLinkPopup(props.item);
             break;
         case 1:
-            toggleLinkPopup(props.item, { isLink: false });
+            emits('changeLink', { isLink: false })
+            // changeLink(}); 
             break;
         case 2:
-            toggleLinkPopup(props.item, { isCard: props.item.isCard.value?false:true });
+            emits('changeLink', { isCard: props.item.isCard ? false : true })
+            // changeLink({ isCard: props.item.isCard ? false : true });
             break;
     }
 }
 
-const togglePopover = (value) => {
-    //props.item.isCard.value = value;
+const togglePopover = () => {
     showPopover.value = !showPopover.value;
 }
 </script>
@@ -62,7 +66,7 @@ const togglePopover = (value) => {
                 @click="togglePopover(true)">
                 <div>{{ props.item.text }}</div>
                 <div class="gray-font"><van-icon name="link-o" color="#ddd" size="17px" />{{ props.item.address }}</div>
-                <van-icon name="close" class="icon-close" @click.stop="closePopup" />
+                <van-icon name="close" class="icon-close" @click.stop="closeLink" />
             </div>
         </template>
     </template>

@@ -15,7 +15,6 @@ const tip = ref('');
 const txtValue = ref('');
 const historyStore = useHistoryStore();
 const updateTxt = throttle(function () {
-    console.log(2)
     tip.value = '草稿保存中';
     tip.value = '草稿已报存';
     historyStore.add(txtValue.value);
@@ -58,17 +57,30 @@ const addVideo = (obj) => {
 //添加链接弹框
 const showLink = ref(false);
 const link = ref({
-    address:1,
-    text:2,
+    address:'',
+    text:'',
     isLink:true,
     isCard:false,
 });
+const linkList = ref([]);
+//新增链接
+const sureAddLink = (obj)=>{
+    const item = Object.assign({},obj);
+    linkList.value.push(item);
+}
+//改变链接
+const changeLink = (obj,index)=>{
+    Object.assign(linkList.value[index],obj);
+}
+//切换链接弹框的显示隐藏 
 const toggleLinkPopup = (item) => {
-    console.log(item)
-    if(item?.address) link.value = item;
+    link.value=item;
+   // (obj&&obj.address)?link.value = obj:'';
     showLink.value = !showLink.value;
 }
 provide('toggleLinkPopup', toggleLinkPopup);
+provide('sureAddLink', sureAddLink);
+provide('changeLink', changeLink);
 const closeLink = ()=>{
     link.value = {};
 }
@@ -103,7 +115,7 @@ const closeLink = ()=>{
         </van-uploader>
         <van-uploader v-model="videoList" multiple :max-count="2" disabled :show-upload="false">
         </van-uploader>
-        <LinkItem :item="link" @close="closeLink"/>
+        <LinkItem :item="item" @close="closeLink" v-for="(item,index) in linkList" :key="index" @changeLink="changeLink($event,index)"/>
     </van-cell-group>
     <div class="footer">
         <van-row justify="end">
