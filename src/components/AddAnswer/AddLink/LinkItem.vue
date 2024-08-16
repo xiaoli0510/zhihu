@@ -5,6 +5,10 @@ const emits = defineEmits(['close', 'changeLink']);
 const props = defineProps({
     item: {
         type: Object
+    },
+    index:{
+        type:Number,
+        required: true
     }
 });
 const actions = [
@@ -14,7 +18,6 @@ const actions = [
 ];
 const showPopover = ref(false);
 watch(() => props.item.isCard, (newVal) => {
-    console.log('改变了isCard', newVal)
     if (newVal) {
         actions[2].text = '切换为链接';
     } else {
@@ -25,23 +28,21 @@ watch(() => props.item.isCard, (newVal) => {
 });
 const closeLink = () => {
     showPopover.value = false;
-    emits('close');
-}
+    emits('close',props.index);
+} 
 
 const onSelect = (action) => {
-    console.log(action);
     const id = action.id;
     switch (id) {
         case 0:
-            toggleLinkPopup(props.item);
+            toggleLinkPopup();
+            emits('changeLink');
             break;
         case 1:
             emits('changeLink', { isLink: false })
-            // changeLink(}); 
             break;
         case 2:
-            emits('changeLink', { isCard: props.item.isCard ? false : true })
-            // changeLink({ isCard: props.item.isCard ? false : true });
+            emits('changeLink', { isCard: props.item.isCard ? false : true });
             break;
     }
 }
@@ -70,7 +71,7 @@ const togglePopover = () => {
             </div>
         </template>
     </template>
-
+<br/>
 </template>
 <style scoped lang='scss'>
 .link-card {

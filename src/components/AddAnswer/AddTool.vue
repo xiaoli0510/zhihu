@@ -4,8 +4,7 @@ const toggleLinkPopup = inject('toggleLinkPopup')
 
 
 
-const emits = defineEmits(['addLink', 'addVideo']);
-const addLinkPopup = ref(null);
+const emits = defineEmits(['addLink', 'addVideo','changeLink']);
 const changeTool = (index) => {
     if (index === 0) {
         // console.log(addLink?.value);
@@ -19,6 +18,11 @@ const afterRead = (file) => {
     })
 };
 
+const add = ()=>{
+    toggleLinkPopup();
+    emits('changeLink',{});
+}
+
 
 </script>
 <template>
@@ -26,7 +30,7 @@ const afterRead = (file) => {
         <!-- <van-grid-item icon="link-o" text="添加链接" @click="changeTool(0)" /> -->
         <van-grid-item text="添加链接" @click="changeTool(0)">
             <template #icon>
-                <van-icon name="link-o" size="30px" @click="toggleLinkPopup()" />
+                <van-icon name="link-o" size="30px" @click="add" />
 
                 <!-- <van-icon name="link-o" size="30px"/> -->
             </template>

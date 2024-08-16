@@ -1,40 +1,44 @@
 <script setup>
-import { inject, nextTick, ref, watch } from 'vue';
-const props = defineProps(['show', 'item']);
+import { inject, nextTick, ref, watch, watchEffect } from 'vue';
+const props = defineProps(['show', 'item', 'index']);
 const toggleLinkPopup = inject('toggleLinkPopup');
 const sureAddLink = inject('sureAddLink');
-const obj = Object.assign({
+const emits = defineEmits(['close', 'changeLink']);
+
+const inputAddress = ref(null);
+const showLinkPopup = ref(props.show);
+const currentItem = ref({
     address: '',
     text: '',
     isLink: true,
     isCard: false,
-}, props.item.value || {});
-const currentItem = ref(obj);
-// const currentItem = Object.assign({
-//     address: '',
-//     text: '',
-//     isLink: true,
-//     isCard: false,
-// }, props.item || {});
-const inputAddress = ref(null);
+});
+watch(
+    () => props.index, (newIndex, preIndex) => {
+        //在更新和新增两者切换时，且当前是新增时，初始化currentItem
+        newIndex !== preIndex && newIndex === -1 ? currentItem.value = {
+            address: '',
+            text: '',
+            isLink: true,
+            isCard: false,
+        } : '';
+    }, { immediate: true });
 
-const showLinkPopup = ref(props.show);
-watch(() => props.show, (newVal) => {
-    showLinkPopup.value = newVal;
-    setTimeout(() => {
+watchEffect(() => {
+    props.item?.address ? currentItem.value = JSON.parse(JSON.stringify(props.item)) : '';
+    showLinkPopup.value = props.show;
+    showLinkPopup.value ? setTimeout(() => {
         nextTick(() => {
             inputAddress.value?.focus();
         })
-    }, 0)
-}, {
-    immediate: true
+    }, 0) : '';
 })
+
 const confirm = () => {
     if (!currentItem.value.address) {
         return showToast('请输入链接地址！');
     }
-    sureAddLink(currentItem.value);
-    //currentItem.value={};
+    props?.index === -1 ? sureAddLink(currentItem.value) : emits('changeLink', currentItem.value);
 }
 const beforeClose = (action) => {
     if (action === 'confirm') {
@@ -53,7 +57,7 @@ const beforeClose = (action) => {
 }
 
 const cancelLink = () => {
-    changeLink({ isLink: false });
+    emits('changeLink', { isLink: false });
     toggleLinkPopup();
 }
 </script>

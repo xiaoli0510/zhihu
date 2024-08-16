@@ -57,33 +57,43 @@ const addVideo = (obj) => {
 //添加链接弹框
 const showLink = ref(false);
 const link = ref({
-    address:'',
-    text:'',
-    isLink:true,
-    isCard:false,
+    address: '',
+    text: '',
+    isLink: true,
+    isCard: false,
 });
 const linkList = ref([]);
+
+//当前链接弹框对应的是哪一个linkItem
+const curIndex = ref(-1);
 //新增链接
-const sureAddLink = (obj)=>{
-    const item = Object.assign({},obj);
+const sureAddLink = (obj) => {
+    const item = Object.assign({}, obj);
     linkList.value.push(item);
 }
 //改变链接
-const changeLink = (obj,index)=>{
-    Object.assign(linkList.value[index],obj);
+const changeLink = (obj, index) => {
+    curIndex.value = index;
+    index>-1?Object.assign(linkList.value[index], obj ? obj : {}):'';
+    link.value = index > -1 ? linkList.value[index] : {
+        address: '',
+        text: '',
+        isLink: true,
+        isCard: false,
+    }
 }
-//切换链接弹框的显示隐藏 
-const toggleLinkPopup = (item) => {
-    link.value=item;
-   // (obj&&obj.address)?link.value = obj:'';
-    showLink.value = !showLink.value;
-}
-provide('toggleLinkPopup', toggleLinkPopup);
-provide('sureAddLink', sureAddLink);
-provide('changeLink', changeLink);
-const closeLink = ()=>{
-    link.value = {};
-}
+    // 删除链接
+    const closeLink = (index) => {
+        linkList.value.splice(index, 1);
+    }
+
+    //切换链接弹框的显示隐藏 
+    const toggleLinkPopup = () => {
+        showLink.value = !showLink.value;
+        if (!showLink.value) curIndex.value = -1;
+    }
+    provide('toggleLinkPopup', toggleLinkPopup);
+    provide('sureAddLink', sureAddLink);
 
 </script>
 <template>
@@ -115,7 +125,8 @@ const closeLink = ()=>{
         </van-uploader>
         <van-uploader v-model="videoList" multiple :max-count="2" disabled :show-upload="false">
         </van-uploader>
-        <LinkItem :item="item" @close="closeLink" v-for="(item,index) in linkList" :key="index" @changeLink="changeLink($event,index)"/>
+        <LinkItem :item="item" @close="closeLink" v-for="(item, index) in linkList" :key="index"
+            @changeLink="changeLink($event, index)" :index="index" />
     </van-cell-group>
     <div class="footer">
         <van-row justify="end">
@@ -138,10 +149,11 @@ const closeLink = ()=>{
         </van-row>:
         <van-divider />
         <TxtTool v-if="tool === 'txt'" />
-        <AddTool v-if="tool === 'add'" @addLink="addLink" @addVideo="addVideo" />
+        <AddTool v-if="tool === 'add'" @addLink="addLink" @addVideo="addVideo" @changeLink="changeLink($event, curIndex)"/>
         <SetTool v-if="tool === 'set'" />
     </div>
-    <AddLinkPopup  :show="showLink" :item="link"/>
+    <AddLinkPopup :show="showLink" :item="link" :index="curIndex" @changeLink="changeLink($event, curIndex)" />
+    <!-- <AddLinkPopup  :show="showLink" v-if="showLink" :item="link" :index="curIndex"  @changeLink="changeLink($event,curIndex)"/> -->
 </template>
 <style scoped lang='scss'>
 .type-wrap {
