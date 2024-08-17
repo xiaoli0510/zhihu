@@ -153,7 +153,6 @@ const changeLink = (obj, index) => {
         <SetTool v-if="tool === 'set'" />
     </div>
     <AddLinkPopup :show="showLink" :item="link" :index="curIndex" @changeLink="changeLink($event, curIndex)" />
-    <!-- <AddLinkPopup  :show="showLink" v-if="showLink" :item="link" :index="curIndex"  @changeLink="changeLink($event,curIndex)"/> -->
 </template>
 <style scoped lang='scss'>
 .type-wrap {
