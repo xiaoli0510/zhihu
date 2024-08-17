@@ -1,12 +1,15 @@
 <script setup>
 import { inject, ref } from 'vue';
+import { useRouter } from 'vue-router';
 const toggleLinkPopup = inject('toggleLinkPopup')
 
 
 
 const emits = defineEmits(['addLink', 'addVideo','changeLink']);
+const router = useRouter();
 const changeTool = (index) => {
-    if (index === 0) {
+    if (index === 2) {
+        router.push('/quoteArticle');
         // console.log(addLink?.value);
         // addLink?.value?.showPopup();
     }

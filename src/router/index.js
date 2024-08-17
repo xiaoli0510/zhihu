@@ -25,6 +25,8 @@ import Subject from "../views/home/subject.vue";//关键字的讨论 想法 待�
 import WaitAnswerDetail from "../views/home/waitAnswerDetail.vue";//待回答详情页
 import Recent from "../views/home/recent.vue";//历史浏览页
 import AddAnswer from "../views/home/addAnswer.vue";//写回答
+import QuoteArticle from "../views/home/quoteArticle.vue";//引用文章
+import Article from "../views/home/article.vue";//文章详情页
 
 
 import Test from "../views/home/test.vue";//测试页
@@ -188,8 +190,17 @@ const router = createRouter({
       name: "AddAnswer",
       component:AddAnswer,
     },
-    
-    
+    {
+      path: "/quoteArticle",
+      name: "quoteArticle",
+      component:QuoteArticle,
+    },
+    {
+      path: "/article/id",
+      name: "article",
+      props:true,
+      component:Article,
+    }, 
   ],
 });
 

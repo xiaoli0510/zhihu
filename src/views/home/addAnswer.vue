@@ -125,6 +125,7 @@ const changeLink = (obj, index) => {
         </van-uploader>
         <van-uploader v-model="videoList" multiple :max-count="2" disabled :show-upload="false">
         </van-uploader>
+        <br/>
         <LinkItem :item="item" @close="closeLink" v-for="(item, index) in linkList" :key="index"
             @changeLink="changeLink($event, index)" :index="index" />
     </van-cell-group>
