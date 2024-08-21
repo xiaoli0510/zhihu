@@ -282,3 +282,18 @@ Mock.mock("/api/answer/detail", "get", {
     },
   ],
 });
+
+//quotoArticle页 
+Mock.mock("/api/article", "get", {
+  "list|4-10": [
+    {
+      "type|1": [1, 2], //1默认 2赞同
+      id: "@increment",
+      title: "@ctitle(1,10)",
+      sentence: "@cparagraph(100,200)",
+      agreeCount: "@integer(0,100)",
+      commentCount: "@integer(0,100)",
+      time: "@datetime('yyyy-MM-dd')",
+    },
+  ],
+});

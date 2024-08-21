@@ -1,14 +1,34 @@
 <script setup>
 import ArticleItem from '@/components/AddAnswer/ArticleItem.vue'
-import { ref } from 'vue';
-
+import { ref, watch } from 'vue';
+import {fetchArticle} from '@/api/search.js';
 const showPopover = ref(false);
+const list = ref([]);
+fetchArticle()
+.then(res=>{
+  list.value = res?.data?.list;
+}).catch(err=>{
+    console.log(err);
+})
+
 // 通过 actions 属性来定义菜单选项
 const actions = [
-  { text: '默认排序' },
-  { text: '按赞同排序' },
+  { text: '默认排序',value:1},
+  { text: '按赞同排序' ,value:2},
 ];
-const onSelect = (action) => showToast(action.text);
+const curType = ref(1);
+const onSelect = (action) => {
+    curType.value = action.value;
+};
+watch(curType,newVal=>{
+    list.value.sort(item=>{
+        if(item.type===newVal){
+            return -1;
+        }else{
+            return 1;
+        }
+    })
+})
 </script>
 <template>
     <van-row justify="flex-start" style="padding:4px;" align="center">
@@ -30,7 +50,7 @@ const onSelect = (action) => showToast(action.text);
                 </van-popover>
             </van-col>
         </van-row>
-        <ArticleItem />
+        <ArticleItem v-for="item in list" :key="item.id" :item="item"/>
         <p class="gray-font tips">没有更多内容</p>
     </div>
 </template>

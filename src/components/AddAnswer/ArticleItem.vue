@@ -1,15 +1,15 @@
 <script setup>
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+const props = defineProps(['item']);
 
-const obj = ref({
-    id: 1,
-    title: '211',
-    sentence: '22222222222',
-    commentCount: "1",
-    agreeCount: "2",
-    date: '1年前'
-})
+// const props.item = ref({
+//     id: 1,
+//     title: '211',
+//     sentence: '22222222222',
+//     commentCount: "1",
+//     agreeCount: "2",
+//     time: '1年前'
+// })
 
 const router = useRouter();
 const enterArticle = (id) => {
@@ -17,15 +17,15 @@ const enterArticle = (id) => {
 }
 </script>
 <template>
-    <div class="article-item" @click="enterArticle(obj.id)">
+    <div class="article-item" @click="enterArticle(props.item.id)">
         <van-row justify="space-between" align="center">
             <van-col span="20">
-                <h3 class="title">{{ obj.title }}</h3>
-                <p>{{ obj.sentence }}</p>
+                <h3 class="title">{{ props.item.title }}</h3>
+                <van-text-ellipsis :content="props.item.sentence" rows="2"/>
                 <van-row class="gray-font">
-                    <van-col>{{ obj.agreeCount }}赞同.</van-col>
-                    <van-col>{{ obj.commentCount }}评论.</van-col>
-                    <van-col>{{ obj.date }}</van-col>
+                    <van-col>{{ props.item.agreeCount }}赞同.</van-col>
+                    <van-col>{{ props.item.commentCount }}评论.</van-col>
+                    <van-col>{{ props.item.time }}</van-col>
                 </van-row>
             </van-col>
             <van-col span="3" class="quote-txt">引用</van-col>

@@ -71,4 +71,8 @@ export async function fetchSubjectWaitAnswer(){
 export async function fetchAnswerDetail(){
     return await service.get('/api/answer/detail');
 }
+//quotoArticle页 
+export async function fetchArticle(){
+    return await service.get('/api/article');
+}
 

@@ -196,7 +196,7 @@ const router = createRouter({
       component:QuoteArticle,
     },
     {
-      path: "/article/id",
+      path: "/article/:id",
       name: "article",
       props:true,
       component:Article,
