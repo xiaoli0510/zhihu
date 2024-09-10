@@ -1,207 +1,35 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import HomeView from "../views/home/index.vue";//tab-首页
-import DiscoverView from "../views/discover/index.vue";//tab-发现页
-import AddView from "../views/add/index.vue";//tab-创造页
-import HotView from "../views/hot/index.vue";//tab-热点页
-import CenterView from "../views/center/index.vue";//tab-个人中心页
-import Topic from "../views/home/topic.vue";//首页-想法-主题页
-import Profile from "../views/home/profile.vue";//首页-想法-个人页
-import Detail from "../views/home/detail.vue";//首页-想法-详情页
-import Search from "../views/home/search.vue";//搜索页
-import Result from "../views/home/result.vue";//搜索结果页
-import Report from "../views/home/report.vue";//举报页
-import NovelDetail from "../views/home/novelDetail.vue";//小说详情页
-import VipWelfare from "../views/center/vipWelfare.vue";//专属会员福利
-import BulletComment from "../views/home/bulletComment.vue";//弹评
-import Private from "../views/home/private.vue";//私信
-import Contact from "../views/home/contact.vue";//联系小管家
-import NovelHome from "../views/home/novelHome.vue";//小说主页
-import Roster from "../views/home/roster.vue";//获奖名单页
-import Pay from "../views/home/pay.vue";//付款订单页
-import PayProtocol from "../views/home/payProtocol.vue";//支付协议页
-import RechargeProtocol from "../views/home/rechargeProtocol.vue";//充值须知
-import YanxuanVip from "../views/home/yanxuanVip.vue";//盐选会员
-import Subject from "../views/home/subject.vue";//关键字的讨论 想法 待回答 综合页
-import WaitAnswerDetail from "../views/home/waitAnswerDetail.vue";//待回答详情页
-import Recent from "../views/home/recent.vue";//历史浏览页
-import AddAnswer from "../views/home/addAnswer.vue";//写回答
-import QuoteArticle from "../views/home/quoteArticle.vue";//引用文章
-import Article from "../views/home/article.vue";//文章详情页
-
-
-import Test from "../views/home/test.vue";//测试页
-
+import { moduleRoutes } from "./util.js";
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: "/home",
-      name: "home",
-      alias: "/",
-      component: HomeView,
-    },
-    {
-      path: "/discover",
-      name: "discover",
-      component: DiscoverView,
-    },
-    {
-      path: "/add",
-      name: "add",
-      component: AddView,
-    },
-    {
-      path: "/hot",
-      name: "hot",
-      component: HotView,
-    },
-    {
-      path: "/center",
-      name: "center",
-      component: CenterView,
-    },
-    {
-      path: "/about",
-      name: "about",
-      component: () => import("../views/AboutView.vue"),
-    },
-    {
-      path: "/topic",
-      name: "topic",
-      component: Topic,
-    },
-    {
-      path: "/profile/:id",
-      name: "profile",
-      component: Profile,
-    },
-    {
-      path: "/detail",
-      name: "detail",
-      component: Detail,
-    },
-    {
-      path: "/search",
-      name: "search",
-      component: Search,
-    },
-    {
-      path: "/result/:keyWord",
-      name: "result",
-      component: Result,
-      props: true,
-      meta: {
-        keepAlive: true, //需要缓存
-      },
-    },
-    {
-      path: "/report",
-      name: "report",
-      component: Report,
-      props: true,
-    },
-    {
-      path: "/novel/detail/:id",
-      name: "novelDetail",
-      component: NovelDetail,
-      props: true,
-      meta: {
-        keepAlive: true, //需要缓存
-      },
-    },
-    {
-      path: "/vipWelfare",
-      name: "vipWelfare",
-      component: VipWelfare,
-    },
-    {
-      path: "/bullet",
-      name: "bulletComment",
-      component: BulletComment,
-    },
-    {
-      path: "/private",
-      name: "private",
-      component: Private,
-    },
-    {
-      path: "/contact",
-      name: "contact",
-      component: Contact,
-    },
-    {
-      path: "/test",
-      name: "test",
-      component: Test,
-    },
-    {
-      path: "/novel/home/:id",
-      props:true,
-      name: "novelHomepage",
-      component: NovelHome,
-      meta:{
-        keepAlive:true,//需要缓存
-      }
-    },
-    {
-      path: "/novel/roster",
-      props:true,
-      name: "roster",
-      component: Roster,
-    },
-    {
-      path: "/pay/:id",
-      props:true,
-      name: "pay",
-      component: Pay,
-    },
-    {
-      path: "/pay/protocol",
-      name: "payProtocol",
-      component:PayProtocol,
-    },
-    {
-      path: "/recharge/protocol",
-      name: "rechargeProtocol",
-      component:RechargeProtocol,
-    },
-    {
-      path: "/yanxuanVip",
-      name: "yanxuanVip",
-      component:YanxuanVip,
-    },
-    {
-      path: "/subject",
-      name: "subject",
-      component:Subject
-    },
-    {
-      path: "/waitAnswerDetail",
-      name: "waitAnswerDetail",
-      component:WaitAnswerDetail
-    },
-    {
-      path: "/recent",
-      name: "Recent",
-      component:Recent,
-    },
-    {
-      path: "/addAnswer",
-      name: "AddAnswer",
-      component:AddAnswer,
-    },
-    {
-      path: "/quoteArticle",
-      name: "quoteArticle",
-      component:QuoteArticle,
-    },
-    {
-      path: "/article/:id",
-      name: "article",
-      props:true,
-      component:Article,
-    }, 
-  ],
+  routes: [],
 });
+
+const commonModuleRoute = [];
+const existRoute = router.getRoutes();
+for (let key in moduleRoutes) {
+  //获取最后的名字并小写
+  const pathArr = key.split("/");
+  let componentName = pathArr.pop().split(".")[0];
+  if (componentName === "index") componentName = pathArr.pop();
+  componentName = componentName.toUpperCase();
+  let pathName = componentName.toLocaleLowerCase();
+  //url后带有id参数的路由
+  const idPath = ["profile", "novelDetail", "novelHome", "pay", "article"];
+  idPath.includes(pathName) ? (pathName = pathName + "/:id") : "";
+  //如果有重复的，则跳过
+  if (existRoute.includes(pathName)) continue;
+  const routeInfo = {
+    path: `/${pathName}`,
+    name: componentName,
+    component: moduleRoutes[key],
+  };
+  //首页
+  componentName === "home" ? (routeInfo.alias = "/") : "";
+  commonModuleRoute.push({ ...routeInfo });
+} 
+commonModuleRoute.forEach((item) => {
+  router.addRoute(item);
+}); 
 
 export default router;
