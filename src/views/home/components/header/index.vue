@@ -14,7 +14,7 @@ const tabArray = ref([
 const router = useRouter();
 const enterSearch = () => {
   router.push({
-    name: 'search'
+    name: 'SEARCH'
   })
 }
 
