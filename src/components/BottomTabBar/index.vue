@@ -4,23 +4,23 @@ const active = ref(0);
 const icon = [{
   active: "/src/assets/imgs/bottomTabBar/active-home.png",
   inactive: "/src/assets/imgs/bottomTabBar/home.png",
-  routeName:'home'
+  routeName:'HOME'
 },{
   active: "/src/assets/imgs/bottomTabBar/active-discover.png",
   inactive: "/src/assets/imgs/bottomTabBar/discover.png",
-  routeName:'discover'
+  routeName:'DISCOVER'
 },{
   active: "/src/assets/imgs/bottomTabBar/active-add.png",
   inactive: "/src/assets/imgs/bottomTabBar/add.png",
-  routeName:'add'
+  routeName:'ADD'
 },{
   active: "/src/assets/imgs/bottomTabBar/active-hot.png",
   inactive: "/src/assets/imgs/bottomTabBar/hot.png",
-  routeName:'hot'
+  routeName:'HOT'
 },{
   active: "/src/assets/imgs/bottomTabBar/active-center.png",
   inactive: "/src/assets/imgs/bottomTabBar/center.png",
-  routeName:'center'
+  routeName:'CENTER'
 }];
 </script>
 <template>

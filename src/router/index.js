@@ -25,9 +25,10 @@ for (let key in moduleRoutes) {
     component: moduleRoutes[key],
   };
   //首页
-  componentName === "home" ? (routeInfo.alias = "/") : "";
+  componentName === "HOME" ? (routeInfo.alias = "/") : "";
   commonModuleRoute.push({ ...routeInfo });
 } 
+console.log(commonModuleRoute)
 commonModuleRoute.forEach((item) => {
   router.addRoute(item);
 }); 
