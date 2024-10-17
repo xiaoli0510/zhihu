@@ -5,7 +5,7 @@
         </van-col>
         <van-col>
             <van-tabs v-model:active="active" @clickTab="onClickTab">
-                <van-tab v-for="(item) in tabs" :title="item.label" :name="item.name">
+                <van-tab v-for="(item) in tabs" :title="item.label">
                 </van-tab>
             </van-tabs>
         </van-col>
@@ -15,8 +15,9 @@
 </template>
 <script setup>
 import BackIcon from '@/components/BackIcon.vue'
-import Scan from './component/Scan.vue'
-import { ref } from 'vue';
+import Scan from './component/Scan/Scan.vue'
+import Collect from './component/Collect/Index.vue'
+import { ref,markRaw } from 'vue';
 
 const tabs = [
     {
@@ -46,10 +47,19 @@ const tabs = [
     },
 ]
 
-const active = ref('scan');
-const componentName = Scan;
+const active = ref(1);
+const componentName = ref(markRaw(Collect));
 
 const onClickTab = (data) => {
+    const {name} = data;
+    switch(name){
+        case 0:
+            componentName.value = markRaw(Scan);
+            break;
+        case 1:
+            componentName.value = markRaw(Collect);
+            break;
+    }
     console.log(data);
     console.log()
     
@@ -57,3 +67,4 @@ const onClickTab = (data) => {
 
 </script>
 <style scoped lang='scss'></style>
+ 
