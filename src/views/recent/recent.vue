@@ -6,12 +6,11 @@
         <van-col>
             <van-tabs v-model:active="active" @clickTab="onClickTab">
                 <van-tab v-for="(item) in tabs" :title="item.label" :name="item.name">
-                    122
-                     <component :is="Scan"/>
                 </van-tab>
             </van-tabs>
         </van-col>
     </van-row>
+    <component :is="componentName"/>
 
 </template>
 <script setup>
@@ -48,6 +47,7 @@ const tabs = [
 ]
 
 const active = ref('scan');
+const componentName = Scan;
 
 const onClickTab = (data) => {
     console.log(data);

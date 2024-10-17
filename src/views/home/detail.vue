@@ -6,11 +6,11 @@ import TopicItem from '@/views/home/components/idea/topicItem.vue'
 import { fetchTopicList } from "@/api/index";
 import BackIcon from '@/components/BackIcon.vue'
 let list = ref([]);
-fetchTopicList()
-    .then(res => {
-        list.value = res.data.list;
-    });
-
+const info = ref({});
+const res = await fetchTopicList();
+list.value = res.data.list;
+info.value = res.data.info;
+provide('questionTitle', info.value.title)
 const toggleFollow = (item) => {
     item.isFollow = !item.isFollow;
 }
@@ -28,11 +28,11 @@ provide('toggleFollow', toggleFollow);
             </van-col>
         </van-row>
         <div class="detail-header">
-            <h3>这是标题</h3>
+            <h3><van-text-ellipsis :content="info.title"/></h3>
             <van-row class="info">
                 <van-col>知乎·</van-col>
-                <van-col>44个回答·</van-col>
-                <van-col>119个关注</van-col>
+                <van-col>{{info.answer}}个回答·</van-col>
+                <van-col>{{info.beFollow}}个关注</van-col>
                 <van-col><van-icon name="arrow" /></van-col>
             </van-row>
         </div>

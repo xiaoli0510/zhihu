@@ -28,7 +28,6 @@ for (let key in moduleRoutes) {
   componentName === "HOME" ? (routeInfo.alias = "/") : "";
   commonModuleRoute.push({ ...routeInfo });
 } 
-console.log(commonModuleRoute)
 commonModuleRoute.forEach((item) => {
   router.addRoute(item);
 }); 

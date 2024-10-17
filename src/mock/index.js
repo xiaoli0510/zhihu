@@ -16,15 +16,14 @@ Mock.mock("/api/idea", "get", {
   ],
 });
 
-//主题页列表
+//根据id获取主题页列表
 Mock.mock("/api/topic", "get", {
-  status: 200, //请求成功状态码
-   info:{
+   "info":{
     id: "@increment",
     avatar: "https://randomuser.me/api/portraits/men/@integer(0,99).jpg",
     title: "@sentence(5)",
-    answer:"@interger(1,100)",
-    beFollow:"@interger(1,100)",
+    answer:"@integer(1,100)",
+    beFollow:"@integer(1,100)",
    },
   "list|10": [
     {

@@ -6,6 +6,7 @@ import {createPinia } from 'pinia';
 import 'amfe-flexible';
 import '@/mock/index'
 import '@/mock/search.js'
+import '@/mock/recent.js'
 
 const pinia = createPinia();
 const app = createApp(App)
