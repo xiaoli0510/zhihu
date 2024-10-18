@@ -1,7 +1,7 @@
 <script setup>
 import { inject } from 'vue';
 import { useRouter } from 'vue-router';
-const title = inject('questionTitle');
+const title = inject('questionTitle','');
 const router = useRouter();
 const enterAddAnswer = () => {
   router.push(`/addAnswer?t=${title}`);

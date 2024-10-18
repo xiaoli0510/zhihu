@@ -126,7 +126,7 @@ const clickOverlay = () => {
 </script>
 <template>
     <van-share-sheet v-model:show="showShare" title="分享到..." cancel-text="" :options="options" @select="onSelect"
-        @click-overlay="clickOverlay">
+        @click-overlay.stop="clickOverlay">
         <span class="copy"></span>
     </van-share-sheet>
 </template>
