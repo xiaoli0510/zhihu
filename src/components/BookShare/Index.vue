@@ -8,7 +8,7 @@ import MoreShare from '@/components/BookShare/MoreShare.vue'
 const props = defineProps(['data']);
 //分享面板
 const isShare = ref(false);
-const showShare = () => {
+const showShare = (id=0) => {
     isShare.value = true;
 }
 const hideShare = () => {
@@ -36,15 +36,23 @@ const hideMoreShare = () => {
     isMoreShare.value = false;
 }
 
+defineExpose({
+    showShare
+})
+
 </script>
 <template>
+    <div>
+        
     <Panel :data="props.data" :isShare="isShare" @hideShare="hideShare" v-if="isShare" @showReadSet="showReadSet"
         @showMoreShare="showMoreShare" />
-    <ShareIcon @showShare="showShare" :data="props.data" />
+    <ShareIcon @showShare="showShare" :data="props.data" v-show="!props.data.hideIcon"/>
     <!-- 更多分享 -->
     <MoreShare v-if="isMoreShare" :isMoreShare="isMoreShare" @hideMoreShare="hideMoreShare" />
     <!-- 阅读设置 -->
     <ReadSet @close="hideReadset" :isReadset="isReadset" v-if="isReadset"/>
+</div>
+
 </template>
 <style scoped lang='scss'>
 </style>

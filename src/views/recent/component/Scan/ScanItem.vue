@@ -13,13 +13,13 @@
         <div class="gray-font">
             <van-row justify="space-around">
                 <van-col span="22">
-                     <span>{{ item.favour }}</span>赞同.
-            <span>{{ item.comment }}</span>评论.
-            <van-tag color="#faf7f7" text-color="#a09f9f">已读{{ item.finishPercent < 100 ? item.finishPercent + '%' : '完'
-                    }}</van-tag>
+                    <span>{{ item.favour }}</span>赞同.
+                    <span>{{ item.comment }}</span>评论.
+                    <van-tag color="#faf7f7" text-color="#a09f9f">已读{{ item.finishPercent < 100 ? item.finishPercent
+                            + '%' : '完' }}</van-tag>
                 </van-col>
                 <van-col span="2">
-        <BookShare :data="{item,iconName:'ellipsis'}"/>
+                    <BookShare :data="{ item, iconName: 'ellipsis' }" />
                 </van-col>
             </van-row>
         </div>
