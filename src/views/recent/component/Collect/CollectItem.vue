@@ -56,7 +56,6 @@ const actions = [
     { text: '分享',index:2 },
 ];
 const onSelect = (item, action) => {
-    const { id } = item;
     const { index } = action;
     switch (index) {
         case 0:
