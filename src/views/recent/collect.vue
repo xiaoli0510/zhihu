@@ -16,7 +16,7 @@
     <div class="collect-page-main">
         <p class="explain">{{ list.length }}个内容</p>
         <CollectItem v-for="(item, index) in list" :key="item.id" :item="item" @share="onShare" @move="onMove"
-            :index="index" />
+             />
     </div>
 </template>
 <script setup>

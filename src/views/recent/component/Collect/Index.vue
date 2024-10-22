@@ -23,14 +23,12 @@
                 </span>
             </van-col>
         </van-row>
-        <!-- <template v-for="(item1,index1) in bookmarkList" :key="item1.id"> -->
-            
-            <CollectItem  @share="onShare" 
-                v-for="(item,index) in list.collectList" :key="item.id" :item="item" :index="index" :parentId="item.parentId"
-             :bookmarkList="list.bookmarkList" @update="updateBookmark($event,item.parentId)"/>
-        <!-- </template> -->
-
-        <BookmarkItem v-show="orderType === 1" v-for="item in list.bookmarkList" :key="item.id" :item="item"/>
+        <template v-if="orderType === 0">
+            <CollectItem @share="onShare" v-for="(item, index) in list.collectList" :key="item.id" :item="item"
+                :index="index" :parentId="item.parentId" :bookmarkList="list.bookmarkList"
+                @update="updateBookmark($event, item.parentId)" />
+        </template>
+        <BookmarkItem v-show="orderType === 1" v-for="item in list.bookmarkList" :key="item.id" :item="item" @edit="showBookmark('edit',item,index)"/>
         <p class="tips gray-font">没有更多内容</p>
         <BookShare ref="bookShare" :data="{ item: bookShareData, hideIcon: true }" />
 
@@ -38,7 +36,7 @@
         <van-popup closeable close-icon="close" close-icon-position="top-left" v-model:show="isShowCreate" round
             position="bottom" :style="{ height: '90%', padding: '20px 10px' }">
             <h3 class="text-c position-r">新建收藏夹
-                <span class="position-a btn-submit" @click="createBookmark">创建</span>
+                <span class="position-a btn-submit" @click="createEditBookmark">创建</span>
             </h3>
             <van-cell-group inset>
                 <van-field v-model="bookmark.folderTitle" name="folderTitle" label="" placeholder="添加收藏夹标题"
@@ -64,7 +62,7 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { provide, ref } from 'vue';
 import CollectItem from './CollectItem.vue'
 import BookShare from '@/components/BookShare/Index.vue'
 import BookmarkItem from './BookmarkItem.vue'
@@ -157,16 +155,20 @@ const validator = {
     folderTitle: (val) => val.length <= 20,
     depict: (val) => val.length <= 300,
 }
-//显示新建收藏夹弹框
-const showBookmark = () => {
+//显示新建/编辑收藏夹弹框
+const typeRef  = ref('create');//create/edit
+const showBookmark = (type='create',params = {},index = -1)  => {
+    typeRef.value = type
+    bookmark.value = params;
     isShowCreate.value = true;
 }
+provide('showBookmark',showBookmark)
 const setDefault = () => {
     bookmark.default = true;
 }
 //submit 新建收藏夹
-const createBookmark = () => {
-    list.value.bookmarkList.push(bookmark.value);
+const createEditBookmark = () => {
+    typeRef.value === 'create'?list.value.bookmarkList.push(bookmark.value):'';
     isShowCreate.value = false;
 }
 const updateBookmark = (sonData={checked:[],curItem:{}}, parentId=[]) => {
@@ -185,6 +187,7 @@ const updateBookmark = (sonData={checked:[],curItem:{}}, parentId=[]) => {
             curItem.parentId.splice(parentIdIndex, 1);
             curItem.parentId.length === 0 && list.value.collectList.splice(curSonIndex, 1);
             list.value.bookmarkList[index].childrenNum -= 1;
+            list.value.allNum -= 1;
         }
     })
 }

@@ -38,7 +38,7 @@
             <van-col>
                 <h2>选择收藏夹</h2>
             </van-col>
-            <van-col>
+            <van-col @click="showBookmark">
                 <van-icon name="add" />
                 新建收藏夹
             </van-col>
@@ -64,11 +64,10 @@
 
 </template>
 <script setup>
-import { ref,watch } from 'vue';
+import { inject, ref,watch } from 'vue';
 import { useRouter } from 'vue-router';
 const props = defineProps(['item', 'index', 'bookmarkList','parentId']);
 const item = props.item;
-const curIndex = props.index;
 const router = useRouter();
 const emit = defineEmits(['share', 'move','update']);
 
@@ -95,7 +94,8 @@ const onSelect = (item,action) => {
     const { index } = action;
     switch (index) {
         case 0:
-            emit('move', curIndex);
+            checked.value = new Array(props.bookmarkList.length).fill(false);
+            emit('update', {checked:checked.value,curItem:curItem.value});
             break;
         case 1:
             let parentIndex = -1;
@@ -132,6 +132,8 @@ const submitUpdate = () => {
    emit('update',{checked:checked.value,curItem:curItem.value});
    isShowMove.value = false;
 }
+
+const showBookmark = inject('showBookmark')
 </script>
 <style scoped lang='scss'>
 .collect-item {
