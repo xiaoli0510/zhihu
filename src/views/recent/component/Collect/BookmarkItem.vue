@@ -3,7 +3,7 @@
         <h4>{{ item.folderTitle }} <van-tag color="#faf7f7" text-color="#a09f9f" v-if="item.default">默认</van-tag></h4>
         <van-row justify="space-between" class="gray-font">
             <van-col>
-                {{ item.subList.length}}个内容.{{item.power === 1?'仅自己可见':'公开'}}
+                {{ item.childrenNum}}个内容.{{item.power === 1?'仅自己可见':'公开'}}
             </van-col>
             <van-col>
                 <van-popover v-model:show="showPopover" :actions="actions" @select="onSelect" placement="left-start">

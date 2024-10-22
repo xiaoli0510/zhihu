@@ -43,16 +43,14 @@
                 新建收藏夹
             </van-col>
         </van-row>
-        <div v-for="item in bookmarkList" :key="item.id">
-            <van-row justify="space-between" class="bookmark-item">
+        <div v-for="(item,index) in props.bookmarkList" :key="item.id">
+            <van-row justify="space-between" class="bookmark-item" align="center">
                 <van-col>
                     <p>{{ item.folderTitle }}</p>
-                    <p class="gray-font">{{ item.subList.length }}个内容.{{ item.power === 1 ? '仅自己可见' : '公开' }}</p>
+                    <p class="gray-font">{{ item.childrenNum }}个内容.{{ item.power === 1 ? '仅自己可见' : '公开' }}</p>
                 </van-col>
-                <van-col>
-                    <!-- <span v-if="item.default">默认</span> -->
-                    <van-checkbox v-if="curParentId===item.id" v-model="checked[0]" shape="square" />
-                    <van-checkbox v-else v-model="checked[1]" shape="square" />
+                <van-col style="border:1px solid red;">
+                    <van-checkbox v-model="checked[index]" shape="square" />
                 </van-col>
             </van-row>
             <div class="line"></div>
@@ -66,17 +64,14 @@
 
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref,watch } from 'vue';
 import { useRouter } from 'vue-router';
-const props = defineProps(['item', 'index', 'bookmarkList','parent']);
+const props = defineProps(['item', 'index', 'bookmarkList','parentId']);
 const item = props.item;
 const curIndex = props.index;
-const bookmarkList = props.bookmarkList;
-const collectList = ref([]);
-bookmarkList.forEach(item => {
-    collectList.value = item?.subList?.length > 0 ? collectList.value.concat(item.subList) : '';
-});
 const router = useRouter();
+const emit = defineEmits(['share', 'move','update']);
+
 const enterDetail = (item) => {
     const { type, id } = item;
     type === 1 ? router.push(`/detail?id=${id}`) : router.push(`/noveldetail?id=${id}`);
@@ -88,15 +83,11 @@ const enterProfile = (item) => {
 
 const showPopover = ref(false);
 
-const emit = defineEmits(['share', 'move','update']);
-// 通过 actions 属性来定义菜单选项
 const actions = [
     { text: '取消收藏', index: 0 },
     { text: '移动到其他收藏夹', index: 1 },
     { text: '分享', index: 2 },
 ];
-const curParentId = props.parent.id;
-const curParentIndex= props.parent.index;
 const isShowMove = ref(false);
 const curItem = ref(null);
 const onSelect = (item,action) => {
@@ -107,6 +98,16 @@ const onSelect = (item,action) => {
             emit('move', curIndex);
             break;
         case 1:
+            let parentIndex = -1;
+            checked.value = new Array(props.bookmarkList.length).fill(false);
+            props.bookmarkList.forEach((item, index) => {
+                props.parentId.forEach(id => {
+                    if (item.id === id) {
+                        parentIndex = index;
+                        checked.value[parentIndex] = true;
+                    }
+                })
+            })
             isShowMove.value = true;
             break;
         case 2:
@@ -119,9 +120,17 @@ const enterCollect = () => {
     router.push('/collect');
 }
 
-const checked = ref([true,false]);
+const checked = ref([]);
+watch(()=>props.bookmarkList,()=>{
+    checked.value = new Array(props.bookmarkList.length).fill(false);
+},{
+    immediate:true,
+    deep:true,
+})
+
 const submitUpdate = () => {
-    emit('update',curParentIndex,curIndex,checked.value);
+   emit('update',{checked:checked.value,curItem:curItem.value});
+   isShowMove.value = false;
 }
 </script>
 <style scoped lang='scss'>
@@ -152,5 +161,12 @@ const submitUpdate = () => {
     .tips {
         line-height: 50px;
         text-align: center;
+    }
+    .square{
+        display:inline-block;
+        width:20px;
+        height:20px;
+        border:1px solid #ccc;
+        border-radius: 50%;
     }
 </style>

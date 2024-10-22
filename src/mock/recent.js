@@ -46,6 +46,7 @@ Mock.mock("/api/recent/collect", "get", {
           collectType: 1, //1我收藏的 2我关注的
           favour: "@integer(0,100)",
           comment: "@integer(0,100)",
+          parentId:1,
         },
       ],
     },
