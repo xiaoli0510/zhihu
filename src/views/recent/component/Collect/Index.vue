@@ -25,59 +25,24 @@
         </van-row>
         <template v-if="orderType === 0">
             <CollectItem @share="onShare" v-for="(item, index) in list.collectList" :key="item.id" :item="item"
-                :index="index" :parentId="item.parentId" :bookmarkList="list.bookmarkList"
-                @update="updateBookmark($event)" />
+                :bookmarkList="list.bookmarkList"
+                @update="updateItem" />
         </template>
         <BookmarkItem v-show="orderType === 1" v-for="(item, index) in list.bookmarkList" :key="(item, index).id"
             :item="item" @edit="showBookmark('edit', $event, index)" />
         <p class="tips gray-font">没有更多内容</p>
         <BookShare ref="bookShareRef" :data="{ item: bookShareData, hideIcon: true }" />
 
-        <!-- 新建文件夹 弹框 -->
-        <van-popup closeable close-icon="close" close-icon-position="top-left" v-model:show="isShowCreate" round
-            position="bottom" :style="{ height: '90%', padding: '20px 10px' }">
-            <h3 class="text-c position-r">
-                新建收藏夹
-                <span class="position-a btn-submit" @click="createEditBookmark">{{ addEditRef === 'add' ? '创建' : '完成'
-                    }}</span>
-            </h3>
-            <van-cell-group inset>
-                <van-field v-model="bookmarkItemRef.folderTitle" name="folderTitle" label="" placeholder="添加收藏夹标题"
-                    :rules="[
-                        {
-                            validator: validator.folderTitle,
-                            message: '请输入长度不超过20的标题',
-                        },
-                    ]" />
-                <van-field v-model="bookmarkItemRef.depict" name="depict" label="" placeholder="添加收藏夹描述(可选)" :rules="[
-                    {
-                        validator: validator.depict,
-                        message: '请输入长度不超过300的描述',
-                    },
-                ]" />
-                <van-field name="radio" label="">
-                    <template #input>
-                        <van-radio-group v-model="bookmarkItemRef.power" direction="horizontal">
-                            <van-radio :name="1">仅自己可见</van-radio>
-                            <br />
-                            <van-radio :name="2">公开</van-radio>
-                        </van-radio-group>
-                    </template>
-                </van-field>
-                <p v-show="bookmarkItemRef.power === 2" class="gray-font power-tips">
-                    公开的收藏夹在站内可以流通，其他人可以关注你的收藏夹。改收藏夹未来有关注者后，将无法设为私密。
-                </p>
-                <van-button plain round type="default" @click="setDefault" size="mini"
-                    class="btn-set-default">设为默认收藏夹</van-button>
-            </van-cell-group>
-        </van-popup>
+        <!-- 新建/编辑文件夹 弹框 -->
+        <BookmarkPopup @update="updateBookmark" @close="closeBookmarkPopup" :data="bookmarkItemObj" :type="addEditRef" :nextId="lastBookmarkId" :show="isShowCreate"/>
     </div>
 </template>
 <script setup>
-import { provide, ref } from 'vue'
+import { provide, ref, watch } from 'vue'
 import CollectItem from './CollectItem.vue'
 import BookShare from '@/components/BookShare/Index.vue'
 import BookmarkItem from './BookmarkItem.vue'
+import BookmarkPopup from './BookmarkPopup.vue'
 // import { fetchCollectList } from '@/api/recent.js'
 //收藏夹列表
 const list = ref({
@@ -140,7 +105,16 @@ const list = ref({
     ],
 })
 
+//我收藏的/我关注的 tab
 const active = ref(0)
+
+//按收藏夹/按内容查看收藏list tab
+const orderType = ref(0) //0按内容 1按收藏夹
+const onToggleOrderType = () => {
+    orderType.value === 0 ? orderType.value = 1 : orderType.value = 0
+}
+
+//分享
 const bookShareRef = ref()
 const bookShareData = ref({})
 const onShare = (item) => {
@@ -148,66 +122,8 @@ const onShare = (item) => {
     bookShareRef.value?.showShare()
 }
 
-const orderType = ref(0) //0按内容 1按收藏夹
-const onToggleOrderType = () => {
-    orderType.value === 0 ? orderType.value = 1 : orderType.value = 0
-}
-
-const bookList = list.value.bookmarkList
-let lastBookmarkId = bookList[bookList.length - 1].id
-
-
-const validator = {
-    folderTitle: (val) => val.length <= 20,
-    depict: (val) => val.length <= 300,
-}
-//显示新建/编辑收藏夹弹框
-const addEditRef = ref('add') //create/edit
-const bookmarkItemIndex = ref(-1)
-const isShowCreate = ref(false)
-const bookmarkItemRef = ref({
-    id: lastBookmarkId++,
-    folderTitle: '',
-    depict: '',
-    power: 1,
-    default: true, //默认收藏夹
-    childrenNum: 0,
-})
-const showBookmark = (type = 'add', params = {}, index = -1) => {
-    if (type === 'edit') {
-        bookmarkItemRef.value = params
-        bookmarkItemIndex.value = index
-    } else {
-        bookmarkItemRef.value = {
-            id: lastBookmarkId++,
-            folderTitle: '',
-            depict: '',
-            power: 1,
-            default: true, //默认收藏夹的id
-            childrenNum: 0,
-        }
-    }
-    addEditRef.value = type
-    isShowCreate.value = true
-}
-provide('showBookmark', showBookmark)
-const setDefault = () => {
-    bookmarkItemRef.value.default = true
-}
-//submit 新建/编辑收藏夹
-const createEditBookmark = () => {
-    if(bookmarkItemRef.value.default === true){
-        list.value.bookmarkList.every(item => {
-            (item.id !== bookmarkItemRef.value.id) && (item.default = false);
-        })
-    }
-    addEditRef.value === 'add'
-        ? list.value.bookmarkList.push(bookmarkItemRef.value)
-        : (list.value.bookmarkList[bookmarkItemIndex.value] =
-            bookmarkItemRef.value)
-    isShowCreate.value = false
-}
-const updateBookmark = (
+//更新item所属于的收藏夹
+const updateItem = (
     sonData = { checked: [], curItem: {} }
 ) => {
     const { checked, curItem } = sonData
@@ -234,6 +150,46 @@ const updateBookmark = (
         }
     })
 }
+
+//显示新建/编辑收藏夹弹框
+const addEditRef = ref('add') //create/edit
+const bookmarkItemIndex = ref(-1)
+const isShowCreate = ref(false)
+const lastBookmarkId = ref(null);
+watch(()=>list.value.bookmarkList,()=>{
+    lastBookmarkId.value = list.value.bookmarkList[list.value.bookmarkList.length - 1].id
+},{
+    immediate:true,
+    deep:true
+})
+const bookmarkItemObj = ref({})
+const showBookmark = (type = 'add', params = {}, index = -1) => {
+    if (type === 'edit') {
+        bookmarkItemObj.value = params
+        bookmarkItemIndex.value = index
+    } else {
+        bookmarkItemObj.value = {}
+    }
+    addEditRef.value = type
+    isShowCreate.value = true
+}
+provide('showBookmark', showBookmark)
+const closeBookmarkPopup = () => {
+    isShowCreate.value = false
+}
+//更新收藏夹
+const updateBookmark = (data) => {
+    if (data.default === true) {
+        list.value.bookmarkList.every(item => {
+            (item.id !== data.id) && (item.default = false);
+        })
+    }
+    addEditRef.value === 'add'
+        ? list.value.bookmarkList.push({...data})
+        : (list.value.bookmarkList[bookmarkItemIndex.value] =
+        data)
+        closeBookmarkPopup()
+}
 </script>
 <style scoped lang="scss">
 .collect-page {
@@ -248,20 +204,6 @@ const updateBookmark = (
     .tips {
         line-height: 50px;
         text-align: center;
-    }
-
-    .power-tips {
-        margin: 4px 0;
-    }
-
-    .btn-set-default {
-        margin: 4px 0;
-    }
-
-    .btn-submit {
-        right: 0;
-        top: 0;
-        color: var(--color-blue-text);
     }
 }
 </style>

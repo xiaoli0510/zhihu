@@ -16,8 +16,9 @@
             </van-col>
         </van-row>
         <van-row justify="space-between">
-            <van-col class="gray-font">收藏于
-                <span @click="enterCollect">{{ item.collectType === 1 ? '我的收藏' : '我关注的' }}</span>
+            <van-col class="gray-font" :class="{'visibility-none':props.hideFolderTitle}">收藏于
+                <span @click="enterCollect">{{firstParentFolderTitle(item.parentId[0])}}</span>
+                <span v-if="item.parentId.length > 1">等 {{ item.parentId.length }} 个收藏夹</span>
             </van-col>
             <van-col>
                 <van-popover v-model:show="showPopover" :actions="actions" @select="onSelect(item, $event)"
@@ -50,7 +51,7 @@
                     <p class="gray-font">{{ item.childrenNum }}个内容.{{ item.power === 1 ? '仅自己可见' : '公开' }}</p>
                 </van-col>
                 <van-col>
-                    <span v-if="props.parentId.includes(item.id)">默认</span>
+                    <span v-if="curItem.parentId.includes(item.id)">默认</span>
                     <van-checkbox v-model="checked[index]" shape="square" />
                 </van-col>
             </van-row>
@@ -65,9 +66,9 @@
 
 </template>
 <script setup>
-import { inject, ref,watch } from 'vue';
+import {  inject, ref,watch } from 'vue';
 import { useRouter } from 'vue-router';
-const props = defineProps(['item', 'index', 'bookmarkList','parentId']);
+const props = defineProps(['item', 'bookmarkList','hideFolderTitle']);
 const item = props.item;
 const router = useRouter();
 const emits = defineEmits(['share','update']);
@@ -101,10 +102,10 @@ const onSelect = (item,action) => {
         case 1:
             let parentIndex = -1;
             checked.value = new Array(props.bookmarkList.length).fill(false);
-            props.bookmarkList.forEach((item, index) => {
-                props.parentId.forEach(id => {
-                    if (item.id === id) {
-                        parentIndex = index;
+            props.bookmarkList.forEach((item1, index1) => {
+                item.parentId.forEach(id => {
+                    if (item1.id === id) {
+                        parentIndex = index1;
                         checked.value[parentIndex] = true;
                     }
                 })
@@ -116,7 +117,9 @@ const onSelect = (item,action) => {
             break;
     }
 };
-
+const firstParentFolderTitle = (id)=> {
+    if(id) return props.bookmarkList.filter(item=>item.id === id)?.[0]?.folderTitle
+}
 const enterCollect = () => {
     router.push('/collect');
 }
@@ -147,14 +150,7 @@ const showBookmark = inject('showBookmark')
         line-height: 30px;
         padding:7px 9px;
     }
-.btn-submit {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    line-height: 50px;
-    font-weight: 700;
-}
+
 .line {
         width: 100%;
         height: 1px;
@@ -171,5 +167,8 @@ const showBookmark = inject('showBookmark')
         height:20px;
         border:1px solid #ccc;
         border-radius: 50%;
+    }
+    .visibility-none{
+        visibility:hidden;
     }
 </style>
