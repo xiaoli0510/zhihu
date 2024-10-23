@@ -38,7 +38,7 @@
             <van-col>
                 <h2>选择收藏夹</h2>
             </van-col>
-            <van-col @click="showBookmark">
+            <van-col @click="showBookmark('add')">
                 <van-icon name="add" />
                 新建收藏夹
             </van-col>
@@ -49,7 +49,8 @@
                     <p>{{ item.folderTitle }}</p>
                     <p class="gray-font">{{ item.childrenNum }}个内容.{{ item.power === 1 ? '仅自己可见' : '公开' }}</p>
                 </van-col>
-                <van-col style="border:1px solid red;">
+                <van-col>
+                    <span v-if="props.parentId.includes(item.id)">默认</span>
                     <van-checkbox v-model="checked[index]" shape="square" />
                 </van-col>
             </van-row>

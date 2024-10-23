@@ -17,7 +17,7 @@
     </div>
 </template>
 <script setup>
-import { inject, ref } from 'vue';
+import { ref } from 'vue';
 const {item} = defineProps(['item']);
 
 const showPopover = ref(false);
@@ -25,10 +25,8 @@ const showPopover = ref(false);
 const actions = [
     { text: '编辑收藏夹' },
 ];
-const emits = defineEmits(['edit']);
-const showBookmark = inject('showBookmark',22);
-const onSelect = (action) => {
-    emits('edit');    
+const emits = defineEmits(['edit']);const onSelect = () => { 
+    emits('edit',item);
 }
 </script>
 <style scoped lang='scss'>
