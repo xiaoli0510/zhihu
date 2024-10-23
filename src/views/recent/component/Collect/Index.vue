@@ -31,7 +31,7 @@
         <BookmarkItem v-show="orderType === 1" v-for="(item, index) in list.bookmarkList" :key="(item, index).id"
             :item="item" @edit="showBookmark('edit', $event, index)" />
         <p class="tips gray-font">没有更多内容</p>
-        <BookShare ref="bookShare" :data="{ item: bookShareData, hideIcon: true }" />
+        <BookShare ref="bookShareRef" :data="{ item: bookShareData, hideIcon: true }" />
 
         <!-- 新建文件夹 弹框 -->
         <van-popup closeable close-icon="close" close-icon-position="top-left" v-model:show="isShowCreate" round
@@ -78,7 +78,7 @@ import { provide, ref } from 'vue'
 import CollectItem from './CollectItem.vue'
 import BookShare from '@/components/BookShare/Index.vue'
 import BookmarkItem from './BookmarkItem.vue'
-import { fetchCollectList } from '@/api/recent.js'
+// import { fetchCollectList } from '@/api/recent.js'
 //收藏夹列表
 const list = ref({
     allNum: 4,
@@ -141,11 +141,11 @@ const list = ref({
 })
 
 const active = ref(0)
-const bookShare = ref()
+const bookShareRef = ref()
 const bookShareData = ref({})
 const onShare = (item) => {
     bookShareData.value = item
-    bookShare.value?.showShare()
+    bookShareRef.value?.showShare()
 }
 
 const orderType = ref(0) //0按内容 1按收藏夹
@@ -153,17 +153,9 @@ const onToggleOrderType = () => {
     orderType.value === 0 ? orderType.value = 1 : orderType.value = 0
 }
 
-const isShowCreate = ref(false)
 const bookList = list.value.bookmarkList
 let lastBookmarkId = bookList[bookList.length - 1].id
-const bookmarkItemRef = ref({
-    id: lastBookmarkId++,
-    folderTitle: '',
-    depict: '',
-    power: 1,
-    default: true, //默认收藏夹
-    childrenNum: 0,
-})
+
 
 const validator = {
     folderTitle: (val) => val.length <= 20,
@@ -172,6 +164,15 @@ const validator = {
 //显示新建/编辑收藏夹弹框
 const addEditRef = ref('add') //create/edit
 const bookmarkItemIndex = ref(-1)
+const isShowCreate = ref(false)
+const bookmarkItemRef = ref({
+    id: lastBookmarkId++,
+    folderTitle: '',
+    depict: '',
+    power: 1,
+    default: true, //默认收藏夹
+    childrenNum: 0,
+})
 const showBookmark = (type = 'add', params = {}, index = -1) => {
     if (type === 'edit') {
         bookmarkItemRef.value = params
@@ -191,10 +192,15 @@ const showBookmark = (type = 'add', params = {}, index = -1) => {
 }
 provide('showBookmark', showBookmark)
 const setDefault = () => {
-    bookmarkItemRef.default = true
+    bookmarkItemRef.value.default = true
 }
 //submit 新建/编辑收藏夹
 const createEditBookmark = () => {
+    if(bookmarkItemRef.value.default === true){
+        list.value.bookmarkList.every(item => {
+            (item.id !== bookmarkItemRef.value.id) && (item.default = false);
+        })
+    }
     addEditRef.value === 'add'
         ? list.value.bookmarkList.push(bookmarkItemRef.value)
         : (list.value.bookmarkList[bookmarkItemIndex.value] =

@@ -70,7 +70,7 @@ import { useRouter } from 'vue-router';
 const props = defineProps(['item', 'index', 'bookmarkList','parentId']);
 const item = props.item;
 const router = useRouter();
-const emit = defineEmits(['share', 'move','update']);
+const emits = defineEmits(['share','update']);
 
 const enterDetail = (item) => {
     const { type, id } = item;
@@ -96,7 +96,7 @@ const onSelect = (item,action) => {
     switch (index) {
         case 0:
             checked.value = new Array(props.bookmarkList.length).fill(false);
-            emit('update', {checked:checked.value,curItem:curItem.value});
+            emits('update', {checked:checked.value,curItem:curItem.value});
             break;
         case 1:
             let parentIndex = -1;
@@ -112,7 +112,7 @@ const onSelect = (item,action) => {
             isShowMove.value = true;
             break;
         case 2:
-            emit('share', item);
+            emits('share', item);
             break;
     }
 };
@@ -130,7 +130,7 @@ watch(()=>props.bookmarkList,()=>{
 })
 
 const submitUpdate = () => {
-   emit('update',{checked:checked.value,curItem:curItem.value});
+   emits('update',{checked:checked.value,curItem:curItem.value});
    isShowMove.value = false;
 }
 
