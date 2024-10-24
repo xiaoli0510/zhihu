@@ -47,9 +47,21 @@ const enterDetail = (id) => {
     isSpread.value = false;
     router.push(`/novel/detail/${id}`);
 }
+
+//拖动
+const isDrag = ref(false)
+const onDrag = (event) => {
+    console.log(event);
+    isDrag.value = true
+}
+const onDragEnd = (event) => {
+    console.log(event);
+    isDrag.value = false
+}
+
 </script>
 <template>
-    <div class="float-window" align="center" @click="showList" v-if="todo.total > 0">
+    <div class="float-window" align="center" @click="showList" v-if="todo.total > 0" draggable="true" :class="{'circle':isDrag}" @drag="onDrag" @dragstart.passive="onDrag" @dragend="onDragEnd" @dragover="onDragEnd">
         <van-icon name="sign" color="#1989fa" size="25px" />
         <span>{{ todo.total }}</span>
     </div>
@@ -105,6 +117,10 @@ const enterDetail = (id) => {
     border-radius: 20px 0 0 20px;
     width: 67px;
     background: #fff;
+    border:1px solid red;
+    &.circle{
+        width:44px;
+    }
 
     >span {
         vertical-align: top;
