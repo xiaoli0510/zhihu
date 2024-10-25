@@ -50,18 +50,20 @@ const enterDetail = (id) => {
 
 //拖动
 const isDrag = ref(false)
-const onDrag = (event) => {
-    console.log(event);
+const onDragStart = (event) => {
     isDrag.value = true
 }
 const onDragEnd = (event) => {
-    console.log(event);
+    const target = event.target
+    target.style.left = window.innerWidth + 'px'
+    target.style.transform = 'translate(-100%,0)'
     isDrag.value = false
 }
 
 </script>
 <template>
-    <div class="float-window" align="center" @click="showList" v-if="todo.total > 0" draggable="true" :class="{'circle':isDrag}" @drag="onDrag" @dragstart.passive="onDrag" @dragend="onDragEnd" @dragover="onDragEnd">
+    <div class="float-window" align="center" @click="showList" v-if="todo.total > 0" draggable="true" :class="{'circle':isDrag}"
+         v-drag @v-drag-start="onDragStart" @v-drag-end="onDragEnd">
         <van-icon name="sign" color="#1989fa" size="25px" />
         <span>{{ todo.total }}</span>
     </div>
@@ -117,9 +119,10 @@ const onDragEnd = (event) => {
     border-radius: 20px 0 0 20px;
     width: 67px;
     background: #fff;
-    border:1px solid red;
+    touch-action: none;
     &.circle{
         width:44px;
+        border-radius: 50%;
     }
 
     >span {

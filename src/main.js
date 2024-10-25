@@ -7,12 +7,14 @@ import 'amfe-flexible';
 import '@/mock/index'
 import '@/mock/search.js'
 import '@/mock/recent.js'
+import drag from 'v-drag'
 
 const pinia = createPinia();
 const app = createApp(App)
 app.use(pinia);
 
 app.use(router)
+app.use(drag,{})
 // app.use(store)
 
 app.mount('#app')
