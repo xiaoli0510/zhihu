@@ -24,7 +24,7 @@ const icon = [{
 }];
 </script>
 <template>
-  <van-tabbar v-model="active" active-color="#29A1F7">
+  <van-tabbar v-model="active" active-color="#29A1F7" class="footer-tabbar">
     <van-tabbar-item v-for="item in icon">
       <template #icon="props">
         <router-link :to="{ name: item.routeName}">
@@ -34,4 +34,10 @@ const icon = [{
     </van-tabbar-item>
   </van-tabbar>
 </template>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.footer-tabbar {
+    max-width: 750px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+</style>

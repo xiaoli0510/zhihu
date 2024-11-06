@@ -38,13 +38,16 @@ const enterRecent = () => {
 <style scoped lang="scss">
 .header {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  right: 0;
-  z-index: 999;
-  background: #fff;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1.33333rem;
+    right: 0;
+    z-index: 999;
+    background: #fff;
+    max-width: 750px;
+    left: 50%;
+    transform: translateX(-50%);
 
   .top-tab {
     width: 80%;
