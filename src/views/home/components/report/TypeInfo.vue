@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+//举报弹框
 import { ref } from 'vue';
 const isStep2 = ref(false);
 const fileList = ref([

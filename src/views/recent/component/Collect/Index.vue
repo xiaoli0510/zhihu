@@ -9,32 +9,36 @@
             </van-col>
             <van-col @click="showBookmark('add')">新建收藏夹</van-col>
         </van-row>
-        <van-row justify="space-between" class="explain">
-            <van-col>
-                <span v-show="orderType === 0">{{ list.allNum }}条内容</span>
-                <span v-show="orderType === 1">{{ list.bookmarkList.length }}个文件夹</span>
-            </van-col>
-            <van-col @click="onToggleOrderType">
-                <span v-show="orderType === 0">
-                    <van-icon name="peer-pay" />按收藏夹
-                </span>
-                <span v-show="orderType === 1">
-                    <van-icon name="orders-o" />按内容
-                </span>
-            </van-col>
-        </van-row>
-        <template v-if="orderType === 0">
-            <CollectItem @share="onShare" v-for="(item, index) in list.collectList" :key="item.id" :item="item"
-                :bookmarkList="list.bookmarkList"
-                @update="updateItem" />
+        <template v-if="active === 0">
+            <van-row justify="space-between" class="explain">
+                <van-col>
+                    <span v-show="orderType === 0">{{ list.allNum }}条内容</span>
+                    <span v-show="orderType === 1">{{ list.bookmarkList.length }}个文件夹</span>
+                </van-col>
+                <van-col @click="onToggleOrderType">
+                    <span v-show="orderType === 0">
+                        <van-icon name="peer-pay" />按收藏夹
+                    </span>
+                    <span v-show="orderType === 1">
+                        <van-icon name="orders-o" />按内容
+                    </span>
+                </van-col>
+            </van-row>
+            <template v-if="orderType === 0">
+                <CollectItem @share="onShare" v-for="(item, index) in list.collectList" :key="item.id" :item="item"
+                    :bookmarkList="list.bookmarkList" @update="updateItem" />
+            </template>
+            <BookmarkItem v-show="orderType === 1" v-for="(item, index) in list.bookmarkList" :key="(item, index).id"
+                :item="item" @edit="showBookmark('edit', $event, index)" />
+            <p class="tips gray-font">没有更多内容</p>
+            <BookShare ref="bookShareRef" :data="{ item: bookShareData, hideIcon: true }" />
         </template>
-        <BookmarkItem v-show="orderType === 1" v-for="(item, index) in list.bookmarkList" :key="(item, index).id"
-            :item="item" @edit="showBookmark('edit', $event, index)" />
-        <p class="tips gray-font">没有更多内容</p>
-        <BookShare ref="bookShareRef" :data="{ item: bookShareData, hideIcon: true }" />
+
+        <Interest v-else />
 
         <!-- 新建/编辑文件夹 弹框 -->
-        <BookmarkPopup @update="updateBookmark" @close="closeBookmarkPopup" :data="bookmarkItemObj" :type="addEditRef" :nextId="lastBookmarkId" :show="isShowCreate"/>
+        <BookmarkPopup @update="updateBookmark" @close="closeBookmarkPopup" :data="bookmarkItemObj" :type="addEditRef"
+            :nextId="lastBookmarkId" :show="isShowCreate" />
     </div>
 </template>
 <script setup>
@@ -43,6 +47,7 @@ import CollectItem from './CollectItem.vue'
 import BookShare from '@/components/BookShare/Index.vue'
 import BookmarkItem from './BookmarkItem.vue'
 import BookmarkPopup from './BookmarkPopup.vue'
+import Interest from '@/views/recent/component/Collect/Interest.vue';
 // import { fetchCollectList } from '@/api/recent.js'
 //收藏夹列表
 const list = ref({
@@ -106,7 +111,7 @@ const list = ref({
 })
 
 //我收藏的/我关注的 tab
-const active = ref(0)
+const active = ref(1)
 
 //按收藏夹/按内容查看收藏list tab
 const orderType = ref(0) //0按内容 1按收藏夹
@@ -156,11 +161,11 @@ const addEditRef = ref('add') //create/edit
 const bookmarkItemIndex = ref(-1)
 const isShowCreate = ref(false)
 const lastBookmarkId = ref(null);
-watch(()=>list.value.bookmarkList,()=>{
+watch(() => list.value.bookmarkList, () => {
     lastBookmarkId.value = list.value.bookmarkList[list.value.bookmarkList.length - 1].id
-},{
-    immediate:true,
-    deep:true
+}, {
+    immediate: true,
+    deep: true
 })
 const bookmarkItemObj = ref({})
 const showBookmark = (type = 'add', params = {}, index = -1) => {
@@ -185,10 +190,10 @@ const updateBookmark = (data) => {
         })
     }
     addEditRef.value === 'add'
-        ? list.value.bookmarkList.push({...data})
+        ? list.value.bookmarkList.push({ ...data })
         : (list.value.bookmarkList[bookmarkItemIndex.value] =
-        data)
-        closeBookmarkPopup()
+            data)
+    closeBookmarkPopup()
 }
 </script>
 <style scoped lang="scss">
