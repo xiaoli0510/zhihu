@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup>
 // 关注问题
 import personal from "@/assets/imgs/personal.jpg";
 import AnswerIcon from '@/components/AnswerIcon.vue';

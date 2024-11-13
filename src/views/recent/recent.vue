@@ -17,6 +17,7 @@
 import BackIcon from '@/components/BackIcon.vue'
 import Scan from './component/Scan/Scan.vue'
 import Collect from './component/Collect/Index.vue'
+import MyFollowMatter from './component/MyFollowMatter/Index.vue';
 import { ref,markRaw } from 'vue';
 
 const tabs = [
@@ -47,8 +48,8 @@ const tabs = [
     },
 ]
 
-const active = ref(1);
-const componentName = ref(markRaw(Collect));
+const active = ref(2);
+const componentName = ref(markRaw(MyFollowMatter));
 
 const onClickTab = (data) => {
     const {name} = data;
