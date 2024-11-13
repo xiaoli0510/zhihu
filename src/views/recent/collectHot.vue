@@ -1,19 +1,20 @@
 <template>
-    <van-row justify="space-between" class="hot interest" align="center" @click="enterCollectHot">
+    <van-row justify="space-between" class="collect-hot-page-top">
         <van-col>
-            <van-icon size="19px" name="star" color="rgb(230 212 22)"/> <span class="hot-title">热门收藏夹推荐</span>
+            <BackIcon/>
         </van-col>
         <van-col>
-            查看更多
-            <van-icon name="arrow" size="10px"/>
+            <searchIcon/>
         </van-col>
     </van-row>
-    <InterestItem :list="list"/>
+    <CollectHotItem :list="list"/>
+    
 </template>
 <script setup>
-import { ref } from 'vue';
-import InterestItem from '@/views/recent/component/Collect/InterestItem.vue';
-import { useRouter } from 'vue-router';
+import BackIcon from '@/components/BackIcon.vue';
+import SearchIcon from '@/components/SearchIcon.vue';
+import CollectHotItem from '@/views/recent/component/Collect/CollectHotItem.vue';
+import { provide, ref } from 'vue';
 const list = ref([{
     id: 1,
     title: '知识就是培根',
@@ -24,28 +25,18 @@ const list = ref([{
     avatar: 'https://randomuser.me/api/portraits/men/26.jpg',
     cover: 'https://randomuser.me/api/portraits/men/63.jpg',
     collectType: 1,
+    isFollow:true,
     favour: 76,
     comment: 91,
     parentId: [1],
 }]);
-const router = useRouter();
-const enterCollectHot = () => {
-router.push('./collectHot');
-}
+const toggleFollow = (item) => {
+    item.isFollow = !item.isFollow;
+};
+provide('toggleFollow', toggleFollow);
 </script>
-<style>
-.interest{
-    color: var(--color-blue-text);
-    background: #e6ecee;
-    line-height: 40px;
-    border-radius: 5px;
-    width: 96%;
-    margin: 10px auto;
-    padding: 0 10px;
-    .hot-title{
-        font-size:14px;
-        font-weight: 600;
-    }
+<style scoped lang='scss'>
+.collect-hot-page-top{
+    padding: 7px 9px;
 }
-
 </style>
