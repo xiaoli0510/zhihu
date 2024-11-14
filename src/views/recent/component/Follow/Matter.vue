@@ -1,43 +1,33 @@
 <template>
-    <div class="follow-matter-item" v-for="item in list" :key="item.id">
+    <div class="follow-item" v-for="item in list" :key="item.id">
         <div @click="enterDetail(item.id)">
-            <h3>{{ item.title }}</h3>
+            <h3>
+                <slot name="title-icon">
+                </slot>
+                {{ item.title }}
+            </h3>
             <van-row justify="space-between">
                 <van-col class="gray-font">
-                    {{ item.scan }} 浏览.{{ item.answer }}回答
+                    {{ formatPeopleNumber(item.scan) }} 浏览.{{ formatPeopleNumber(item.answer) }}回答
                 </van-col>
                 <van-col class="time">
                     {{ formatTimeStamp(item.updateTime) }}前更新
                 </van-col>
             </van-row>
         </div>
-        <div class="anwner-wrap">
-            <div class="item" v-for="item1 in item.answerList" :key="item.id" @click="enterDetail(item1.id)">
-                <van-row justify="start" align="center">
-                    <van-col>
-                        <van-image width="20" height="20" fit="cover" round :src="personal" />
-                    </van-col>
-                    <van-col>
-                        <span class="gray-font"> {{ item1.author }} </span>
-                    </van-col>
-                </van-row>
-                <van-text-ellipsis :content="item1.detail" row="2" />
-                <div class="gray-font">
-                    {{ item1.scan }}浏览.{{ formatTimeStamp(item1.updateTime) }}前
-                </div>
-            </div>
-        </div>
+        <MatterTopicItem :list="item.answerList" />
     </div>
 </template>
 <script setup>
-import personal from '@/assets/imgs/personal.jpg';
+import MatterTopicItem from '@/views/recent/component/Follow/MatterTopicItem.vue';
+const formatTimeStamp = getCurrentInstance().proxy.$utils.formatTimeStamp;
+const formatPeopleNumber = getCurrentInstance().proxy.$utils.formatPeopleNumber;
 import { getCurrentInstance, ref } from 'vue';
-import { useRouter } from 'vue-router';
 const list = ref([
     {
         title: '知识就是培根',
         id: 1,
-        scan: 100,
+        scan: 1211110,
         answer: 4,
         updateTime: 1721506660000,//时间戳
         answerList: [{
@@ -47,34 +37,18 @@ const list = ref([
             scan: 4,
             agree: 2,
             comment: 100,
+            collect: 0,
             updateTime: 1731495015788,//minutes
         }]
     }]);
-
-const formatTimeStamp = getCurrentInstance().proxy.$utils.formatTimeStamp;
-const router = useRouter();
-const enterDetail = (id) => {
-    router.push(`/detail?id=${id}`)
-}
 </script>
-<style scoped lang='scss'>
-.follow-matter-item {
+<style>
+.follow-item {
     padding: 0 8px;
 
     .time {
         color: var(--color-blue-text);
         font-size: 10px;
-    }
-
-    .anwner-wrap {
-        font-size: 10px;
-        background: #ebeaea;
-        padding: 5px;
-        margin-top: 7px;
-
-        .item:not-first-child {
-            border-top: 1px solid #ddd;
-        }
     }
 }
 </style>

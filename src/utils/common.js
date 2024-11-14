@@ -19,5 +19,14 @@
         }
         return res
     },
+    /**
+     * 人气格式化
+     * @param {*} num 人气
+     * @return string; 
+     */
+    formatPeopleNumber: (num) => {
+      const res = num>=10000?Math.ceil(num/10000)+'万':num;
+      return res;
+    },
 }
 export default utils;

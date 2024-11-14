@@ -35,7 +35,7 @@ watch(sortType, (newVal) => {
     <div class="subject-discuss-list">
         <van-row justify="space-between" class="gray-font sort">
             <van-col>
-                全部内容
+            全部内容
             </van-col>
             <van-col class="sort-wrap">
                 <span :class="{ active: sortType === 1 }" @click="changeSort(1)">精华</span>
