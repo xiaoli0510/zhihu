@@ -19,6 +19,7 @@ import Scan from './component/Scan/Scan.vue'
 import Collect from './component/Collect/Index.vue'
 import Matter from './component/Follow/Matter.vue';
 import Topic from './component/Follow/Topic.vue';
+import Search from '@/views/recent/component/Search/Index.vue';
 import { ref, markRaw, watch } from 'vue';
 
 const tabs = [
@@ -49,8 +50,8 @@ const tabs = [
     },
 ]
 
-const active = ref(0);
-const componentName = ref(markRaw(Scan));
+const active = ref(4);
+const componentName = ref(markRaw(Search));
 watch(active, (val) => {
     switch (val) {
         case 0:

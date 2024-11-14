@@ -1,5 +1,5 @@
 <template>
-    <div class="anwner-wrap">
+    <div class="answer-wrap">
         <div class="item" v-for="item1 in props.list" :key="item1.id" @click="enterDetail(item1.id)">
             <van-row justify="start" align="center">
                 <van-col>
@@ -33,13 +33,15 @@ const enterDetail = (id) => {
 }
 </script>
 <style scoped lang='scss'>
-.anwner-wrap {
+.answer-wrap {
     font-size: 10px;
     background: #ebeaea;
     padding: 5px;
     margin-top: 7px;
-
-    .item:not-first-child {
+    .item{
+        padding:5px;
+    }
+    .item:nth-child(n+2) {
         border-top: 1px solid #ddd;
     }
 }

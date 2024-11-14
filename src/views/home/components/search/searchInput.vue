@@ -1,10 +1,11 @@
 <script setup lang='ts'>
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
 const keyWord = ref('');
 const onSearch = (val) => showToast(val);
 const onClickButton = () => showToast(value.value);
 const props = defineProps(['keyWord'])
-keyWord.value=props.keyWord;
+const injectKeyWord = inject('keyWord','');
+keyWord.value=props.keyWord || injectKeyWord;
 </script>
 <template>
     <van-search shape="round" v-model="keyWord" show-action placeholder="搜索知乎内容" @search="onSearch">
