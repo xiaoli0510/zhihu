@@ -35,7 +35,7 @@ const enterDetail = (id) => {
 <style scoped lang='scss'>
 .answer-wrap {
     font-size: 10px;
-    background: #ebeaea;
+    background: #f6f5f5;
     padding: 5px;
     margin-top: 7px;
     .item{

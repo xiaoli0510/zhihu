@@ -5,13 +5,13 @@
         const minute = Math.floor(diff / 60000)
         let res
         if (minute < 60) {
-            res = `${minute}分钟`
+            res = `${minute}分钟前`
         } else if (minute < 1440) {
-            res = `${Math.floor(minute / 60)}小时`
+            res = `${Math.floor(minute / 60)}小时前`
         } else {
             const day = Math.floor(minute / 1440)
             if (day <= 10) {
-                res = `${Math.floor(minute / 1440)}天`
+                res = `${Math.floor(minute / 1440)}天前`
             } else {
                 const date = new Date(timeStamp)
                 res = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`

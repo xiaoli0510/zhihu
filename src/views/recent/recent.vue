@@ -4,14 +4,13 @@
             <BackIcon size="14px" />
         </van-col>
         <van-col>
-            <van-tabs v-model:active="active" @clickTab="onClickTab">
+            <van-tabs v-model:active="active">
                 <van-tab v-for="(item) in tabs" :title="item.label">
                 </van-tab>
             </van-tabs>
         </van-col>
     </van-row>
     <component :is="componentName" />
-
 </template>
 <script setup>
 import BackIcon from '@/components/BackIcon.vue'
@@ -66,21 +65,10 @@ watch(active, (val) => {
         case 3:
             componentName.value = markRaw(Topic);
             break;
+        case 4:
+            componentName.value = markRaw(Search);
+            break;
     }
 })
-
-const onClickTab = (data) => {
-    const { name } = data;
-    switch (name) {
-        case 0:
-            componentName.value = markRaw(Scan);
-            break;
-        case 1:
-            componentName.value = markRaw(Collect);
-            break;
-    }
-
-}
-
 </script>
 <style scoped lang='scss'></style>

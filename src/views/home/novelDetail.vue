@@ -129,7 +129,7 @@ const showCommentPopup = ()=>{
 
 </script>
 <template>
-    <div class="novel-detail" ref="novel" @scroll="novelScroll" @touchstart="onTouchStart" @touchend="onTouchEnd"
+    <div class="novel-detail" ref="novel" @scroll="novelScroll" @touchstart.passive="onTouchStart" @touchend="onTouchEnd"
         @touchmove="onTouchMove">
         <van-row align="center" justify="space-between" class="header-fixed">
             <van-col span="1">

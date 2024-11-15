@@ -10,7 +10,7 @@
                     {{ formatPeopleNumber(item.scan) }} 浏览.{{ formatPeopleNumber(item.answer) }}回答
                 </van-col>
                 <van-col class="time">
-                    {{ formatTimeStamp(item.updateTime) }}前更新
+                    {{ formatTimeStamp(item.updateTime) }}更新
                 </van-col>
             </van-row>
         </div>

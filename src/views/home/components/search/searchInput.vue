@@ -1,14 +1,14 @@
-<script setup lang='ts'>
-import { inject, ref } from 'vue';
-const keyWord = ref('');
+<script setup>
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const selfKeyWord = ref('');
+selfKeyWord.value = route.params.keyWord
 const onSearch = (val) => showToast(val);
 const onClickButton = () => showToast(value.value);
-const props = defineProps(['keyWord'])
-const injectKeyWord = inject('keyWord','');
-keyWord.value=props.keyWord || injectKeyWord;
 </script>
 <template>
-    <van-search shape="round" v-model="keyWord" show-action placeholder="搜索知乎内容" @search="onSearch">
+    <van-search shape="round" v-model="selfKeyWord" show-action placeholder="搜索知乎内容" @search="onSearch">
         <template #action>
             <div @click="onClickButton" class="btn-search">
                 <slot name="txt"></slot>
