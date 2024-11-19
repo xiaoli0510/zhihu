@@ -86,7 +86,7 @@ const showModalDetail = (obj) => {
 const actions = [
    { text: '分享' },
    { text: '加入黑名单' },
-   { text: '举报用户' },
+   { text: ' 用户' },
 ];
 const selectMore = (action) => showToast(action.text);
 

@@ -1,16 +1,21 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Idea from "@/views/home/components/idea/Index.vue";
+import Interest from "@/views/home/components/Interest/Index.vue";
 import recent from "@/assets/imgs/recent.png";
 import warn from "@/assets/imgs/warn.png";
-const activeName = ref("a");
+const activeName = ref("Interest");
 const tabArray = ref([
-  { title: "想法", value: "idea" },
-  { title: "关注", value: "interest" },
-  { title: "推荐", value: "recomment" },
-  { title: "热榜", value: "hot" },
+  { title: "想法", value: "Idea" },
+  { title: "关注", value: "Interest" },
+  { title: "推荐", value: "Recomment" },
+  { title: "热榜", value: "Hot" },
 ]);
+const comTagMap = {
+  Idea,
+  Interest,
+}
 const router = useRouter();
 const enterSearch = () => {
   router.push({
@@ -32,7 +37,11 @@ const enterRecent = () => {
     <van-icon name="search" class="search" size="24px" @click="enterSearch" />
     <van-icon :name="warn" class="warn" size="20px" />
   </div>
-  <Idea />
+  <div class="home-main">
+
+    <component :is="comTagMap[activeName]"/>
+  </div>
+  <!-- <Idea /> -->
   <RouterView />
 </template>
 <style scoped lang="scss">
@@ -41,7 +50,7 @@ const enterRecent = () => {
     top: 0;
     left: 0;
     width: 100%;
-    height: 1.33333rem;
+    height: 40px;
     right: 0;
     z-index: 999;
     background: #fff;
@@ -74,5 +83,10 @@ const enterRecent = () => {
     top: 27%;
     z-index: 999;
   }
+}
+.home-main {
+  overflow: hidden;
+  margin: 46px auto;
+  border: 1px solid red;
 }
 </style>

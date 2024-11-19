@@ -37,7 +37,10 @@ const icon = [{
 <style scoped lang="scss">
 .footer-tabbar {
     max-width: 750px;
+    height:40px;
+    border:1px solid blue;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 999;
 }
 </style>

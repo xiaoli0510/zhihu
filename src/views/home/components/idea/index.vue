@@ -87,7 +87,6 @@ const enterTopic = ()=>{
 </template>
 <style scoped lang="scss">
 .list {
-  margin-top: 44px;
   .item-wrap {
     align-items: flex-start;
   }
