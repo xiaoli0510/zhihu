@@ -27,7 +27,7 @@ for (let key in moduleRoutes) {
       name: componentName,
       component: moduleRoutes[key],
       props:
-          pathName.indexOf('/:id') !== -1
+      pathName.indexOf('/:id') !== -1
               ? true
               : false,
   }

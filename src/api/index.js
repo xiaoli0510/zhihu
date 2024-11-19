@@ -19,3 +19,12 @@ export async function fetchCommentList(params){
 export async function fetchCommentReply(params){
     return await service.get('/api/commentReply/id');
 }
+//关注页
+export async function fetchInterest(){
+    return await service.get('/api/interest/id');
+}
+//关注-热门页
+export async function fetchInterestHot(){
+    return await service.get('/api/interest/hot');
+}
+

@@ -32,9 +32,9 @@ const productLabelArr = ref([{
    num: 53,
 }
 ])
-
+const props = defineProps(['id']);
 const initData = async () => {
-   await fetchProfile().then(res => {
+   await fetchProfile(props.id).then(res => {
       obj.value = res.data.body;
    })
 }
