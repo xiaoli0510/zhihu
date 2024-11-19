@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Idea from "@/views/home/components/idea/Index.vue";
-import Interest from "@/views/home/components/Interest/Index.vue";
+import Interest from "@/views/home/components/Interest/Interest.vue";
 import recent from "@/assets/imgs/recent.png";
 import warn from "@/assets/imgs/warn.png";
 const activeName = ref("Interest");

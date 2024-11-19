@@ -10,43 +10,7 @@ import Trend from '@/views/home/components/idea/Trend.vue';
 import { fetchProfile } from '@/api/index.js'
 import { showToast } from 'vant';
 const activeName = ref('trend');
-// const obj = ref({
-//    id: 1,
-//    imgBg: personal,//top img
-//    location: '贵州',//ip
-//    author: '宝宝',//姓名
-//    gender: 'male',//性别
-//    sign: '安然入眠',//签名
-//    career:'',
-//    born: '1999-01-01',//生日
-//    support: 1,//获赞
-//    beFollow: 2,//被关注
-//    follow: 3,//关注
-//    like: 4,//喜欢
-//    collect: 5,//喜欢
-//    intro:'',
-//    label:[],
-//    badge: {//徽章
-//       develop: ['diamond'],
-//       particular: ['level11', 'level22'],
-//    },
-//    product: [//创造
-//       {
-//          name: '宝宝',
-//          time: '2024-05-13 07:00',
-//          title: '这是一句话标题',
-//          sentence: '这是一段话',
-//          upvote: 112,
-//          collect: 112,
-//          comment: 12,
-//       }
-//    ],
-//    favour: [],
-//    trend: [],
-// });
-
 const obj = ref(null);
-
 const productLabelArr = ref([{
    name: "全部",
    num: 53,

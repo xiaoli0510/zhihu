@@ -7,16 +7,6 @@ import CommentReply from '@/components/CommentReply/Index.vue'
 import MoreIcon from '@/components/MoreIcon.vue';
 const { item } = defineProps(["item"]);
 const router = useRouter();
-// {
-//     type:1,
-//     name:'宝宝',
-//     time:'2024-05-13 07:00',
-//     title:'这是一句话标题',
-//     sentence:'这是一段话',
-//     upvote: 112,
-//     collect: 112,
-//     comment:12,
-// }
 const enterDetail = (item) => {
     router.push({
         path: '/detail',
@@ -58,13 +48,13 @@ const enterDetail = (item) => {
                 </van-col>
             </van-row>
         </div>
+        <van-divider />
     </div>
 </template>
 <style scoped lang='scss'>
 .item {
     background: #fff;
-    margin-bottom: 2%;
-    padding: 3% 2%;
+    padding: 1% 2%;
 
     .top {
         display: flex;

@@ -6,7 +6,7 @@
                     <van-image width="30px" height="30px" :src="item.avatar" round />
                     <div class="dot" v-if="item.isNew"></div>
                 </div>
-                <div class="gray-font">{{item.author}}</div>
+                <div class="gray-font">{{ item.author }}</div>
             </div>
             <div class="item">
                 <div class="more-wrap">
@@ -15,28 +15,18 @@
                 <div class="gray-font">关注更多</div>
             </div>
         </div>
-
-<div class="sort-wrap">
-    <span class="sort-text active">精选</span>
-    <span class="sort-text">最新</span>
-    <span class="sort-text">想法</span>
-</div>
-        <Invent v-for="(item, index) in obj.product" :key="index" :item="item" />
+        <van-divider />
+        <div class="sort-wrap">
+            <span class="sort-text" :class="{ 'active': activeIndex === Number(key) }" v-for="(item, key) in SORTTYPE"
+                :key="key" @click="selectSortType(key)">{{ item }}</span>
+        </div>
+        <Invent v-for="(item, index) in filterList" :key="index" :item="item" />
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Invent from "@/views/home/components/idea/Invent.vue";
 import { fetchProfile } from '@/api/index.js'
-
-const obj = ref({});
-const initData = async () => {
-   await fetchProfile().then(res => {
-      obj.value = res.data.body;
-   })
-}
-await initData();
-
 const list = ref([
     {
         "id": 53,
@@ -48,11 +38,50 @@ const list = ref([
         "isNew": true,
         "isAgree": true,
         "label": ["duvl"],
-    }])
+    }]);
 
+let obj = {};
+const filterList = ref({});
+const initData = async () => {
+    await fetchProfile().then(res => {
+        obj = res.data.body;
+    })
+}
+await initData();
+const activeIndex = ref(0);
+const SORTTYPE = {
+    0: '精选',
+    1: '最新',
+    2: '想法',
+};
+const selectSortType = (key) => {
+    activeIndex.value = Number(key);
+}
+watch(activeIndex, (val) => {
+    switch (val) {
+        case 0:
+            filterList.value = obj.product.sort((item1, item2) => {
+                return item2.upvote - item1.upvote;
+            })
+            break;
+        case 1:
+            filterList.value = obj.product.sort((item1, item2) => {
+                return new Date(item2.time).getTime() - new Date(item1.time).getTime();
+            })
+            break;
+        case 2:
+            filterList.value = obj.product.filter(item => item.type === 4);
+            break;
+    }
+}, {
+    immediate: true,
+})
 </script>
 <style scoped lang='scss'>
 .interest-list {
+    width: 97%;
+    margin: 0 auto;
+
     .interest-top {
         display: flex;
         flex-direction: row;
@@ -61,7 +90,7 @@ const list = ref([
 
         .item {
             width: 55px;
-            height:60px;
+            height: 60px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -96,17 +125,18 @@ const list = ref([
     }
 
     .sort-text {
-        padding:0 11px;
+        padding: 0 11px;
         line-height: 20px;
         height: 20px;
         display: inline-block;
-        background:#e9e8e8;
-        color:#5f5d5d;
-        border-radius: 9px;
-        margin:0 4px;
-        font-size:12px;
-        &.active{
-            color:#000;
+        background: #f5f3f3;
+        color: #5f5d5d;
+        border-radius: 14px;
+        margin: 0 4px;
+        font-size: 12px;
+
+        &.active {
+            color: #000;
         }
     }
 
