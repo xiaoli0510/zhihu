@@ -1,7 +1,7 @@
 <template>
     <div class="interest-list">
         <div class="interest-top">
-            <div class="item" v-for="item in obj.list" :key="item.id">
+            <div class="item" v-for="(item,index) in obj.list" :key="item.id" @click="showDetail(item,index)">
                 <div class="img-wrap">
                     <van-image width="30px" height="30px" :src="item.imgBg" round />
                     <div class="dot" v-if="item.isNew"></div>
@@ -22,9 +22,23 @@
         </div>
         <Invent v-for="(item, index) in filterList" :key="index" :item="item" />
     </div>
+    <!-- 关注的用户详情弹框 -->
+    <van-popup v-model:show="show" position="bottom" class="detail-model" :style="{ height: '90%' }">
+        <div class="top">
+            <van-icon name="cross" @click="closeModel"/>
+            <div class="dot">
+                <span class="dot-item" :class="{ 'active': curInfo.index === item - 1 }"
+                    v-for="item in obj.list.length"></span>
+            </div>
+            <div class="follow-particular" :class="{'has':curInfo.isFollowParticular}" @click="toggleFollowParticular(curInfo,curInfo.author)"> {{ !curInfo.isFollowParticular ?'+ 特别关注':'已特别关注' }}</div>
+        </div>
+        <div class="main">
+            <Invent v-for="item in filterList" :key="item.id" :item="item" />
+        </div>
+    </van-popup>
 </template>
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import Invent from "@/views/home/components/idea/Invent.vue";
 import { fetchInterest } from '@/api/index.js';
 import { useRouter } from 'vue-router';
@@ -70,8 +84,32 @@ watch(activeIndex, (val) => {
     immediate: true,
 });
 const router = useRouter();
-const enterInterestHot = ()=>{
+const enterInterestHot = () => {
     router.push('/interestHot');
+}
+
+const show = ref(false);
+const curInfo = ref({
+    index:-1,
+    author:'',
+    isFollowParticular:false,
+});
+const showDetail = (item,index) => {
+    show.value = true;
+    curInfo.value.author = item.author;
+    curInfo.value.isFollowParticular = item.isFollowParticular;
+    curInfo.value.index = index;
+}
+const closeModel = () => {
+    show.value = false;
+}
+const toggleFollowParticular = (obj, author) => {
+    const msg = !obj.isFollowParticular ? '已' : '已取消';
+    obj.isFollowParticular = !obj.isFollowParticular;
+    showToast({
+        message: `${msg}特别关注${author}`,
+        icon: 'certificate',
+    });
 }
 
 </script>
@@ -122,24 +160,69 @@ const enterInterestHot = ()=>{
         }
     }
 
-    .sort-text {
-        padding: 0 11px;
-        line-height: 20px;
-        height: 20px;
-        display: inline-block;
-        background: #f5f3f3;
-        color: #5f5d5d;
-        border-radius: 14px;
-        margin: 0 4px;
-        font-size: 12px;
+    .sort-wrap {
+        margin: 2% 0;
 
-        &.active {
-            color: #000;
+        .sort-text {
+            padding: 0 11px;
+            line-height: 20px;
+            height: 20px;
+            display: inline-block;
+            background: #f5f3f3;
+            color: #5f5d5d;
+            border-radius: 14px;
+            margin: 0 4px;
+            font-size: 12px;
+
+            &.active {
+                color: #000;
+            }
         }
     }
+
 
     .item-wrap {
         align-items: flex-start;
     }
+}
+
+.detail-model {
+    .top {
+        display: flex;
+        justify-content: space-between;
+        height:40px;
+        align-items: center;
+        width:95%;
+        margin:0 auto;
+
+        .dot {
+            display: flex;
+
+            .dot-item {
+                width: 8px;
+                height: 8px;
+                background: #797777;
+                border-radius: 50%;
+                margin: 0 2px;
+
+                &.active {
+                    background: #252525;
+                }
+            }
+        }
+
+
+        .follow-particular {
+            color: var(--color-blue-text);
+            &.has{
+                color:var(--vt-c-text-light-2);
+            }
+        }
+    }
+    .main{
+        height:calc(100% - 40px);
+        overflow: auto;
+    }
+
 }
 </style>

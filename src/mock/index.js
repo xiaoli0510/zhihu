@@ -312,6 +312,7 @@ Mock.mock('/api/interest/id', 'get', {
                         upvote: '@integer(0,100)',
                         collect: '@integer(0,100)',
                         comment: '@integer(0,100)',
+                        isFollowParticular:'@boolean',
                         'imgList|0-10': [
                             {
                                 img: 'https://randomuser.me/api/portraits/men/@integer(0,99).jpg',
