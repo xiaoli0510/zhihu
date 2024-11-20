@@ -18,7 +18,7 @@ for (let key in moduleRoutes) {
   const idPath = ["profile", "novelDetail", "novelHome", "pay", "article"];
   idPath.includes(pathName) ? (pathName = pathName + "/:id") : "";
   //url后带参数keyWord的路由
-  const keyWordPath = ['search'];
+  const keyWordPath = ['search','result'];
   keyWordPath.includes(pathName) ? (pathName = pathName + "/:keyWord?") : "";
   //如果有重复的，则跳过
   if (existRoute.includes(pathName)) continue;

@@ -11,10 +11,10 @@
     </van-row>
     <div class="search-wrap">
         <van-row justify="space-between" align="center">
-            <van-col span="21">
-                <span>你好棒</span>
+            <van-col span="21" @click="enterSearch">
+                <span>{{ keyWordList[keyWordIndex].name }}</span>
             </van-col>
-            <van-col class="search-txt">| 搜索</van-col>
+            <van-col class="search-txt" @click="enterResult">| 搜索</van-col>
         </van-row>
     </div>
     <SuggestItem />
@@ -22,7 +22,29 @@
 <script setup>
 import { ref } from 'vue';
 import SuggestItem from './SuggestItem.vue'
+import { useRouter } from 'vue-router';
+import { fetchKeyWordHot } from '@/api/index.js';
+const keyWord = ref('');
+const keyWordIndex = ref(0);
+let keyWordList = [];
+fetchKeyWordHot().then(res => {
+    keyWordList = res.data.body.list;
+}).catch(err => {
+    console.log(err);
+})
+const play = setInterval(function () {
+    if (keyWordIndex.value < keyWordList.length - 1) {
+        keyWordIndex.value += 1;
+    }
+}, 2000);
 
+const router = useRouter();
+const enterSearch = () => {
+    router.push('/search');
+}
+const enterResult = () => {
+    router.push(`/result/${keyWord.value}`);
+}
 const TABTYPE = {
     0: '全站',
     1: 'AI学习',
@@ -60,14 +82,15 @@ const active = ref(0);
 </script>
 <style scoped lang='scss'>
 .search-wrap {
-    width:95%;
-    margin:10px auto;
-    line-height:30px;
+    width: 95%;
+    margin: 10px auto;
+    line-height: 30px;
     border-radius: 20px;
-    padding:0 10px;
-    border:1px solid var(--color-blue-text);
-    .search-txt{
-        color:var(--color-blue-text);
+    padding: 0 10px;
+    border: 1px solid var(--color-blue-text);
+
+    .search-txt {
+        color: var(--color-blue-text);
     }
 }
 </style>

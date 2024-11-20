@@ -383,6 +383,17 @@ Mock.mock('/api/guess/id', 'get', {
         ],
     },
 })
+//热门搜索关键词
+Mock.mock('/api/keyWord/hot', 'get', {
+    status: 200, //请求成功状态码
+    body: {
+        'list|10': [
+            {
+                name: '@ctitle(1,10)',
+            },
+        ],
+    },
+})
 
 //根据id获取主题页列表
 Mock.mock('/api/topic', 'get', {

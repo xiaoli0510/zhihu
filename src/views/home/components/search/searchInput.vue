@@ -5,7 +5,10 @@ const route = useRoute();
 const selfKeyWord = ref('');
 selfKeyWord.value = route.params.keyWord
 const onSearch = (val) => showToast(val);
-const onClickButton = () => showToast(value.value);
+const onClickButton = () => {
+    if(selfKeyWord.value  ===  '') return;
+    
+};
 </script>
 <template>
     <van-search shape="round" v-model="selfKeyWord" show-action placeholder="搜索知乎内容" @search="onSearch">

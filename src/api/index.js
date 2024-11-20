@@ -31,5 +31,8 @@ export async function fetchInterestHot(){
 export async function fetchGuess(){
     return await service.get('/api/guess/id');
 }
-
+//热门搜索关键词
+export async function fetchKeyWordHot(){
+    return await service.get('/api/keyWord/hot');
+} 
 
