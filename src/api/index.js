@@ -27,4 +27,9 @@ export async function fetchInterest(){
 export async function fetchInterestHot(){
     return await service.get('/api/interest/hot');
 }
+//推荐页
+export async function fetchGuess(){
+    return await service.get('/api/guess/id');
+}
+
 

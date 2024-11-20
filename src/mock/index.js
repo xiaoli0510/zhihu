@@ -364,21 +364,67 @@ Mock.mock('/api/interest/id', 'get', {
     },
 })
 
-//热门关注
-Mock.mock('/api/interest/hot', 'get', {
+//根据类型获取推荐list
+Mock.mock('/api/guess/id', 'get', {
     status: 200, //请求成功状态码
     body: {
         'list|10': [
             {
                 id: '@increment',
                 title: '@ctitle(1,10)',
-                'tag|1':['金融','感情'],
-                guess:'@boolean',
-                answer:'@integer(1,100)',
-                follow:'@integer(1,100)',
+                avatar: 'https://randomuser.me/api/portraits/men/@integer(0,99).jpg',
+                author: '@cname',
+                'tag|1': ['金融', '感情'],
                 sentence: '@cparagraph(1,10)',
-                imgBg: 'https://randomuser.me/api/portraits/men/@integer(0,99).jpg', //top img
+                upvote: '@integer(0,100)',
+                collect: '@integer(0,100)',
+                answer: '@integer(1,100)',
             },
         ],
     },
+})
+
+//根据id获取主题页列表
+Mock.mock('/api/topic', 'get', {
+    info: {
+        id: '@increment',
+        avatar: 'https://randomuser.me/api/portraits/men/@integer(0,99).jpg',
+        title: '@sentence(5)',
+        answer: '@integer(1,100)',
+        beFollow: '@integer(1,100)',
+    },
+    'list|10': [
+        {
+            id: '@increment',
+            avatar: 'https://randomuser.me/api/portraits/men/@integer(0,99).jpg',
+            title: '@ctitle(1,10)',
+            detail: '@cparagraph(1,10)',
+            isFollow: '@boolean',
+            author: '@cname',
+            'career|+1': [
+                'Java',
+                'Python',
+                '前端',
+                '产品经理',
+                'UI设计师',
+                'IOS',
+                '安卓',
+            ],
+            'badge|1': ['diamond', 'gift', 'gem'],
+            sign: '@cparagraph(1,10)', //签名
+            upvote: '@integer(1,100)',
+            collect: '@integer(1,100)',
+            comment: '@integer(1,100)',
+            depict: '@cname',
+            createTime: "@datetime('yyyy-MM-dd HH:mm')",
+            province: '@province()',
+            like: '@integer(1, 100)',
+            'label|1-2': ['@word(1,10)'],
+            'imgList|1-2': [
+                'https://randomuser.me/api/portraits/men/@integer(0,99).jpg',
+                'https://randomuser.me/api/portraits/men/@integer(0,99).jpg',
+                'https://randomuser.me/api/portraits/men/@integer(0,99).jpg',
+            ],
+        },
+    ],
 })

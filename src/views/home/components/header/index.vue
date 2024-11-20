@@ -2,19 +2,21 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Idea from "@/views/home/components/idea/Index.vue";
-import Interest from "@/views/home/components/Interest/Interest.vue";
+import Interest from "@/views/home/components/interest/Interest.vue";
+import Suggest from "@/views/home/components/suggest/Suggest.vue";
 import recent from "@/assets/imgs/recent.png";
 import warn from "@/assets/imgs/warn.png";
-const activeName = ref("Interest");
+const activeName = ref("Suggest");
 const tabArray = ref([
   { title: "想法", value: "Idea" },
   { title: "关注", value: "Interest" },
-  { title: "推荐", value: "Recomment" },
+  { title: "推荐", value: "Suggest" },
   { title: "热榜", value: "Hot" },
 ]);
 const comTagMap = {
   Idea,
   Interest,
+  Suggest,
 }
 const router = useRouter();
 const enterSearch = () => {
